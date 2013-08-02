@@ -1,10 +1,11 @@
-Puppet::Type.type(:reboot).provide(:windows) do
+require 'puppet/type'
+
+Puppet::Type.type(:reboot).provide :windows, :parent => :base do
   confine :operatingsystem => :windows
   commands :shutdown => 'shutdown.exe'
 
   def reboot
-    # don't evaluate any more resources
-    Puppet::Application.stop!
+    super
 
     # for demo/testing
     interactive = @resource[:prompt] ? '/i' : nil

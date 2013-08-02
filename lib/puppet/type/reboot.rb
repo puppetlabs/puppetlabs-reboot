@@ -4,10 +4,8 @@ Puppet::Type.newtype(:reboot) do
   end
 
   newparam(:when) do
-    munge do |value|
-      30 # seconds
-    end
-    newvalues(:now)
+    newvalues(:refreshed)
+    defaultto :refreshed
   end
 
   newparam(:message) do
@@ -20,6 +18,11 @@ Puppet::Type.newtype(:reboot) do
   end
 
   def refresh
-    provider.reboot
+    case resource[:when]
+    when :refreshed
+      provider.reboot
+    else
+      Puppet.debug("Skipping reboot")
+    end
   end
 end
