@@ -1,5 +1,39 @@
 Puppet::Type.newtype(:reboot) do
+  @doc = <<-'EOT'
+    Manages system reboots.  The `reboot` type is typically
+    used in situations where a resource performs a change, e.g.
+    package install, and a reboot is required to complete
+    installation.  Only if the package is installed should the
+    reboot be triggered.
+
+    Sample usage:
+
+      package { 'IIS':
+        source => '\\server\share\iis.exe'
+      }
+      reboot { 'now':
+        subscribe => Package['IIS']
+      }
+
+    A reboot resource can also check if the system is in a
+    reboot pending state, and if so, reboot the system.  For
+    example, if you have a package that cannot be installed
+    while a reboot is pending.
+
+    Sample usage:
+
+      reboot { 'now':
+        when   => pending,
+        before => Package['IIS']
+      }
+      package { 'IIS':
+        source => '\\server\share\iis.exe'
+      }
+
+  EOT
+
   newparam(:name) do
+    desc "The name of the reboot resource.  Used for uniqueness."
     isnamevar
   end
 
@@ -33,7 +67,7 @@ Puppet::Type.newtype(:reboot) do
   end
 
   newparam(:prompt, :boolean => true) do
-    desc "Whether to prompt the user to continue the reboot. By default, the
+    desc "Whether to prompt the user to continue the reboot.  By default, the
       user will not be prompted."
     newvalues(:true, :false)
     defaultto(false)
@@ -41,7 +75,7 @@ Puppet::Type.newtype(:reboot) do
 
   newparam(:timeout) do
     desc "The amount of time to wait between the time the reboot is requested
-      and when the reboot is initiated. The default timeout is 60 seconds."
+      and when the reboot is initiated.  The default timeout is 60 seconds."
 
     validate do |value|
       begin
