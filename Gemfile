@@ -14,7 +14,6 @@ gem "puppet", *location_for(ENV['PUPPET_LOCATION'] || '~> 3.2.3')
 gem "facter", *location_for(ENV['FACTER_LOCATION'] || '~> 1.6')
 gem "hiera", *location_for(ENV['HIERA_LOCATION'] || '~> 1.0')
 
-
 group :development, :test do
   gem 'pry'
   gem 'rake'
@@ -23,6 +22,7 @@ group :development, :test do
   gem 'puppetlabs_spec_helper'
 end
 
+# see http://projects.puppetlabs.com/issues/21698
 platforms :mswin, :mingw do
   gem "sys-admin", "~> 1.5.6", :require => false
   gem "win32-api", "~> 1.4.8", :require => false

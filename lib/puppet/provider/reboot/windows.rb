@@ -2,6 +2,7 @@ require 'puppet/type'
 
 Puppet::Type.type(:reboot).provide :windows, :parent => :base do
   confine :operatingsystem => :windows
+  defaultfor :operatingsystem => :windows
   commands :shutdown => 'shutdown.exe'
 
   def reboot
@@ -12,6 +13,6 @@ Puppet::Type.type(:reboot).provide :windows, :parent => :base do
 
     # Reason code
     # E P     4       1       Application: Maintenance (Planned)
-    shutdown(interactive, '/r', '/t', @resource[:when], '/d', 'p:4:1', '/c', "\"#{@resource[:message]}\"")
+    shutdown([interactive, '/r', '/t', @resource[:timeout], '/d', 'p:4:1', '/c', "\"#{@resource[:message]}\""])
   end
 end
