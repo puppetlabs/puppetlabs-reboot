@@ -32,16 +32,21 @@ Puppet::Type.newtype(:reboot) do
 
   EOT
 
+  feature :manages_reboot_pending, "The provider can detect if a reboot is pending, and reboot as needed."
+
   newparam(:name) do
     desc "The name of the reboot resource.  Used for uniqueness."
     isnamevar
   end
 
   newproperty(:when) do
-    desc "When to check for, and if needed, perform a reboot. If `refreshed`
-      then the reboot will only be performed, in response to a refresh
-      event from another resource, e.g. `package`."
-    newvalues(:refreshed)
+    desc "When to check for, and if needed, perform a reboot. If `pending`,
+      then the provider will check if a reboot is pending, and only
+      if needed, reboot the system.  If `refreshed` then the reboot
+      will only be performed in response to a refresh event from
+      another resource, e.g. `package`."
+    newvalue(:refreshed)
+    newvalue(:pending, :required_features => :manages_reboot_pending)
     defaultto :refreshed
 
     def insync?(is)

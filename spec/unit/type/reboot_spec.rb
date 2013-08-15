@@ -24,9 +24,9 @@ describe Puppet::Type.type(:reboot) do
     end
 
     it "should not reboot if the `when` parameter is `pending`" do
-      pending "The :pending value is not yet supported"
-      resource[:when] = :pending
+      resource.provider.expects(:satisfies?).with([:manages_reboot_pending]).returns(true)
       resource.provider.expects(:reboot).never
+      resource[:when] = :pending
 
       resource.refresh
     end
@@ -38,7 +38,8 @@ describe Puppet::Type.type(:reboot) do
     end
 
     it "should accept :pending" do
-      pending "The :pending value is not yet supported"
+      resource.provider.expects(:satisfies?).with([:manages_reboot_pending]).returns(true)
+
       resource[:when] = :pending
     end
 
