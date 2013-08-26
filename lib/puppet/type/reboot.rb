@@ -8,11 +8,14 @@ Puppet::Type.newtype(:reboot) do
 
     Sample usage:
 
-      package { 'IIS':
-        source => '\\server\share\iis.exe'
+      package { 'Microsoft .NET Framework 4.5':
+        ensure          => installed,
+        source          => '\\server\share\dotnetfx45_full_x86_x64.exe',
+        install_options => ['/Passive', '/NoRestart'],
+        provider        => windows,
       }
-      reboot { 'now':
-        subscribe => Package['IIS']
+      reboot { 'after':
+        subscribe       => Package['Microsoft .NET Framework 4.5'],
       }
 
     A reboot resource can also check if the system is in a
@@ -22,14 +25,16 @@ Puppet::Type.newtype(:reboot) do
 
     Sample usage:
 
-      reboot { 'now':
-        when   => pending,
-        before => Package['IIS']
+      reboot { 'before':
+        when            => pending,
       }
-      package { 'IIS':
-        source => '\\server\share\iis.exe'
+      package { 'Microsoft .NET Framework 4.5':
+        ensure          => installed,
+        source          => '\\server\share\dotnetfx45_full_x86_x64.exe',
+        install_options => ['/Passive', '/NoRestart'],
+        provider        => windows,
+        require         => Reboot['before'],
       }
-
   EOT
 
   feature :manages_reboot_pending, "The provider can detect if a reboot is pending, and reboot as needed."
