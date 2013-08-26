@@ -91,10 +91,12 @@ describe Puppet::Type.type(:reboot) do
       resource[:timeout] = 30 * 60
     end
 
-    it "should reject a non-integer value" do
-      expect {
-        resource[:timeout] = "later"
-      }.to raise_error(Puppet::ResourceError, /The timeout must be an integer/)
+    ["later", :later, {}, [], true].each do |timeout|
+      it "should reject a non-integer (#{timeout.class}) value" do
+        expect {
+          resource[:timeout] = timeout
+        }.to raise_error(Puppet::ResourceError, /The timeout must be an integer/)
+      end
     end
   end
 end

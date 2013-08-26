@@ -90,7 +90,7 @@ Puppet::Type.newtype(:reboot) do
     validate do |value|
       begin
         value = Integer(value)
-      rescue ArgumentError
+      rescue ArgumentError, TypeError
         raise ArgumentError, "The timeout must be an integer."
       end
     end
