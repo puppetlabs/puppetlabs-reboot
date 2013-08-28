@@ -88,9 +88,7 @@ Puppet::Type.newtype(:reboot) do
       and when the reboot is initiated.  The default timeout is 60 seconds."
 
     validate do |value|
-      begin
-        value = Integer(value)
-      rescue ArgumentError, TypeError
+      if value.to_s !~ /^\d+$/
         raise ArgumentError, "The timeout must be an integer."
       end
     end
