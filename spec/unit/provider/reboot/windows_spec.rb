@@ -18,21 +18,45 @@ describe Puppet::Type.type(:reboot).provider(:windows), :if => Puppet.features.m
   end
 
   context "when checking if the `when` property is insync" do
-    it "issues a shutdown command" do
+    it "issues a shutdown command when a reboot is pending" do
       resource[:when] = :pending
 
-      provider.expects(:shutdown)
+      provider.expects(:async_shutdown).with(includes('shutdown.exe'))
 
       provider.when = :pending
     end
   end
 
   context "when a reboot is triggered" do
-    it "should include the quoted reboot message" do
+    it "does not include the interactive flag by default" do
+      provider.expects(:async_shutdown).with(Not(includes('/i')))
+      provider.reboot
+    end
+
+    it "includes the interactive flag if specified" do
+      resource[:prompt] = true
+      provider.expects(:async_shutdown).with(includes('/i'))
+      provider.reboot
+    end
+
+    it "includes the restart flag" do
+      provider.expects(:async_shutdown).with(includes('/r'))
+      provider.reboot
+    end
+
+    it "includes a timeout in the future" do
+      provider.expects(:async_shutdown).with(includes("/t #{resource[:timeout]}"))
+      provider.reboot
+    end
+
+    it "includes the shutdown reason as Application Maintenance (Planned)" do
+      provider.expects(:async_shutdown).with(includes("/d p:4:1"))
+      provider.reboot
+    end
+
+    it "includes the quoted reboot message" do
       resource[:message] = "triggering a reboot"
-
-      provider.expects(:shutdown).with(includes('"triggering a reboot"'))
-
+      provider.expects(:async_shutdown).with(includes('"triggering a reboot"'))
       provider.reboot
     end
   end

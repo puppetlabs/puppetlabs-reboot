@@ -1,4 +1,5 @@
 require 'puppet/type'
+require 'open3'
 
 Puppet::Type.type(:reboot).provide :windows, :parent => :base do
   confine :operatingsystem => :windows
@@ -33,7 +34,27 @@ Puppet::Type.type(:reboot).provide :windows, :parent => :base do
 
     # Reason code
     # E P     4       1       Application: Maintenance (Planned)
-    shutdown([interactive, '/r', '/t', @resource[:timeout], '/d', 'p:4:1', '/c', "\"#{@resource[:message]}\""])
+    shutdown_cmd = [command(:shutdown), interactive, '/r', '/t', @resource[:timeout], '/d', 'p:4:1', '/c', "\"#{@resource[:message]}\""].join(' ')
+    async_shutdown(shutdown_cmd)
+  end
+
+  def async_shutdown(shutdown_cmd)
+    # execute a ruby process to shutdown after puppet exits
+    watcher = File.join(File.dirname(__FILE__), 'windows', 'watcher.rb')
+    if not File.exists?(watcher)
+      raise ArgumentError, "The watcher program #{watcher} does not exist"
+    end
+
+    Puppet.debug("Launching 'ruby.exe #{watcher}'")
+    stdin, stdout, wait_thr = Open3.popen2("ruby.exe #{watcher}")
+    Process.detach(wait_thr.pid)
+
+    # order is important
+    stdin.puts(Process.pid)
+    stdin.puts(@resource[:timeout])
+    stdin.write(shutdown_cmd)
+    stdin.close
+    stdout.close
   end
 
   def reboot_pending?
