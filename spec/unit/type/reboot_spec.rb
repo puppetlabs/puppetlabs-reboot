@@ -82,6 +82,24 @@ describe Puppet::Type.type(:reboot) do
     end
   end
 
+  context "parameter :catalog_apply_timeout" do
+    it "should default to 7200 seconds" do
+      resource[:catalog_apply_timeout].must == 7200
+    end
+
+    it "should accept 30 minute timeout" do
+      resource[:catalog_apply_timeout] = 30 * 60
+    end
+
+    ["later", :later, {}, [], true].each do |timeout|
+      it "should reject a non-integer (#{timeout.class}) value" do
+        expect {
+          resource[:catalog_apply_timeout] = timeout
+        }.to raise_error(Puppet::ResourceError, /The catalog_apply_timeout must be an integer/)
+      end
+    end
+  end
+
   context "parameter :timeout" do
     it "should default :timeout to 60 seconds" do
       resource[:timeout].must == 60

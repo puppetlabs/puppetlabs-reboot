@@ -51,7 +51,7 @@ Puppet::Type.type(:reboot).provide :windows, :parent => :base do
 
     # order is important
     stdin.puts(Process.pid)
-    stdin.puts(@resource[:timeout])
+    stdin.puts(@resource[:catalog_apply_timeout])
     stdin.write(shutdown_cmd)
     stdin.close
     stdout.close
