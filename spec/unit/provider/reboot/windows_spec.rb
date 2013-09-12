@@ -59,6 +59,36 @@ describe Puppet::Type.type(:reboot).provider(:windows), :if => Puppet.features.m
   end
 
   context "when a reboot is triggered", :if => Puppet::Util.which('shutdown.exe') do
+    before :each do
+      provider.expects(:async_shutdown).with(includes('shutdown.exe')).at_most_once
+    end
+
+    it "stops the application by default" do
+      Puppet::Application.expects(:stop!)
+      provider.reboot
+    end
+
+    context "when apply is set to finished and when is set to pending" do
+      it "throws an unsupported warning" do
+        resource[:when] = :pending
+        resource[:apply] = :finished
+        Puppet.expects(:warning).with(includes('The combination'))
+        provider.reboot
+      end
+    end
+
+    it "cancels the rest of the catalog transaction if apply is set to immediately" do
+      resource[:apply] = :immediately
+      Puppet::Application.expects(:stop!)
+      provider.reboot
+    end
+
+    it "doesn't stop the rest of the catalog transaction if apply is set to finished" do
+      resource[:apply] = :finished
+      Puppet::Application.expects(:stop!).never
+      provider.reboot
+    end
+
     it "does not include the interactive flag by default" do
       provider.expects(:async_shutdown).with(Not(includes('/i')))
       provider.reboot
