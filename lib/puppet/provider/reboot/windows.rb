@@ -46,15 +46,14 @@ Puppet::Type.type(:reboot).provide :windows, :parent => :base do
     end
 
     Puppet.debug("Launching 'ruby.exe #{watcher}'")
-    stdin, stdout, wait_thr = Open3.popen2("ruby.exe #{watcher}")
-    Process.detach(wait_thr.pid)
+    stdin, wait_threads = Open3.pipeline_w("ruby.exe #{watcher}")
+    Process.detach(wait_threads[0].pid)
 
     # order is important
     stdin.puts(Process.pid)
     stdin.puts(@resource[:catalog_apply_timeout])
     stdin.write(shutdown_cmd)
     stdin.close
-    stdout.close
   end
 
   def reboot_pending?

@@ -64,12 +64,13 @@ describe Puppet::Type.type(:reboot).provider(:windows), :if => Puppet.features.m
   context "when executing the watcher process" do
     let(:stdin)    { StringIO.new }
     let(:stdout)   { StringIO.new }
-    let(:wait_thr) { stub(:pid => 0xFFFFFFFF) }
+    let(:child_pid) { 0x1234 }
+    let(:wait_threads) { [stub(:pid => child_pid)] }
     let(:command)  { 'cmd.exe /c echo hello' }
 
     before :each do
-      Open3.stubs(:popen2).returns([stdin, stdout, wait_thr])
-      Process.stubs(:detach)
+      Open3.expects(:pipeline_w).returns([stdin, wait_threads])
+      Process.expects(:detach).with(child_pid)
       stdin.stubs(:close)
     end
 
