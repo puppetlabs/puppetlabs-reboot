@@ -35,6 +35,23 @@ Puppet::Type.newtype(:reboot) do
         provider        => windows,
         require         => Reboot['before'],
       }
+
+    A reboot resource can also finish the run and then reboot the system.  For
+    example, if you have a few packages that all require reboots but will not block 
+    each other during the run.
+
+    Sample usage:
+
+      package { 'Microsoft .NET Framework 4.5':
+        ensure          => installed,
+        source          => '\\server\share\dotnetfx45_full_x86_x64.exe',
+        install_options => ['/Passive', '/NoRestart'],
+        provider        => windows,
+      }
+      reboot { 'after_run':
+        apply           => finished,
+        subscribe       => Package['Microsoft .NET Framework 4.5'],
+      }
   EOT
 
   feature :manages_reboot_pending, "The provider can detect if a reboot is pending, and reboot as needed."
@@ -57,6 +74,26 @@ Puppet::Type.newtype(:reboot) do
     def insync?(is)
       case should
       when :refreshed
+        true # we're always insync
+      else
+        super
+      end
+    end
+  end
+
+  newproperty(:apply) do
+    desc "When to apply the reboot. If `immediately`, then the provider
+      will stop applying additional resources and apply the reboot once
+      puppet has finished syncing. If `finished`, it will continue
+      applying resources and then perform a reboot at the end of the
+      run. The default is `immediately`."
+    newvalue(:immediately)
+    newvalue(:finished)
+    defaultto :immediately
+
+    def insync?(is)
+      case should
+      when :immediately
         true # we're always insync
       else
         super
@@ -103,7 +140,8 @@ Puppet::Type.newtype(:reboot) do
   newparam(:timeout) do
     desc "The amount of time in seconds to wait between the time the reboot
       is requested and when the reboot is performed.  The default timeout
-      is 60 seconds."
+      is 60 seconds.  Note that this time starts once puppet has exited the
+      current run."
 
     validate do |value|
       begin

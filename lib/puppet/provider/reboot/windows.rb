@@ -27,7 +27,13 @@ Puppet::Type.type(:reboot).provide :windows, :parent => :base do
   end
 
   def reboot
-    super
+    if @resource[:apply] == :finished && @resource[:when] == :pending
+      Puppet.warning("The combination of `when => pending` and `apply => finished` is not a recommended or supported scenario. Please only use this scenario if you know exactly what you are doing. The puppet agent run will continue.")
+    end
+
+    unless @resource[:apply] == :finished
+      cancel_transaction
+    end
 
     # for demo/testing
     interactive = @resource[:prompt] ? '/i' : nil

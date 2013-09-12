@@ -18,12 +18,4 @@ describe Puppet::Type.type(:reboot).provider(:base) do
       provider.when = :refreshed
     end
   end
-
-  context "when a reboot is triggered" do
-    it "should request that the application stop" do
-      Puppet::Application.expects(:stop!)
-
-      provider.reboot
-    end
-  end
 end

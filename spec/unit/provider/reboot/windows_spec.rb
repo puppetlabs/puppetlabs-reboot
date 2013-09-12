@@ -20,14 +20,43 @@ describe Puppet::Type.type(:reboot).provider(:windows), :if => Puppet.features.m
   context "when checking if the `when` property is insync" do
     it "issues a shutdown command when a reboot is pending" do
       resource[:when] = :pending
-
       provider.expects(:async_shutdown).with(includes('shutdown.exe'))
-
       provider.when = :pending
     end
   end
 
   context "when a reboot is triggered" do
+
+    before :each do
+      provider.expects(:async_shutdown).with(includes('shutdown.exe')).times(0..1)
+    end
+
+    context "when apply is set to finished and when is set to pending" do
+      it "should throw an unsupported warning" do
+        resource[:when] = :pending
+        resource[:apply] = :finished
+        Puppet.expects(:warning).with(includes('The combination'))
+        provider.reboot
+      end
+    end
+
+    it "should stop the application by default" do
+      Puppet::Application.expects(:stop!)
+      provider.reboot
+    end
+
+    it "should cancel the rest of the catalog transaction if apply is set to immediately" do
+      resource[:apply] = :immediately
+      Puppet::Application.expects(:stop!)
+      provider.reboot
+    end
+
+    it "should not stop the rest of the catalog transaction if apply is set to finished" do
+      resource[:apply] = :finished
+      Puppet::Application.expects(:stop!).never
+      provider.reboot
+    end
+
     it "does not include the interactive flag by default" do
       provider.expects(:async_shutdown).with(Not(includes('/i')))
       provider.reboot

@@ -1,13 +1,15 @@
-require 'windows/process'
-require 'windows/synchronize'
-require 'windows/handle'
-require 'windows/error'
-
 class Watcher
-  include Windows::Process
-  include Windows::Synchronize
-  include Windows::Handle
-  include Windows::Error
+
+  if File::ALT_SEPARATOR
+    require 'windows/process'
+    require 'windows/synchronize'
+    require 'windows/handle'
+    require 'windows/error'
+
+    include Windows::Process
+    include Windows::Synchronize
+    include Windows::Handle
+  end
 
   attr_reader :pid, :timeout, :command
 
