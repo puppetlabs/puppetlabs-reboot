@@ -35,15 +35,13 @@ class Watcher
   def execute
     case waitpid
     when Windows::Synchronize::WAIT_OBJECT_0
-      log_message("Process completed")
+      log_message("Process completed; executing '#{command}'.")
+      system(command)
     when Windows::Synchronize::WAIT_TIMEOUT
-      log_message("Timed out waiting for process to exit")
+      log_message("Timed out waiting for process to exit; reboot aborted.")
     else
-      log_message("Failed to wait on the process")
+      log_message("Failed to wait on the process; reboot aborted.")
     end
-
-    log_message("Executing '#{command}'")
-    system(command)
   end
 
   def log_message(message)

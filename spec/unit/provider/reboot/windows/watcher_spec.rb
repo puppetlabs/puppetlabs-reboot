@@ -52,9 +52,31 @@ describe Watcher, :if => Puppet.features.microsoft_windows? do
   end
 
   context "when executing the command" do
-    it "executes when waiting on a non-existent process" do
-      watcher = Watcher.new(bogus_pid, 0, command)
+    def expects_watcher_to_return(wait_result)
+      watcher = Watcher.new(current_pid, timeout, command)
+      watcher.expects(:waitpid).returns(wait_result)
+      watcher
+    end
+
+    it "only executes when the watched process completes" do
+      watcher = expects_watcher_to_return(Windows::Synchronize::WAIT_OBJECT_0)
       watcher.expects(:system).with(command)
+      watcher.expects(:log_message).with("Process completed; executing '#{command}'.")
+
+      watcher.execute
+    end
+
+    it "logs a message when the watched process times-out" do
+      watcher = expects_watcher_to_return(Windows::Synchronize::WAIT_TIMEOUT)
+      watcher.expects(:system).never
+      watcher.expects(:log_message).with("Timed out waiting for process to exit; reboot aborted.")
+      watcher.execute
+    end
+
+    it "logs a message when it fails to watch the process" do
+      watcher = expects_watcher_to_return(Windows::Synchronize::WAIT_FAILED)
+      watcher.expects(:system).never
+      watcher.expects(:log_message).with("Failed to wait on the process; reboot aborted.")
       watcher.execute
     end
   end
