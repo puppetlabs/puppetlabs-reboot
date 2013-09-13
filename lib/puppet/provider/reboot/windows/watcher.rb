@@ -1,11 +1,13 @@
 require 'windows/process'
 require 'windows/synchronize'
 require 'windows/handle'
+require 'windows/error'
 
 class Watcher
   include Windows::Process
   include Windows::Synchronize
   include Windows::Handle
+  include Windows::Error
 
   attr_reader :pid, :timeout, :command
 
@@ -40,7 +42,7 @@ class Watcher
     when Windows::Synchronize::WAIT_TIMEOUT
       log_message("Timed out waiting for process to exit; reboot aborted.")
     else
-      log_message("Failed to wait on the process; reboot aborted.")
+      log_message("Failed to wait on the process (#{get_last_error}); reboot aborted.")
     end
   end
 

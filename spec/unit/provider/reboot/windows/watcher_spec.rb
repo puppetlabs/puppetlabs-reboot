@@ -76,7 +76,8 @@ describe Watcher, :if => Puppet.features.microsoft_windows? do
     it "logs a message when it fails to watch the process" do
       watcher = expects_watcher_to_return(Windows::Synchronize::WAIT_FAILED)
       watcher.expects(:system).never
-      watcher.expects(:log_message).with("Failed to wait on the process; reboot aborted.")
+      watcher.expects(:get_last_error).returns('Access is denied')
+      watcher.expects(:log_message).with("Failed to wait on the process (Access is denied); reboot aborted.")
       watcher.execute
     end
   end
