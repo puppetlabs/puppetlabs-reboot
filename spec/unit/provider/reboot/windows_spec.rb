@@ -5,7 +5,9 @@ require 'puppet/provider/reboot/windows'
 
 describe Puppet::Type.type(:reboot).provider(:windows), :if => Puppet.features.microsoft_windows? do
   let(:resource) { Puppet::Type.type(:reboot).new(:provider => :windows, :name => "windows_reboot") }
-  let (:provider) { resource.provider}
+  let(:provider) { resource.provider}
+  let(:native_path)     { "#{ENV['SYSTEMROOT']}\\sysnative\\shutdown.exe" }
+  let(:redirected_path) { "#{ENV['SYSTEMROOT']}\\system32\\shutdown.exe" }
 
   it "should be an instance of Puppet::Type::Reboot::ProviderWindows" do
     provider.must be_an_instance_of Puppet::Type::Reboot::ProviderWindows
@@ -17,10 +19,39 @@ describe Puppet::Type.type(:reboot).provider(:windows), :if => Puppet.features.m
     end
   end
 
+  context "when resolving the shutdown command" do
+    it "should try to disable file system redirection" do
+      File.expects(:exists?).with(native_path).returns(true)
+      expect(provider.class.shutdown_command).to eq(native_path)
+    end
+
+    it "should fall back to system32" do
+      File.expects(:exists?).with(native_path).returns(false)
+      File.expects(:exists?).with(redirected_path).returns(true)
+      expect(provider.class.shutdown_command).to eq(redirected_path)
+    end
+
+    it "should use 'shutdown.exe'" do
+      File.expects(:exists?).with(native_path).returns(false)
+      File.expects(:exists?).with(redirected_path).returns(false)
+      expect(provider.class.shutdown_command).to eq('shutdown.exe')
+    end
+
+    it "should raise an error if shutdown.exe cannot be found" do
+      provider.expects(:command).with(:shutdown).returns(nil)
+      provider.expects(:async_shutdown).never
+
+      expect {
+        provider.reboot
+      }.to raise_error(ArgumentError, 'The shutdown.exe command was not found. On Windows 2003 x64 hotfix 942589 must be installed to access the 64-bit version of shutdown.exe from 32-bit version of ruby.exe.')
+    end
+  end
+
   context "when checking if the `when` property is insync" do
     it "issues a shutdown command when a reboot is pending" do
       resource[:when] = :pending
 
+      provider.expects(:command).with(:shutdown).returns(native_path)
       provider.expects(:async_shutdown).with(includes('shutdown.exe'))
 
       provider.when = :pending
