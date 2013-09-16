@@ -58,7 +58,7 @@ describe Puppet::Type.type(:reboot).provider(:windows), :if => Puppet.features.m
     end
   end
 
-  context "when a reboot is triggered" do
+  context "when a reboot is triggered", :if => Puppet::Util.which('shutdown.exe') do
     it "does not include the interactive flag by default" do
       provider.expects(:async_shutdown).with(Not(includes('/i')))
       provider.reboot
