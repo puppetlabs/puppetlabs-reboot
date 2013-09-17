@@ -32,7 +32,7 @@ describe 'Watcher', :if => Puppet.features.microsoft_windows? do
   end
 
   context "when waiting for a process" do
-    it "waits for the process to finish" do
+    it "waits for the process to finish", :unless => RUBY_VERSION[0,3] == '1.8' do
       pid = spawn("ruby.exe -e 'sleep #{timeout}'")
       Process.detach(pid)
       watcher = Watcher.new(pid, 2 * timeout, command)

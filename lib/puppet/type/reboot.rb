@@ -117,9 +117,7 @@ Puppet::Type.newtype(:reboot) do
       seconds (2 hours)."
 
     validate do |value|
-      begin
-        value = Integer(value)
-      rescue ArgumentError, TypeError
+      if value.to_s !~ /^\d+$/
         raise ArgumentError, "The catalog_apply_timeout must be an integer."
       end
     end
