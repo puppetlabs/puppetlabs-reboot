@@ -18,22 +18,114 @@ describe Puppet::Type.type(:reboot).provider(:windows), :if => Puppet.features.m
   end
 
   context "when checking if the `when` property is insync" do
-    it "issues a shutdown command" do
+    it "issues a shutdown command when a reboot is pending" do
       resource[:when] = :pending
-
-      provider.expects(:shutdown)
-
+      provider.expects(:async_shutdown).with(includes('shutdown.exe'))
       provider.when = :pending
     end
   end
 
   context "when a reboot is triggered" do
-    it "should include the quoted reboot message" do
-      resource[:message] = "triggering a reboot"
 
-      provider.expects(:shutdown).with(includes('"triggering a reboot"'))
+    before :each do
+      provider.expects(:async_shutdown).with(includes('shutdown.exe')).times(0..1)
+    end
 
+    context "when apply is set to finished and when is set to pending" do
+      it "should throw an unsupported warning" do
+        resource[:when] = :pending
+        resource[:apply] = :finished
+        Puppet.expects(:warning).with(includes('The combination'))
+        provider.reboot
+      end
+    end
+
+    it "should stop the application by default" do
+      Puppet::Application.expects(:stop!)
       provider.reboot
+    end
+
+    it "should cancel the rest of the catalog transaction if apply is set to immediately" do
+      resource[:apply] = :immediately
+      Puppet::Application.expects(:stop!)
+      provider.reboot
+    end
+
+    it "should not stop the rest of the catalog transaction if apply is set to finished" do
+      resource[:apply] = :finished
+      Puppet::Application.expects(:stop!).never
+      provider.reboot
+    end
+
+    it "does not include the interactive flag by default" do
+      provider.expects(:async_shutdown).with(Not(includes('/i')))
+      provider.reboot
+    end
+
+    it "includes the interactive flag if specified" do
+      resource[:prompt] = true
+      provider.expects(:async_shutdown).with(includes('/i'))
+      provider.reboot
+    end
+
+    it "includes the restart flag" do
+      provider.expects(:async_shutdown).with(includes('/r'))
+      provider.reboot
+    end
+
+    it "includes a timeout in the future" do
+      provider.expects(:async_shutdown).with(includes("/t #{resource[:timeout]}"))
+      provider.reboot
+    end
+
+    it "includes the shutdown reason as Application Maintenance (Planned)" do
+      provider.expects(:async_shutdown).with(includes("/d p:4:1"))
+      provider.reboot
+    end
+
+    it "includes the quoted reboot message" do
+      resource[:message] = "triggering a reboot"
+      provider.expects(:async_shutdown).with(includes('"triggering a reboot"'))
+      provider.reboot
+    end
+  end
+
+  context "when executing the watcher process" do
+    let(:stdin)    { StringIO.new }
+    let(:stdout)   { StringIO.new }
+    let(:child_pid) { 0x1234 }
+    let(:wait_threads) { [stub(:pid => child_pid)] }
+    let(:command)  { 'cmd.exe /c echo hello' }
+
+    before :each do
+      Open3.expects(:pipeline_w).returns([stdin, wait_threads])
+      Process.expects(:detach).with(child_pid)
+      stdin.stubs(:close)
+    end
+
+    it "serializes the current process id" do
+      provider.async_shutdown(command)
+      stdin.rewind
+      stdin.to_a[0].chomp.should == Process.pid.to_s
+    end
+
+    it "serializes a 7200 second catalog_apply_timeout by default" do
+      provider.async_shutdown(command)
+      stdin.rewind
+      stdin.to_a[1].chomp.should == "7200"
+    end
+
+    it "serializes a 10 minute catalog_apply_timeout" do
+      resource[:catalog_apply_timeout] = 10 * 60
+      provider.async_shutdown(command)
+      stdin.rewind
+      stdin.to_a[1].chomp.should == "600"
+    end
+
+    it "serializes the command to execute" do
+      provider.async_shutdown(command)
+      stdin.rewind
+      stdin.to_a[2].chomp.should == command
     end
   end
 

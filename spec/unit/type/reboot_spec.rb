@@ -50,6 +50,22 @@ describe Puppet::Type.type(:reboot) do
     end
   end
 
+  context "parameter :apply" do
+    it "should default to :immediately" do
+      resource[:apply].must == :immediately
+    end
+
+    it "should accept :finished" do
+      resource[:apply] = :finished
+    end
+
+    it "should reject other values" do
+      expect {
+        resource[:apply] = :whenever
+      }.to raise_error(Puppet::ResourceError, /Invalid value :whenever. Valid values are immediately/)
+    end
+  end
+
   context "parameter :message" do
     it "should default to \"Puppet is rebooting the computer\"" do
       resource[:message].must == "Puppet is rebooting the computer"
@@ -79,6 +95,24 @@ describe Puppet::Type.type(:reboot) do
       expect {
         resource[:prompt] = "I'm not sure"
       }.to raise_error(Puppet::ResourceError, /Invalid value "I'm not sure"/)
+    end
+  end
+
+  context "parameter :catalog_apply_timeout" do
+    it "should default to 7200 seconds" do
+      resource[:catalog_apply_timeout].must == 7200
+    end
+
+    it "should accept 30 minute timeout" do
+      resource[:catalog_apply_timeout] = 30 * 60
+    end
+
+    ["later", :later, {}, [], true].each do |timeout|
+      it "should reject a non-integer (#{timeout.class}) value" do
+        expect {
+          resource[:catalog_apply_timeout] = timeout
+        }.to raise_error(Puppet::ResourceError, /The catalog_apply_timeout must be an integer/)
+      end
     end
   end
 
