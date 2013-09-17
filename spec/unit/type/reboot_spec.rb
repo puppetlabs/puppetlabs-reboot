@@ -50,6 +50,22 @@ describe Puppet::Type.type(:reboot) do
     end
   end
 
+  context "parameter :apply" do
+    it "should default to :immediately" do
+      resource[:apply].must == :immediately
+    end
+
+    it "should accept :finished" do
+      resource[:apply] = :finished
+    end
+
+    it "should reject other values" do
+      expect {
+        resource[:apply] = :whenever
+      }.to raise_error(Puppet::ResourceError, /Invalid value :whenever. Valid values are immediately/)
+    end
+  end
+
   context "parameter :message" do
     it "should default to \"Puppet is rebooting the computer\"" do
       resource[:message].must == "Puppet is rebooting the computer"

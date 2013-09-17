@@ -1,8 +1,10 @@
 #! /usr/bin/env ruby
 require 'spec_helper'
-require 'puppet/provider/reboot/windows/watcher.rb'
 
-describe Watcher, :if => Puppet.features.microsoft_windows? do
+describe 'Watcher', :if => Puppet.features.microsoft_windows? do
+
+  require 'puppet/provider/reboot/windows/watcher.rb'
+
   let(:current_pid) { Process.pid }
   let(:bogus_pid) { 0xFFFFFFFF }
   let(:timeout) { 1 }
