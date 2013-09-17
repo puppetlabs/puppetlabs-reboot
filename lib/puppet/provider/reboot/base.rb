@@ -12,7 +12,7 @@ Puppet::Type.type(:reboot).provide(:base) do
   def when=(value)
   end
 
-  def reboot
+  def cancel_transaction
     Puppet::Application.stop!
   end
 end
