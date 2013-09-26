@@ -68,7 +68,7 @@ Puppet::Type.type(:reboot).provide :windows, :parent => :base do
     end
 
     Puppet.debug("Launching 'ruby.exe #{watcher}'")
-    stdin, wait_threads = Open3.pipeline_w("ruby.exe #{watcher}")
+    stdin, wait_threads = Open3.pipeline_w("ruby.exe '#{watcher}'")
     Process.detach(wait_threads[0].pid)
 
     # order is important
