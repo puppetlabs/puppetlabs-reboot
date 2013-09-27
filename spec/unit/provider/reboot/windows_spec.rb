@@ -48,6 +48,16 @@ describe Puppet::Type.type(:reboot).provider(:windows), :if => Puppet.features.m
   end
 
   context "when checking if the `when` property is insync" do
+    it "is absent by default" do
+      expect(provider.when).to eq(:absent)
+    end
+
+    it "should not reboot when setting the `when` property to refreshed" do
+      provider.expects(:reboot).never
+
+      provider.when = :refreshed
+    end
+
     it "issues a shutdown command when a reboot is pending" do
       resource[:when] = :pending
 
