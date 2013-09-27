@@ -1,0 +1,9 @@
+2013-09-27, Release 0.1.1
+
+ * (FM-105) Only manage reboot resources on systems where shutdown.exe exists
+ * (FM-106) Module does not work on Windows 2003
+ * (PP-433) Update description in init.pp
+
+2013-09-17, Release 0.1.0
+
+Initial release of the reboot module
