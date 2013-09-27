@@ -1,7 +1,7 @@
 require 'puppet/type'
 require 'open3'
 
-Puppet::Type.type(:reboot).provide :windows, :parent => :base do
+Puppet::Type.type(:reboot).provide :windows do
   confine :operatingsystem => :windows
   defaultfor :operatingsystem => :windows
 
@@ -19,22 +19,27 @@ Puppet::Type.type(:reboot).provide :windows, :parent => :base do
 
   commands :shutdown => shutdown_command
 
+  def self.instances
+    []
+  end
+
   def when
     case @resource[:when]
     when :pending
       reboot_pending? ? :absent : :pending
     else
-      super
+      :absent
     end
   end
 
   def when=(value)
-    case @resource[:when]
-    when :pending
+    if @resource[:when] == :pending
       reboot
-    else
-      super
     end
+  end
+
+  def cancel_transaction
+    Puppet::Application.stop!
   end
 
   def reboot
