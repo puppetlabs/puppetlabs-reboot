@@ -1,0 +1,21 @@
+test_name "Windows Reboot Module - Negative - Incompatible with Linux"
+
+reboot_manifest = <<-MANIFEST
+notify { 'step_1':
+}
+~>
+reboot { 'now':
+}
+MANIFEST
+	
+confine :except, :platform => 'windows'
+
+agents.each do |agent|
+	step "Attempt to Reboot on Linux"
+
+	#Apply the manifest.
+	on agent, puppet('apply', '--debug'), :stdin => reboot_manifest do
+		assert_match /Error: Could not find a suitable provider for reboot/, 
+			result.output, 'Expected error message is missing'
+	end
+end
