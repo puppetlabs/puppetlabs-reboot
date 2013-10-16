@@ -8,15 +8,15 @@ Puppet::Type.newtype(:reboot) do
 
     Sample usage:
 
-      package { 'Microsoft .NET Framework 4.5':
-        ensure          => installed,
-        source          => '\\server\share\dotnetfx45_full_x86_x64.exe',
-        install_options => ['/Passive', '/NoRestart'],
-        provider        => windows,
-      }
-      reboot { 'after':
-        subscribe       => Package['Microsoft .NET Framework 4.5'],
-      }
+        package { 'Microsoft .NET Framework 4.5':
+          ensure          => installed,
+          source          => '\\server\share\dotnetfx45_full_x86_x64.exe',
+          install_options => ['/Passive', '/NoRestart'],
+          provider        => windows,
+        }
+        reboot { 'after':
+          subscribe       => Package['Microsoft .NET Framework 4.5'],
+        }
 
     A reboot resource can also check if the system is in a
     reboot pending state, and if so, reboot the system.  For
@@ -25,16 +25,16 @@ Puppet::Type.newtype(:reboot) do
 
     Sample usage:
 
-      reboot { 'before':
-        when            => pending,
-      }
-      package { 'Microsoft .NET Framework 4.5':
-        ensure          => installed,
-        source          => '\\server\share\dotnetfx45_full_x86_x64.exe',
-        install_options => ['/Passive', '/NoRestart'],
-        provider        => windows,
-        require         => Reboot['before'],
-      }
+        reboot { 'before':
+          when            => pending,
+        }
+        package { 'Microsoft .NET Framework 4.5':
+          ensure          => installed,
+          source          => '\\server\share\dotnetfx45_full_x86_x64.exe',
+          install_options => ['/Passive', '/NoRestart'],
+          provider        => windows,
+          require         => Reboot['before'],
+        }
 
     A reboot resource can also finish the run and then reboot the system.  For
     example, if you have a few packages that all require reboots but will not block
@@ -42,16 +42,16 @@ Puppet::Type.newtype(:reboot) do
 
     Sample usage:
 
-      package { 'Microsoft .NET Framework 4.5':
-        ensure          => installed,
-        source          => '\\server\share\dotnetfx45_full_x86_x64.exe',
-        install_options => ['/Passive', '/NoRestart'],
-        provider        => windows,
-      }
-      reboot { 'after_run':
-        apply           => finished,
-        subscribe       => Package['Microsoft .NET Framework 4.5'],
-      }
+        package { 'Microsoft .NET Framework 4.5':
+          ensure          => installed,
+          source          => '\\server\share\dotnetfx45_full_x86_x64.exe',
+          install_options => ['/Passive', '/NoRestart'],
+          provider        => windows,
+        }
+        reboot { 'after_run':
+          apply           => finished,
+          subscribe       => Package['Microsoft .NET Framework 4.5'],
+        }
   EOT
 
   feature :manages_reboot_pending, "The provider can detect if a reboot is pending, and reboot as needed."
