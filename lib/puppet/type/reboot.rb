@@ -106,6 +106,14 @@ Puppet::Type.newtype(:reboot) do
   newparam(:prompt, :boolean => true) do
     desc "Whether to prompt the user to continue the reboot.  By default, the
       user will not be prompted."
+
+    munge do |value|
+      if value
+        Puppet.deprecation_warning("The `prompt` parameter is deprecated; use `shutdown /a` instead.")
+      end
+      value
+    end
+
     newvalues(:true, :false)
     defaultto(false)
   end

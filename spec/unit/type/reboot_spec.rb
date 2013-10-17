@@ -96,6 +96,12 @@ describe Puppet::Type.type(:reboot) do
         resource[:prompt] = "I'm not sure"
       }.to raise_error(Puppet::ResourceError, /Invalid value "I'm not sure"/)
     end
+
+    it "should be deprecated" do
+      Puppet.expects(:deprecation_warning).with('The `prompt` parameter is deprecated; use `shutdown /a` instead.')
+
+      resource[:prompt] = true
+    end
   end
 
   context "parameter :catalog_apply_timeout" do
