@@ -19,7 +19,7 @@ agents.each do |agent|
 
 	#Apply the manifest.
 	on agent, puppet('apply', '--debug'), :stdin => reboot_manifest do
-		assert_match /Debug: \/Stage\[main\]\/\/Notify\[step_2\]: Transaction canceled, skipping/, 
+		assert_match /Transaction canceled, skipping/, 
 			result.stdout, 'Expected resource was not skipped'
 	end
 

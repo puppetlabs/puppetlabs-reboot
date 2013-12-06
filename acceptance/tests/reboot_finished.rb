@@ -20,7 +20,7 @@ agents.each do |agent|
 
 	#Apply the manifest.
 	on agent, puppet('apply', '--debug'), :stdin => reboot_manifest do
-		assert_match /Notice: \/Stage\[main\]\/\/Notify\[step_2\]\/message: defined 'message' as 'step_2'/, 
+		assert_match /defined 'message' as 'step_2'/, 
 			result.stdout, 'Expected step was not finished before reboot'
 	end
 

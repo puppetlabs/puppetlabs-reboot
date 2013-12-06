@@ -21,9 +21,6 @@ registry_key { 'HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\WindowsUpdat
 }
 MANIFEST
 
-step "Install Registry Module on Master"
-on master, puppet('module install puppetlabs/registry --force')
-
 confine :to, :platform => 'windows'
 
 teardown do
@@ -32,9 +29,6 @@ teardown do
 end
 
 agents.each do |agent|
-	step "Run Agent to Initialize the Registry Module"
-	on agent, puppet('agent', '-t')
-	
 	step "Declare Reboot Required in the Registry"
 	on agent, puppet('apply', '--debug'), :stdin => pending_reboot_manifest
 

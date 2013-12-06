@@ -35,7 +35,7 @@ end
 agents.each do |agent|
 	step "Attempt First Reboot"
 	on agent, puppet('apply', '--debug'), :stdin => reboot_manifest do
-		assert_match /Notice: \/Stage\[main\]\/\/File\[c:\/first.txt\]\/ensure: created/, 
+		assert_match /\[c:\/first.txt\]\/ensure: created/, 
 			result.stdout, 'Expected file was not created'
 	end
 
@@ -47,7 +47,7 @@ agents.each do |agent|
 	
 	step "Resume After Reboot"
 	on agent, puppet('apply', '--debug'), :stdin => reboot_manifest do
-		assert_match /Notice: \/Stage\[main\]\/\/File\[c:\/second.txt\]\/ensure: created/, 
+		assert_match /\[c:\/second.txt\]\/ensure: created/, 
 			result.stdout, 'Expected file was not created'
 	end
 
