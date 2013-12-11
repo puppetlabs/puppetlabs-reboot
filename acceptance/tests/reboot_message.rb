@@ -19,14 +19,14 @@ agents.each do |agent|
 	step "Reboot Immediately with a Custom Message"
 
 	#Apply the manifest.
-	on agent, puppet('apply', '--debug'), :stdin => reboot_manifest do
+	on agent, puppet('apply', '--debug'), :stdin => reboot_manifest do |result|
 		assert_match /shutdown\.exe  \/r \/t 60 \/d p:4:1 \/c \"A different message\"/, 
-			result.output, 'Expected reboot message is incorrect'
+			result.stderr, 'Expected reboot message is incorrect'
 	end
 
 	#Snooze to give time for shutdown command to propagate.
 	sleep 5
 	
-	#Expect the abort command to cancel the pending reboot.
+	#Verify that a shutdown has been initiated and clear the pending shutdown.
 	on agent, shutdown_abort, :acceptable_exit_codes => [0]
 end

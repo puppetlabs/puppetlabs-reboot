@@ -34,7 +34,7 @@ end
 
 agents.each do |agent|
 	step "Attempt First Reboot"
-	on agent, puppet('apply', '--debug'), :stdin => reboot_manifest do
+	on agent, puppet('apply', '--debug'), :stdin => reboot_manifest do |result|
 		assert_match /\[c:\/first.txt\]\/ensure: created/, 
 			result.stdout, 'Expected file was not created'
 	end
@@ -42,11 +42,11 @@ agents.each do |agent|
 	#Snooze to give time for shutdown command to propagate.
 	sleep 5
 	
-	#Expect the abort command to cancel the pending reboot.
+	#Verify that a shutdown has been initiated and clear the pending shutdown.
 	on agent, shutdown_abort, :acceptable_exit_codes => [0]
 	
 	step "Resume After Reboot"
-	on agent, puppet('apply', '--debug'), :stdin => reboot_manifest do
+	on agent, puppet('apply', '--debug'), :stdin => reboot_manifest do |result|
 		assert_match /\[c:\/second.txt\]\/ensure: created/, 
 			result.stdout, 'Expected file was not created'
 	end
@@ -54,7 +54,7 @@ agents.each do |agent|
 	#Snooze to give time for shutdown command to propagate.
 	sleep 5
 	
-	#Expect the abort command to cancel the pending reboot.
+	#Verify that a shutdown has been initiated and clear the pending shutdown.
 	on agent, shutdown_abort, :acceptable_exit_codes => [0]
 
 	step "Verify Manifest is Finished"
@@ -63,6 +63,6 @@ agents.each do |agent|
 	#Snooze to give time for shutdown command to propagate.
 	sleep 5
 	
-	#Expect the abort command to fail because there are no pending reboots.
+	#Verify that a shutdown has NOT been initiated.
 	on agent, shutdown_abort, :acceptable_exit_codes => [92]
 end

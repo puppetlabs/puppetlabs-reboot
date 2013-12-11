@@ -19,6 +19,7 @@ agents.each do |agent|
 	#Snooze to give time for shutdown command to propagate.
 	sleep 5
 	
-	#Expect that the abort command will fail.
+	#Verify that a shutdown has NOT been initiated because reboot
+	#was not refreshed.
 	on agent, shutdown_abort, :acceptable_exit_codes => [92]
 end

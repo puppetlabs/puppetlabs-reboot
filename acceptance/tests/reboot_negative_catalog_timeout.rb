@@ -20,14 +20,14 @@ agents.each do |agent|
 	step "Attempt Reboot with a Short Catalog Timeout"
 
 	#Apply the manifest.
-	on agent, puppet('apply', '--debug'), :stdin => reboot_manifest do
+	on agent, puppet('apply', '--debug'), :stdin => reboot_manifest do |result|
 		assert_match /Timed out waiting for process to exit; reboot aborted/, 
-			result.output, 'Expected timeout message is missing'
+			result.stderr, 'Expected timeout message is missing'
 	end
 
 	#Snooze to give time for shutdown command to propagate.
 	sleep 5
 	
-	#Expect the abort command to cancel the pending reboot.
+	#Verify that a shutdown has NOT been initiated.
 	on agent, shutdown_abort, :acceptable_exit_codes => [92]
 end

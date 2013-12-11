@@ -14,8 +14,8 @@ agents.each do |agent|
 	step "Attempt to Reboot on Linux"
 
 	#Apply the manifest.
-	on agent, puppet('apply', '--debug'), :stdin => reboot_manifest do
+	on agent, puppet('apply', '--debug'), :stdin => reboot_manifest do |result|
 		assert_match /Error: Could not find a suitable provider for reboot/, 
-			result.output, 'Expected error message is missing'
+			result.stderr, 'Expected error message is missing'
 	end
 end
