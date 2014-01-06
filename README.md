@@ -2,7 +2,7 @@
 
 ##Overview
 
-This module adds a type and windows provider for managing system reboots.
+This module adds a type and Windows provider for managing system reboots.
 
 ##Module Description
 
@@ -72,6 +72,7 @@ By default, when the provider triggers a reboot, it will skip any resources in t
  * If using `when => pending` style reboots, puppet will apply heuristics to determine if a reboot is pending, e.g. the existence of the PendingFileRenameOperations registry key. If the system reboots, but does not resolve the reboot pending condition, then puppet will reboot the system again. This could lead to a reboot cycle.
  * If puppet performs a reboot, any remaining items in the catalog will be applied the next time puppet runs. In other words, it may take more than one run to reach consistency. In situations where puppet is running as a service, puppet should execute again after the machine boots.
  * In puppet 3.3.0 and up, if puppet performs a reboot, any resource in the catalog that is skipped will be marked as such in the report. In versions prior, skipped resources are omitted from the report.
+ * The `prompt` parameter should only be used with `puppet apply`. The prompt isn't displayed during puppet agent runs, which causes the operation to wait indefinitely.
 
 ##License
 
