@@ -31,7 +31,8 @@
 #
 # [*prompt*]
 #   Whether to prompt the user to continue the reboot. By default, the
-#   user will not be prompted. Valid values are true, false.
+#   user will not be prompted. Valid values are true, false. Should only
+#   be used with `puppet apply`, not puppet agent runs.
 #
 # [*catalog_apply_timeout*]
 #   The maximum amount of time in seconds to wait for puppet to finish
