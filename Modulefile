@@ -1,6 +1,6 @@
 name    'puppetlabs-reboot'
 version '0.1.2'
-source 'git://github.com/joshcooper/puppetlabs-reboot.git'
+source 'git://github.com/puppetlabs/puppetlabs-reboot.git'
 author 'puppetlabs'
 license 'Apache License, Version 2.0'
 summary 'This module provides a facility to manage reboots across nodes.'
