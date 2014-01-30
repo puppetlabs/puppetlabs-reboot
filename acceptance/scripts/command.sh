@@ -2,7 +2,7 @@
 
 #Before you can execute this script you must clone the following repos in the cwd.
 # *puppetlabs/puppet
-# *joshcooper/puppetlabs-reboot
+# *puppetlabs/puppetlabs-reboot
 export RUBYLIB=./puppet/acceptance/lib
 beaker \
   --type git \
