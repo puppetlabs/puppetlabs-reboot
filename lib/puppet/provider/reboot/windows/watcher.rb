@@ -9,22 +9,15 @@ class Watcher
     include Windows::Process
     include Windows::Synchronize
     include Windows::Handle
+    include Windows::Error
   end
 
   attr_reader :pid, :timeout, :command
 
-  def self.load(io)
-    pid = io.gets.chomp.to_i
-    timeout = io.gets.chomp.to_i
-    command = io.gets.chomp
-
-    new(pid, timeout, command)
-  end
-
-  def initialize(pid, timeout, command)
-    @pid = pid
-    @timeout = timeout
-    @command = command
+  def initialize(argv)
+    @pid = argv[0].to_i
+    @timeout = argv[1].to_i
+    @command = argv[2]
   end
 
   def waitpid
@@ -54,6 +47,6 @@ class Watcher
 end
 
 if __FILE__ == $0
-  watcher = Watcher.load($stdin)
+  watcher = Watcher.new(ARGV)
   watcher.execute
 end
