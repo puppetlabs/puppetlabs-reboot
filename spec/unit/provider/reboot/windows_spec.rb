@@ -133,41 +133,33 @@ describe Puppet::Type.type(:reboot).provider(:windows), :if => Puppet.features.m
   end
 
   context "when executing the watcher process" do
-    let(:stdin)    { StringIO.new }
-    let(:stdout)   { StringIO.new }
     let(:child_pid) { 0x1234 }
-    let(:wait_threads) { [stub(:pid => child_pid)] }
     let(:command)  { 'cmd.exe /c echo hello' }
 
-    before :each do
-      Open3.expects(:pipeline_w).returns([stdin, wait_threads])
-      Process.expects(:detach).with(child_pid)
-      stdin.stubs(:close)
-    end
+    it "spawns the watcher with the parent process id" do
+      Process.expects(:spawn).with(regexp_matches(Regexp.new(Process.pid.to_s)))
 
-    it "serializes the current process id" do
       provider.async_shutdown(command)
-      stdin.rewind
-      stdin.to_a[0].chomp.should == Process.pid.to_s
     end
 
-    it "serializes a 7200 second catalog_apply_timeout by default" do
+    it "spawns the watcher with a 7200 second catalog_apply_timeout by default" do
+      Process.expects(:spawn).with(regexp_matches(/7200/))
+
       provider.async_shutdown(command)
-      stdin.rewind
-      stdin.to_a[1].chomp.should == "7200"
     end
 
-    it "serializes a 10 minute catalog_apply_timeout" do
+    it "spawns the watcher with a 10 minute catalog_apply_timeout" do
       resource[:catalog_apply_timeout] = 10 * 60
+      Process.expects(:spawn).with(regexp_matches(/600/))
+
       provider.async_shutdown(command)
-      stdin.rewind
-      stdin.to_a[1].chomp.should == "600"
     end
 
-    it "serializes the command to execute" do
+    it "spawns the watcher with the quoted command to execute" do
+      quoted = "'#{command}'"
+      Process.expects(:spawn).with(regexp_matches(Regexp.new(quoted)))
+
       provider.async_shutdown(command)
-      stdin.rewind
-      stdin.to_a[2].chomp.should == command
     end
   end
 

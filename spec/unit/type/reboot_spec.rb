@@ -80,6 +80,16 @@ describe Puppet::Type.type(:reboot) do
         resource[:message] = ""
       }.to raise_error(Puppet::ResourceError, /A non-empty message must be specified./)
     end
+
+    it "should accept a 8000 character message" do
+      resource[:message] = 'a' * 8000
+    end
+
+    it "should reject a 8001 character message" do
+      expect {
+        resource[:message] = 'a' * 8001
+      }.to raise_error(Puppet::ResourceError, /The given message must not exceed 8000 characters./)
+    end
   end
 
   context "parameter :prompt" do
