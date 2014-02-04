@@ -98,6 +98,12 @@ Puppet::Type.newtype(:reboot) do
       if value.nil? or value == ""
         raise ArgumentError, "A non-empty message must be specified."
       end
+
+      # Maximum command line length in Windows is 8191 characters, so this is
+      # an approximation based on the other parts of the shutdown command
+      if value.length > 8000
+        raise ArgumentError, "The given message must not exceed 8000 characters."
+      end
     end
 
     defaultto "Puppet is rebooting the computer"
