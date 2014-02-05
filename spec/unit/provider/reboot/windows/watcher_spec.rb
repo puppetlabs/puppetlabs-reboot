@@ -36,10 +36,20 @@ describe 'Watcher', :if => Puppet.features.microsoft_windows? do
       watcher.waitpid.should == Windows::Synchronize::WAIT_TIMEOUT
     end
 
-    it "returns `WAIT_FAILED` if it waits on a non-existent process" do
+    it "returns `WAIT_FAILED` if it waits on a process it can't access" do
       watcher = Watcher.new([bogus_pid, one_second, command])
 
+      Watcher::GetLastError.expects(:call).returns(5)
+
       watcher.waitpid.should == Windows::Synchronize::WAIT_FAILED
+    end
+
+    it "returns `WAIT_OBJECT_0` if the process has already exited" do
+      watcher = Watcher.new([0, one_second, command])
+
+      Watcher::GetLastError.expects(:call).returns(Windows::Error::ERROR_INVALID_PARAMETER)
+
+      watcher.waitpid.should == Windows::Synchronize::WAIT_OBJECT_0
     end
   end
 

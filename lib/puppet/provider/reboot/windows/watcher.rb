@@ -22,11 +22,18 @@ class Watcher
 
   def waitpid
     handle = OpenProcess(Windows::Process::SYNCHRONIZE, FALSE, pid)
-    begin
-      return WaitForSingleObject(handle, timeout * 1000)
-    ensure
-      CloseHandle(handle)
+    if handle.zero?
+      if GetLastError.call == Windows::Error::ERROR_INVALID_PARAMETER
+        log_message("Process #{pid} already exited")
+        wait_status = Windows::Synchronize::WAIT_OBJECT_0
+      else
+        wait_status = Windows::Synchronize::WAIT_FAILED
+      end
+    else
+      wait_status = WaitForSingleObject(handle, timeout * 1000)
     end
+
+    wait_status
   end
 
   def execute
