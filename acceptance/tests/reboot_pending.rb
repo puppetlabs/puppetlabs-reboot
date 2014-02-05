@@ -1,7 +1,5 @@
 test_name "Windows Reboot Module - Pending Reboot"
-
-#Shutdown abort command.
-shutdown_abort = "cmd /c shutdown /a"
+extend Puppet::Acceptance::Reboot
 
 reboot_manifest = <<-MANIFEST
 reboot { 'now':
@@ -24,20 +22,17 @@ MANIFEST
 confine :to, :platform => 'windows'
 
 teardown do
-	step "Undo the Registry Changes for Required Reboot"
-	on agents, puppet('apply', '--debug'), :stdin => undo_pending_reboot_manifest
+  step "Undo the Registry Changes for Required Reboot"
+  on agents, puppet('apply', '--debug'), :stdin => undo_pending_reboot_manifest
 end
 
 agents.each do |agent|
-	step "Declare Reboot Required in the Registry"
-	on agent, puppet('apply', '--debug'), :stdin => pending_reboot_manifest
+  step "Declare Reboot Required in the Registry"
+  on agent, puppet('apply', '--debug'), :stdin => pending_reboot_manifest
 
-	step "Reboot if Pending Reboot Required"
-	on agent, puppet('apply', '--debug'), :stdin => reboot_manifest
+  step "Reboot if Pending Reboot Required"
+  on agent, puppet('apply', '--debug'), :stdin => reboot_manifest
 
-	#Snooze to give time for shutdown command to propagate.
-	sleep 5
-	
-	#Verify that a shutdown has been initiated and clear the pending shutdown.
-	on agent, shutdown_abort, :acceptable_exit_codes => [0]
+  #Verify that a shutdown has been initiated and clear the pending shutdown.
+  retry_shutdown_abort(agent)
 end

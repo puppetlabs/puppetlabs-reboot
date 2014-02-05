@@ -1,4 +1,5 @@
 class Watcher
+  require 'tempfile'
 
   if File::ALT_SEPARATOR
     require 'windows/process'
@@ -18,15 +19,26 @@ class Watcher
     @pid = argv[0].to_i
     @timeout = argv[1].to_i
     @command = argv[2]
+
+    # this should go to eventlog
+    @path = Tempfile.new('puppet-reboot-watcher').path
+    File.open(@path, 'w') {|fh| }
   end
 
   def waitpid
     handle = OpenProcess(Windows::Process::SYNCHRONIZE, FALSE, pid)
-    begin
-      return WaitForSingleObject(handle, timeout * 1000)
-    ensure
-      CloseHandle(handle)
+    if handle.zero?
+      if GetLastError.call == Windows::Error::ERROR_INVALID_PARAMETER
+        log_message("Process #{pid} already exited")
+        wait_status = Windows::Synchronize::WAIT_OBJECT_0
+      else
+        wait_status = Windows::Synchronize::WAIT_FAILED
+      end
+    else
+      wait_status = WaitForSingleObject(handle, timeout * 1000)
     end
+
+    wait_status
   end
 
   def execute
@@ -42,11 +54,16 @@ class Watcher
   end
 
   def log_message(message)
-    $stderr.puts(message)
+    File.open(@path, 'a') { |fh| fh.puts(message) }
   end
 end
 
 if __FILE__ == $0
   watcher = Watcher.new(ARGV)
-  watcher.execute
+  begin
+    watcher.execute
+  rescue Exception => e
+    watcher.log_message(e.message)
+    watcher.log_message(e.backtrace)
+  end
 end

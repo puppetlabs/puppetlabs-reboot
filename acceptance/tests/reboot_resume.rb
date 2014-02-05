@@ -1,7 +1,5 @@
 test_name "Windows Reboot Module - Puppet Resume after Reboot"
-
-#Shutdown abort command.
-shutdown_abort = "cmd /c shutdown /a"
+extend Puppet::Acceptance::Reboot
 
 reboot_manifest = <<-MANIFEST
 file { 'c:/first.txt':
@@ -28,41 +26,32 @@ MANIFEST
 confine :to, :platform => 'windows'
 
 teardown do
-	step "Remove Test Artifacts"
-	on agents, puppet('apply', '--debug'), :stdin => remove_artifacts
+  step "Remove Test Artifacts"
+  on agents, puppet('apply', '--debug'), :stdin => remove_artifacts
 end
 
 agents.each do |agent|
-	step "Attempt First Reboot"
-	on agent, puppet('apply', '--debug'), :stdin => reboot_manifest do |result|
-		assert_match /\[c:\/first.txt\]\/ensure: created/, 
-			result.stdout, 'Expected file was not created'
-	end
+  step "Attempt First Reboot"
+  on agent, puppet('apply', '--debug'), :stdin => reboot_manifest do |result|
+    assert_match /\[c:\/first.txt\]\/ensure: created/,
+      result.stdout, 'Expected file was not created'
+  end
 
-	#Snooze to give time for shutdown command to propagate.
-	sleep 5
-	
-	#Verify that a shutdown has been initiated and clear the pending shutdown.
-	on agent, shutdown_abort, :acceptable_exit_codes => [0]
-	
-	step "Resume After Reboot"
-	on agent, puppet('apply', '--debug'), :stdin => reboot_manifest do |result|
-		assert_match /\[c:\/second.txt\]\/ensure: created/, 
-			result.stdout, 'Expected file was not created'
-	end
+  #Verify that a shutdown has been initiated and clear the pending shutdown.
+  retry_shutdown_abort(agent)
 
-	#Snooze to give time for shutdown command to propagate.
-	sleep 5
-	
-	#Verify that a shutdown has been initiated and clear the pending shutdown.
-	on agent, shutdown_abort, :acceptable_exit_codes => [0]
+  step "Resume After Reboot"
+  on agent, puppet('apply', '--debug'), :stdin => reboot_manifest do |result|
+    assert_match /\[c:\/second.txt\]\/ensure: created/,
+      result.stdout, 'Expected file was not created'
+  end
 
-	step "Verify Manifest is Finished"
-	on agent, puppet('apply', '--debug'), :stdin => reboot_manifest
+  #Verify that a shutdown has been initiated and clear the pending shutdown.
+  retry_shutdown_abort(agent)
 
-	#Snooze to give time for shutdown command to propagate.
-	sleep 5
-	
-	#Verify that a shutdown has NOT been initiated.
-	on agent, shutdown_abort, :acceptable_exit_codes => [92]
+  step "Verify Manifest is Finished"
+  on agent, puppet('apply', '--debug'), :stdin => reboot_manifest
+
+  #Verify that a shutdown has NOT been initiated.
+  ensure_shutdown_not_scheduled(agent)
 end
