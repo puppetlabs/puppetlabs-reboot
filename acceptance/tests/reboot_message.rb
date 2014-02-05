@@ -1,7 +1,5 @@
 test_name "Windows Reboot Module - Custom Message"
-
-#Shutdown abort command.
-shutdown_abort = "cmd /c shutdown /a"
+extend Puppet::Acceptance::Reboot
 
 reboot_manifest = <<-MANIFEST
 notify { 'step_1':
@@ -24,9 +22,6 @@ agents.each do |agent|
       result.stderr, 'Expected reboot message is incorrect'
   end
 
-  #Snooze to give time for shutdown command to propagate.
-  sleep 5
-
   #Verify that a shutdown has been initiated and clear the pending shutdown.
-  on agent, shutdown_abort, :acceptable_exit_codes => [0]
+  retry_shutdown_abort(agent)
 end

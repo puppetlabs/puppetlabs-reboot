@@ -1,7 +1,5 @@
 test_name "Windows Reboot Module - Negative - Reboot Catalog Timeout"
-
-#Shutdown abort command.
-shutdown_abort = "cmd /c shutdown /a"
+extend Puppet::Acceptance::Reboot
 
 reboot_manifest = <<-MANIFEST
 notify { 'step_1':
@@ -25,9 +23,6 @@ agents.each do |agent|
       result.stderr, 'Expected timeout message is missing'
   end
 
-  #Snooze to give time for shutdown command to propagate.
-  sleep 5
-
   #Verify that a shutdown has NOT been initiated.
-  on agent, shutdown_abort, :acceptable_exit_codes => [92]
+  ensure_shutdown_not_scheduled(agent)
 end

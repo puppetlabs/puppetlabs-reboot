@@ -1,4 +1,5 @@
 test_name "Windows Reboot Module - No Refresh"
+extend Puppet::Acceptance::Reboot
 
 #Shutdown abort command.
 shutdown_abort = "cmd /c shutdown /a"
@@ -16,10 +17,7 @@ agents.each do |agent|
   #Apply the manifest.
   on agent, puppet('apply', '--debug'), :stdin => reboot_manifest
 
-  #Snooze to give time for shutdown command to propagate.
-  sleep 5
-
   #Verify that a shutdown has NOT been initiated because reboot
   #was not refreshed.
-  on agent, shutdown_abort, :acceptable_exit_codes => [92]
+  ensure_shutdown_not_scheduled(agent)
 end

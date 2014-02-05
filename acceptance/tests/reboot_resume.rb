@@ -1,7 +1,5 @@
 test_name "Windows Reboot Module - Puppet Resume after Reboot"
-
-#Shutdown abort command.
-shutdown_abort = "cmd /c shutdown /a"
+extend Puppet::Acceptance::Reboot
 
 reboot_manifest = <<-MANIFEST
 file { 'c:/first.txt':
@@ -39,11 +37,8 @@ agents.each do |agent|
       result.stdout, 'Expected file was not created'
   end
 
-  #Snooze to give time for shutdown command to propagate.
-  sleep 5
-
   #Verify that a shutdown has been initiated and clear the pending shutdown.
-  on agent, shutdown_abort, :acceptable_exit_codes => [0]
+  retry_shutdown_abort(agent)
 
   step "Resume After Reboot"
   on agent, puppet('apply', '--debug'), :stdin => reboot_manifest do |result|
@@ -51,18 +46,12 @@ agents.each do |agent|
       result.stdout, 'Expected file was not created'
   end
 
-  #Snooze to give time for shutdown command to propagate.
-  sleep 5
-
   #Verify that a shutdown has been initiated and clear the pending shutdown.
-  on agent, shutdown_abort, :acceptable_exit_codes => [0]
+  retry_shutdown_abort(agent)
 
   step "Verify Manifest is Finished"
   on agent, puppet('apply', '--debug'), :stdin => reboot_manifest
 
-  #Snooze to give time for shutdown command to propagate.
-  sleep 5
-
   #Verify that a shutdown has NOT been initiated.
-  on agent, shutdown_abort, :acceptable_exit_codes => [92]
+  ensure_shutdown_not_scheduled(agent)
 end
