@@ -66,6 +66,10 @@ Puppet::Type.type(:reboot).provide :windows do
   end
 
   def async_shutdown(shutdown_cmd)
+    if Puppet[:debug]
+      $stderr.puts(shutdown_cmd)
+    end
+
     # execute a ruby process to shutdown after puppet exits
     watcher = File.join(File.dirname(__FILE__), 'windows', 'watcher.rb')
     if not File.exists?(watcher)
