@@ -10,18 +10,18 @@ notify { 'step_1':
 reboot { 'now':
 }
 MANIFEST
-	
+
 confine :to, :platform => 'windows'
 
 agents.each do |agent|
-	step "Reboot Immediately with Refresh"
+  step "Reboot Immediately with Refresh"
 
-	#Apply the manifest.
-	on agent, puppet('apply', '--debug'), :stdin => reboot_manifest
+  #Apply the manifest.
+  on agent, puppet('apply', '--debug'), :stdin => reboot_manifest
 
-	#Snooze to give time for shutdown command to propagate.
-	sleep 5
-	
-	#Verify that a shutdown has been initiated and clear the pending shutdown.
-	on agent, shutdown_abort, :acceptable_exit_codes => [0]
+  #Snooze to give time for shutdown command to propagate.
+  sleep 5
+
+  #Verify that a shutdown has been initiated and clear the pending shutdown.
+  on agent, shutdown_abort, :acceptable_exit_codes => [0]
 end

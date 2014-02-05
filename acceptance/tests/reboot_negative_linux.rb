@@ -7,15 +7,15 @@ notify { 'step_1':
 reboot { 'now':
 }
 MANIFEST
-	
+
 confine :except, :platform => 'windows'
 
 agents.each do |agent|
-	step "Attempt to Reboot on Linux"
+  step "Attempt to Reboot on Linux"
 
-	#Apply the manifest.
-	on agent, puppet('apply', '--debug'), :stdin => reboot_manifest do |result|
-		assert_match /Error: Could not find a suitable provider for reboot/, 
-			result.stderr, 'Expected error message is missing'
-	end
+  #Apply the manifest.
+  on agent, puppet('apply', '--debug'), :stdin => reboot_manifest do |result|
+    assert_match /Error: Could not find a suitable provider for reboot/,
+      result.stderr, 'Expected error message is missing'
+  end
 end
