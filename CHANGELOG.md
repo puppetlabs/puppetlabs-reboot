@@ -1,17 +1,30 @@
-2014-02-07, Release 0.1.4
+##2014-03-04, Supported Release
+###Summary
+
+####Features
+
+####Bugfixes
+
+####Known Bugs
+
+* No known issues.
+
+---
+
+###2014-02-07, Release 0.1.4
 
  * (PUP-1578) Workaround ruby bug that can prevent ruby.exe from exiting
 
-2013-09-27, Release 0.1.2
+###2013-09-27, Release 0.1.2
 
  * (PE-1669) Never load sample.pp in production
 
-2013-09-27, Release 0.1.1
+###2013-09-27, Release 0.1.1
 
  * (FM-105) Only manage reboot resources on systems where shutdown.exe exists
  * (FM-106) Module does not work on Windows 2003
  * (PP-433) Update description in init.pp
 
-2013-09-17, Release 0.1.0
+###2013-09-17, Release 0.1.0
 
 Initial release of the reboot module
