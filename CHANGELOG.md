@@ -1,13 +1,10 @@
-##2014-03-04, Supported Release
+##2014-03-04, Supported Release 0.1.5
 ###Summary
-
-####Features
-
-####Bugfixes
+This is a supported release.
 
 ####Known Bugs
 
-* No known issues.
+* The version is `0.x` but should be considered a `1.x` for semantic versioning purposes.
 
 ---
 
