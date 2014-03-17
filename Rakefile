@@ -17,4 +17,6 @@ RSpec::Core::RakeTask.new(:coverage) do |t|
   t.rcov_opts = ['--exclude', 'spec']
 end
 
-PuppetLint.configuration.ignore_paths = ["spec/**/*.pp", "pkg/**/*.pp","tests/**/*.pp"]
+PuppetLint.configuration.fail_on_warnings
+PuppetLint.configuration.send('disable_autoloader_layout')
+PuppetLint.configuration.ignore_paths = ["spec/**/*.pp", "pkg/**/*.pp","tests/**.pp"]
