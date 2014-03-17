@@ -21,6 +21,7 @@ group :development, :test do
   gem 'rspec-puppet'
   gem 'mocha', "~> 0.10.5"
   gem 'puppetlabs_spec_helper'
+  gem 'puppet-lint'
 end
 
 # see http://projects.puppetlabs.com/issues/21698
