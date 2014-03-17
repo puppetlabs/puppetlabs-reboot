@@ -303,4 +303,5 @@ describe Puppet::Type.type(:reboot).provider(:windows), :if => Puppet.features.m
       end
     end
   end
+
 end
