@@ -1,4 +1,4 @@
-source "https://rubygems.org"
+source ENV['GEM_SOURCE'] || "https://rubygems.org"
 
 def location_for(place, fake_version = nil)
   if place =~ /^(git:[^#]*)#(.*)/
@@ -21,6 +21,7 @@ group :development, :test do
   gem 'rspec-puppet'
   gem 'mocha', "~> 0.10.5"
   gem 'puppetlabs_spec_helper'
+  gem 'beaker'
 end
 
 # see http://projects.puppetlabs.com/issues/21698
