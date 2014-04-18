@@ -17,9 +17,20 @@ gem "hiera", *location_for(ENV['HIERA_LOCATION'] || '~> 1.0')
 group :development, :test do
   gem 'pry'
   gem 'rake'
-  gem 'rspec', "~> 2.11.0"
+  gem 'rspec', "~> 2.13.0"
   gem 'mocha', "~> 0.10.5"
   gem 'puppetlabs_spec_helper'
+  gem 'nokogiri', "~> 1.5.10"
+  gem 'mime-types', '<2.0',      :require => false
+  gem 'rspec-puppet',            :require => false
+  gem 'rspec-system',            :require => false
+  gem 'rspec-system-puppet',     :require => false
+  gem 'rspec-system-serverspec', :require => false
+  gem 'serverspec',              :require => false
+  gem 'puppet-lint',             :require => false
+  gem 'simplecov',               :require => false
+  gem 'beaker',                  :require => false
+  gem 'beaker-rspec',            :require => false
 end
 
 # see http://projects.puppetlabs.com/issues/21698

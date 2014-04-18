@@ -1,5 +1,11 @@
 .rspec
 .*.sw[op]
+.vagrant/
 .bundle/
 Gemfile.lock
 Gemfile.local
+pkg/
+log/
+#IntelliJ
+*.iml
+.idea
