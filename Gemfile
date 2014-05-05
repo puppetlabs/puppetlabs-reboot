@@ -17,7 +17,6 @@ gem "hiera", *location_for(ENV['HIERA_LOCATION'] || '~> 1.0')
 group :development, :test do
   gem 'pry'
   gem 'rake'
-  gem 'rspec-puppet'
   gem 'rspec', "~> 2.13.0"
   gem 'mocha', "~> 0.10.5"
   gem 'puppetlabs_spec_helper'
