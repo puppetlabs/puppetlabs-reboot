@@ -6,6 +6,7 @@ Gemfile.lock
 Gemfile.local
 pkg/
 log/
+acceptance/log
 #IntelliJ
 *.iml
 .idea
