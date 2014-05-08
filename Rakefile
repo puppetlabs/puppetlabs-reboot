@@ -1,8 +1,6 @@
-require 'rake'
-require 'rspec/core/rake_task'
 require 'puppetlabs_spec_helper/rake_tasks'
+require 'puppet-lint/tasks/puppet-lint'
 
-task :default => [:test]
 
 desc 'Run RSpec'
 RSpec::Core::RakeTask.new(:test) do |t|
@@ -15,3 +13,7 @@ RSpec::Core::RakeTask.new(:coverage) do |t|
   t.rcov = true
   t.rcov_opts = ['--exclude', 'spec']
 end
+
+PuppetLint.configuration.fail_on_warnings
+PuppetLint.configuration.send('disable_autoloader_layout')
+PuppetLint.configuration.ignore_paths = ["spec/**/*.pp", "pkg/**/*.pp","tests/*.pp"]
