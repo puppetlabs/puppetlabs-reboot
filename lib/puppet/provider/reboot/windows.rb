@@ -43,6 +43,10 @@ Puppet::Type.type(:reboot).provide :windows do
   end
 
   def reboot
+    if Facter[:operatingsystem] != 'windows'
+      raise Puppet::Error, "Unsupported OS #{Facter.operatingsystem} for Windows Provider"
+    end
+
     if @resource[:apply] == :finished && @resource[:when] == :pending
       Puppet.warning("The combination of `when => pending` and `apply => finished` is not a recommended or supported scenario. Please only use this scenario if you know exactly what you are doing. The puppet agent run will continue.")
     end
