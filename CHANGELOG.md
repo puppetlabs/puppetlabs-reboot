@@ -1,3 +1,7 @@
+##2014-04-15, Supported Release 0.1.6
+###Summary
+This is a supported release.  No changes except metadata.
+
 ##2014-03-04, Supported Release 0.1.5
 ###Summary
 This is a supported release.
