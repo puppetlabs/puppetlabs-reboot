@@ -43,7 +43,7 @@ Puppet::Type.type(:reboot).provide :windows do
   end
 
   def reboot
-    if Facter[:operatingsystem] != 'windows'
+    if Facter[:operatingsystem].value != 'windows'
       raise Puppet::Error, "Unsupported OS #{Facter.operatingsystem} for Windows Provider"
     end
 
