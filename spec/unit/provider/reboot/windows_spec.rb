@@ -3,18 +3,6 @@ require 'spec_helper'
 require 'puppet/type'
 require 'puppet/provider/reboot/windows'
 
-describe Puppet::Type.type(:reboot).provider(:windows), :if => !Puppet.features.microsoft_windows? do
-  %w(debian).each do |os|
-    context "Attempt using with #{os}" do
-      let(:facts){{:operatingsystem => os}}
-      let(:resource) { Puppet::Type.type(:reboot).new(:provider => :windows, :name => "windows_reboot") }
-      let(:provider) { resource.provider}
-      it{
-        expect{resource.refresh }.to raise_error(Puppet::Error, /Unsupported OS/i)
-      }
-    end
-  end
-end
 describe Puppet::Type.type(:reboot).provider(:windows), :if => Puppet.features.microsoft_windows? do
   let(:resource) { Puppet::Type.type(:reboot).new(:provider => :windows, :name => "windows_reboot") }
   let(:provider) { resource.provider}
