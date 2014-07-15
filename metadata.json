@@ -1,6 +1,6 @@
 {
   "name": "puppetlabs-reboot",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "author": "puppetlabs",
   "summary": "This module provides a facility to manage reboots across nodes.",
   "license": "Apache License, Version 2.0",
