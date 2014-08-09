@@ -28,6 +28,13 @@ class Watcher
       attach_function :OpenProcess,
         [:dword, :win32_bool, :dword], :handle
 
+      # http://msdn.microsoft.com/en-us/library/windows/desktop/ms724211(v=vs.85).aspx
+      # BOOL WINAPI CloseHandle(
+      #   _In_  HANDLE hObject
+      # );
+      ffi_lib :kernel32
+      attach_function :CloseHandle, [:handle], :win32_bool
+
       # http://msdn.microsoft.com/en-us/library/windows/desktop/ms687032(v=vs.85).aspx
       # DWORD WINAPI WaitForSingleObject(
       #   _In_  HANDLE hHandle,
@@ -61,16 +68,20 @@ class Watcher
   ERROR_INVALID_PARAMETER   = 0x57
 
   def waitpid
-    handle = Win32::OpenProcess(SYNCHRONIZE, FALSE, pid)
-    if handle == NULL_HANDLE
-      if FFI.errno == ERROR_INVALID_PARAMETER
-        log_message("Process #{pid} already exited")
-        wait_status = WAIT_OBJECT_0
+    begin
+      handle = Win32::OpenProcess(SYNCHRONIZE, FALSE, pid)
+      if handle == NULL_HANDLE
+        if FFI.errno == ERROR_INVALID_PARAMETER
+          log_message("Process #{pid} already exited")
+          wait_status = WAIT_OBJECT_0
+        else
+          wait_status = WAIT_FAILED
+        end
       else
-        wait_status = WAIT_FAILED
+        wait_status = Win32::WaitForSingleObject(handle, timeout * 1000)
       end
-    else
-      wait_status = Win32::WaitForSingleObject(handle, timeout * 1000)
+    ensure
+      Win32::CloseHandle(handle) if handle
     end
 
     wait_status
