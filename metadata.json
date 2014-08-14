@@ -25,11 +25,11 @@
   "requirements": [
     {
       "name": "pe",
-      "version_requirement": ">= 3.2.0 < 3.4.0"
+      "version_requirement": ">= 3.1.0 < 3.4.0"
     },
     {
       "name": "puppet",
-      "version_requirement": "3.x"
+      "version_requirement": ">= 3.3.0"
     }
   ],
   "description": "This module provides a facility for managing reboots across nodes. Currently the only operating system supported is Windows.",
