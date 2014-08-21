@@ -34,6 +34,5 @@
   ],
   "description": "This module provides a facility for managing reboots across nodes. Currently the only operating system supported is Windows.",
   "dependencies": [
-  
   ]
 }
