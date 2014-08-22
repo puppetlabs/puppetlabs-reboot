@@ -12,7 +12,7 @@ MANIFEST
 
 confine :to, :platform => 'windows'
 
-agents.each do |agent|
+windows_agents.each do |agent|
   step "Reboot Immediately with Skipping Other Resources"
 
   #Apply the manifest. Verify that the "step_2" notify is skipped.

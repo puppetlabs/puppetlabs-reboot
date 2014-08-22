@@ -30,7 +30,7 @@ teardown do
   on agents, puppet('apply', '--debug'), :stdin => remove_artifacts
 end
 
-agents.each do |agent|
+windows_agents.each do |agent|
   step "Attempt First Reboot"
   on agent, puppet('apply', '--debug'), :stdin => reboot_manifest do |result|
     assert_match /\[c:\/first.txt\]\/ensure: created/,

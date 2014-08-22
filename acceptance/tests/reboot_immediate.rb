@@ -11,7 +11,7 @@ MANIFEST
 
 confine :to, :platform => 'windows'
 
-agents.each do |agent|
+windows_agents.each do |agent|
   step "Reboot Immediately with Refresh"
 
   #Apply the manifest.
