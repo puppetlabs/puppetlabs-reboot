@@ -1,6 +1,6 @@
 require 'puppetlabs_spec_helper/rake_tasks'
 require 'puppet-lint/tasks/puppet-lint'
-
+require 'beaker/tasks/test'
 
 desc 'Run RSpec'
 RSpec::Core::RakeTask.new(:test) do |t|

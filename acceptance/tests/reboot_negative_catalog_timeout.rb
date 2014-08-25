@@ -14,7 +14,7 @@ MANIFEST
 
 confine :to, :platform => 'windows'
 
-agents.each do |agent|
+windows_agents.each do |agent|
   step "Attempt Reboot with a Short Catalog Timeout"
 
   #Apply the manifest.
