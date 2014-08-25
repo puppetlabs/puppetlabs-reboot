@@ -1,3 +1,8 @@
+##2014-08-25 - Supported Release 0.1.8
+###Summary
+
+This release contains fixes for working on x64-native ruby.
+
 ##2014-07-15 - Supported Release 0.1.7
 ###Summary
 
