@@ -26,7 +26,7 @@ teardown do
   on agents, puppet('apply', '--debug'), :stdin => undo_pending_reboot_manifest
 end
 
-agents.each do |agent|
+windows_agents.each do |agent|
   step "Declare Reboot Required in the Registry"
   on agent, puppet('apply', '--debug'), :stdin => pending_reboot_manifest
 

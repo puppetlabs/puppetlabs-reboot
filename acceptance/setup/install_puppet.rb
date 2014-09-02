@@ -1,12 +1,16 @@
-test_name "Installing Puppet Enterprise" do
-  install_pe
-
-  #remove bundled version of reboot before testing attempting to push out test version
-  on master, puppet('module uninstall puppetlabs/reboot --force')
-
+test_name "Installing Puppet" do
   proj_root = File.expand_path(File.join(File.dirname(__FILE__), '../..'))
-  agents.each do |host|
-    if host['platform'] =~ /windows/i
+  hosts.each do |host|
+    version = ENV['PUPPET_VERSION'] || '3.6.2'
+    download_url = ENV['WIN_DOWNLOAD_URL'] || 'http://downloads.puppetlabs.com/windows/'
+    if host['platform'] =~ /windows/
+      install_puppet_from_msi(host,
+                              {
+                                  :win_download_url => download_url,
+                                  :version => version
+                              })
+
+      step "Install reboot to host"
       on host, "mkdir -p #{host['distmoduledir']}/reboot"
       result = on host, "echo #{host['distmoduledir']}/reboot"
       target = result.raw_output.chomp

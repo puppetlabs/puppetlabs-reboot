@@ -27,29 +27,29 @@ describe 'Watcher', :if => Puppet.features.microsoft_windows? do
       pid = spawn("ruby.exe -e 'sleep #{one_second}'")
       watcher = Watcher.new([pid, 5 * one_second, command])
 
-      watcher.waitpid.should == Windows::Synchronize::WAIT_OBJECT_0
+      watcher.waitpid.should == Watcher::WAIT_OBJECT_0
     end
 
     it "returns `WAIT_TIMEOUT` if the process times out" do
       watcher = Watcher.new([current_pid, one_second, command])
 
-      watcher.waitpid.should == Windows::Synchronize::WAIT_TIMEOUT
+      watcher.waitpid.should == Watcher::WAIT_TIMEOUT
     end
 
     it "returns `WAIT_FAILED` if it waits on a process it can't access" do
       watcher = Watcher.new([bogus_pid, one_second, command])
 
-      Watcher::GetLastError.expects(:call).returns(5)
+      FFI.expects(:errno).returns(5)
 
-      watcher.waitpid.should == Windows::Synchronize::WAIT_FAILED
+      watcher.waitpid.should == Watcher::WAIT_FAILED
     end
 
     it "returns `WAIT_OBJECT_0` if the process has already exited" do
       watcher = Watcher.new([0, one_second, command])
 
-      Watcher::GetLastError.expects(:call).returns(Windows::Error::ERROR_INVALID_PARAMETER)
+      FFI.expects(:errno).returns(Watcher::ERROR_INVALID_PARAMETER)
 
-      watcher.waitpid.should == Windows::Synchronize::WAIT_OBJECT_0
+      watcher.waitpid.should == Watcher::WAIT_OBJECT_0
     end
   end
 
@@ -61,7 +61,7 @@ describe 'Watcher', :if => Puppet.features.microsoft_windows? do
     end
 
     it "only executes when the watched process completes" do
-      watcher = expects_watcher_to_return(Windows::Synchronize::WAIT_OBJECT_0)
+      watcher = expects_watcher_to_return(Watcher::WAIT_OBJECT_0)
       watcher.expects(:system).with(command)
       watcher.expects(:log_message).with("Process completed; executing '#{command}'.")
 
@@ -69,14 +69,14 @@ describe 'Watcher', :if => Puppet.features.microsoft_windows? do
     end
 
     it "logs a message when the watched process times-out" do
-      watcher = expects_watcher_to_return(Windows::Synchronize::WAIT_TIMEOUT)
+      watcher = expects_watcher_to_return(Watcher::WAIT_TIMEOUT)
       watcher.expects(:system).never
       watcher.expects(:log_message).with("Timed out waiting for process to exit; reboot aborted.")
       watcher.execute
     end
 
     it "logs a message when it fails to watch the process" do
-      watcher = expects_watcher_to_return(Windows::Synchronize::WAIT_FAILED)
+      watcher = expects_watcher_to_return(Watcher::WAIT_FAILED)
       watcher.expects(:system).never
       watcher.expects(:get_last_error).returns('Access is denied')
       watcher.expects(:log_message).with("Failed to wait on the process (Access is denied); reboot aborted.")

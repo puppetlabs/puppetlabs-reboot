@@ -1,3 +1,14 @@
+##2014-08-25 - Supported Release 0.1.8
+###Summary
+
+This release contains fixes for working on x64-native ruby.
+
+##2014-07-15 - Supported Release 0.1.7
+###Summary
+
+This release merely updates metadata.json so the module can be uninstalled and
+upgraded via the puppet module command.
+
 ##2014-04-15, Supported Release 0.1.6
 ###Summary
 This is a supported release.  No changes except metadata.

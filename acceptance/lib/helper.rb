@@ -26,6 +26,10 @@ module Puppet
           fail_test "Failed to abort shutdown on #{agent}"
         end
       end
+
+      def windows_agents
+        agents.select { |agent| agent['platform'].include?('windows') }
+      end
     end
   end
 end

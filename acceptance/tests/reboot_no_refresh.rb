@@ -11,7 +11,7 @@ MANIFEST
 
 confine :to, :platform => 'windows'
 
-agents.each do |agent|
+windows_agents.each do |agent|
   step "Attempt to Reboot Computer without Refresh"
 
   #Apply the manifest.
