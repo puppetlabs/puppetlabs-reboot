@@ -1,6 +1,10 @@
 require 'puppetlabs_spec_helper/rake_tasks'
 require 'puppet-lint/tasks/puppet-lint'
-require 'beaker/tasks/test'
+begin
+  require 'beaker/tasks/test'
+rescue LoadError
+  puts "Unable to load beaker/tasks/test for rake tasks"
+end
 
 desc 'Run RSpec'
 RSpec::Core::RakeTask.new(:test) do |t|
