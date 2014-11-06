@@ -1,3 +1,8 @@
+##2014-11-11 - Supported Release 0.1.9
+###Summary
+
+Fixes issues URL in metadata
+
 ##2014-08-25 - Supported Release 0.1.8
 ###Summary
 
