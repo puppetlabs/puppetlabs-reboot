@@ -2,8 +2,8 @@ require 'puppet/type'
 require 'open3'
 
 Puppet::Type.type(:reboot).provide :windows do
-  confine :operatingsystem => :windows
-  defaultfor :operatingsystem => :windows
+  confine :kernel => :windows
+  defaultfor :kernel => :windows
 
   has_features :manages_reboot_pending
 

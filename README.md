@@ -2,15 +2,15 @@
 
 ##Overview
 
-This module adds a type and Windows provider for managing system reboots.
+This module adds a type and both Windows and generic Linux providers for managing system reboots.
 
 ##Module Description
 
-This module provides a type and provider for managing systems reboots. Currently, only Windows is supported.
+This module provides a type and providers for managing systems reboots. Windows and Linux are supported.
 
 The module supports two forms of reboots. The first form occurs when puppet installs a package, and a reboot is required to complete installation. This is the default mode of operation, as it ensures puppet will only reboot the system in response to another resource being applied, such as a package install.
 
-The second form is where a reboot is pending, and puppet needs to reboot the system before applying any other resources. For example, some Windows packages cannot be installed while a reboot is pending. The second form is specified via `when => pending`.
+The second form is where a reboot is pending, and puppet needs to reboot the system before applying any other resources. For example, some Windows packages cannot be installed while a reboot is pending. The second form is specified via `when => pending`. Note that this is only supported for providers that offer the `manages_reboot_pending` feature. Currently, only the Windows provider offers this.
 
 ##Setup
 
@@ -30,7 +30,6 @@ To install .NET 4.5 and reboot, but only if the package needed to be installed:
       ensure          => installed,
       source          => '\\server\share\dotnetfx45_full_x86_x64.exe',
       install_options => ['/Passive', '/NoRestart'],
-      provider        => windows,
     }
     reboot { 'after':
       subscribe       => Package['Microsoft .NET Framework 4.5'],
@@ -45,7 +44,6 @@ To check if a reboot is pending, and if so, reboot the system before installing 
       ensure          => installed,
       source          => '\\server\share\dotnetfx45_full_x86_x64.exe',
       install_options => ['/Passive', '/NoRestart'],
-      provider        => windows,
       require         => Reboot['before'],
     }
 
