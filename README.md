@@ -71,6 +71,7 @@ By default, when the provider triggers a reboot, it will skip any resources in t
  * If puppet performs a reboot, any remaining items in the catalog will be applied the next time puppet runs. In other words, it may take more than one run to reach consistency. In situations where puppet is running as a service, puppet should execute again after the machine boots.
  * In puppet 3.3.0 and up, if puppet performs a reboot, any resource in the catalog that is skipped will be marked as such in the report. In versions prior, skipped resources are omitted from the report.
  * The `prompt` parameter should only be used with `puppet apply`. The prompt isn't displayed during puppet agent runs, which causes the operation to wait indefinitely.
+ * The `prompt` parameter is only supported with providers that offer the `supports_reboot_prompting` feature. Currently, only the Windows provider offers this.
 
 ##License
 

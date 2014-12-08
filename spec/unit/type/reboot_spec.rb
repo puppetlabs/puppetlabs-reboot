@@ -97,13 +97,15 @@ describe Puppet::Type.type(:reboot) do
       resource[:prompt].must be_nil
     end
 
-    it "should accept true" do
-      resource[:prompt] = true
+    it "should accept true on platforms that support prompting" do
+      reboot = Puppet::Type.type(:reboot).new(:name => 'reboot', :provider => :windows)
+      reboot[:prompt] = true
     end
 
-    it "should reject non-boolean values" do
+    it "should reject non-boolean values on platforms that support prompting" do
+      reboot = Puppet::Type.type(:reboot).new(:name => 'reboot', :provider => :windows)
       expect {
-        resource[:prompt] = "I'm not sure"
+        reboot[:prompt] = "I'm not sure"
       }.to raise_error(Puppet::ResourceError, /Invalid value "I'm not sure"/)
     end
   end

@@ -55,6 +55,7 @@ Puppet::Type.newtype(:reboot) do
   EOT
 
   feature :manages_reboot_pending, "The provider can detect if a reboot is pending, and reboot as needed."
+  feature :supports_reboot_prompting, "The provider can prompt the user to continue the reboot."
 
   newparam(:name) do
     desc "The name of the reboot resource.  Used for uniqueness."
@@ -109,7 +110,7 @@ Puppet::Type.newtype(:reboot) do
     defaultto "Puppet is rebooting the computer"
   end
 
-  newparam(:prompt, :boolean => true) do
+  newparam(:prompt, {:boolean => true, :required_features => :supports_reboot_prompting}) do
     desc "Whether to prompt the user to continue the reboot.  By default, the
       user will not be prompted."
     newvalues(:true, :false)
