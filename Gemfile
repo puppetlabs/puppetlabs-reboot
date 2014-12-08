@@ -14,9 +14,16 @@ gem "puppet", *location_for(ENV['PUPPET_LOCATION'] || '~> 3.2.3')
 gem "facter", *location_for(ENV['FACTER_LOCATION'] || '~> 1.6')
 gem "hiera", *location_for(ENV['HIERA_LOCATION'] || '~> 1.0')
 
+is_ruby18 = RUBY_VERSION.start_with? '1.8'
+
 beaker_version = ENV['BEAKER_VERSION']
+beaker_version = "~> 1.20" if is_ruby18
 group :development, :test do
-  gem 'pry'
+  if is_ruby18
+    gem 'pry', "~> 0.9.12"
+  else
+    gem 'pry'
+  end
   gem 'rake'
   gem 'rspec', "~> 2.13.0"
   gem 'mocha', "~> 0.10.5"
