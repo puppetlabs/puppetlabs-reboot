@@ -2,7 +2,7 @@
   "name": "puppetlabs-reboot",
   "version": "0.1.9",
   "author": "puppetlabs",
-  "summary": "This module provides a facility to manage reboots across nodes.",
+  "summary": "Adds a type and provider for managing Windows system reboots.",
   "license": "Apache License, Version 2.0",
   "source": "git://github.com/puppetlabs/puppetlabs-reboot.git",
   "project_page": "https://github.com/puppetlabs/puppetlabs-reboot",
