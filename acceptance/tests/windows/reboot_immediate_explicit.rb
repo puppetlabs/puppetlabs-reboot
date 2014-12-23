@@ -1,4 +1,4 @@
-test_name "Windows Reboot Module - Reboot Immediately Explicit"
+test_name "Reboot Module - Windows Provider - Reboot Immediately Explicit"
 extend Puppet::Acceptance::Reboot
 
 reboot_manifest = <<-MANIFEST

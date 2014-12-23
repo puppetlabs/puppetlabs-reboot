@@ -1,4 +1,4 @@
-test_name "Windows Reboot Module - Reboot when Finished"
+test_name "Reboot Module - Linux Provider - Reboot when Finished"
 extend Puppet::Acceptance::Reboot
 
 reboot_manifest = <<-MANIFEST
@@ -11,9 +11,9 @@ notify { 'step_2':
 }
 MANIFEST
 
-confine :to, :platform => 'windows'
+confine :except, :platform => 'windows'
 
-windows_agents.each do |agent|
+linux_agents.each do |agent|
   step "Reboot After Finishing Complete Catalog"
 
   #Apply the manifest.

@@ -1,4 +1,4 @@
-test_name "Windows Reboot Module - Custom Timeout"
+test_name "Reboot Module - Windows Provider - Custom Timeout"
 extend Puppet::Acceptance::Reboot
 
 reboot_manifest = <<-MANIFEST
