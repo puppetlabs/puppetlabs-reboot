@@ -1,10 +1,11 @@
-test_name "Windows Reboot Module - Reboot Skip"
+test_name "Reboot Module - Windows Provider - Reboot when Finished"
 extend Puppet::Acceptance::Reboot
 
 reboot_manifest = <<-MANIFEST
 notify { 'step_1':
 } ~>
 reboot { 'now':
+  apply => finished
 } ->
 notify { 'step_2':
 }
@@ -13,12 +14,12 @@ MANIFEST
 confine :to, :platform => 'windows'
 
 windows_agents.each do |agent|
-  step "Reboot Immediately with Skipping Other Resources"
+  step "Reboot After Finishing Complete Catalog"
 
-  #Apply the manifest. Verify that the "step_2" notify is skipped.
+  #Apply the manifest.
   on agent, puppet('apply', '--debug'), :stdin => reboot_manifest do |result|
-    assert_match /Transaction canceled, skipping/,
-      result.stdout, 'Expected resource was not skipped'
+    assert_match /defined 'message' as 'step_2'/,
+                 result.stdout, 'Expected step was not finished before reboot'
   end
 
   #Verify that a shutdown has been initiated and clear the pending shutdown.

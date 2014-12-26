@@ -1,4 +1,4 @@
-test_name "Windows Reboot Module - Pending Reboot"
+test_name "Reboot Module - Windows Provider - Pending Reboot"
 extend Puppet::Acceptance::Reboot
 
 reboot_manifest = <<-MANIFEST

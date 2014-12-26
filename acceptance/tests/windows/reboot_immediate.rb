@@ -1,4 +1,4 @@
-test_name "Windows Reboot Module - Reboot when Refreshed Explicit"
+test_name "Reboot Module - Windows Provider - Reboot Immediately"
 extend Puppet::Acceptance::Reboot
 
 reboot_manifest = <<-MANIFEST
@@ -6,14 +6,13 @@ notify { 'step_1':
 }
 ~>
 reboot { 'now':
-  when => refreshed
 }
 MANIFEST
 
 confine :to, :platform => 'windows'
 
 windows_agents.each do |agent|
-  step "Reboot when Refreshed (Explicit)"
+  step "Reboot Immediately with Refresh"
 
   #Apply the manifest.
   on agent, puppet('apply', '--debug'), :stdin => reboot_manifest

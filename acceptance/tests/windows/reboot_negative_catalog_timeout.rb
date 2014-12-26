@@ -1,4 +1,4 @@
-test_name "Windows Reboot Module - Negative - Reboot Catalog Timeout"
+test_name "Reboot Module - Windows Provider - Negative - Reboot Catalog Timeout"
 extend Puppet::Acceptance::Reboot
 
 reboot_manifest = <<-MANIFEST

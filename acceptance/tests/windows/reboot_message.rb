@@ -1,4 +1,4 @@
-test_name "Windows Reboot Module - Custom Message"
+test_name "Reboot Module - Windows Provider - Custom Message"
 extend Puppet::Acceptance::Reboot
 
 reboot_manifest = <<-MANIFEST
