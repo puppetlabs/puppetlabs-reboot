@@ -18,7 +18,7 @@ linux_agents.each do |agent|
 
   #Apply the manifest.
   on agent, puppet('apply', '--debug'), :stdin => reboot_manifest do |result|
-    assert_match /shutdown -r \+1 \"A different message\" &/,
+    assert_match /shutdown -r \+1 \"A different message\"/,
       result.stdout, 'Expected reboot message is incorrect'
   end
 
