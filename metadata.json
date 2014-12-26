@@ -1,6 +1,6 @@
 {
   "name": "puppetlabs-reboot",
-  "version": "0.1.9",
+  "version": "0.1.10-SNAPSHOT",
   "author": "puppetlabs",
   "summary": "This module provides a facility to manage reboots across nodes.",
   "license": "Apache License, Version 2.0",
@@ -20,6 +20,58 @@
         "7",
         "8"
       ]
+    },
+    {
+      "operatingsystem": "RedHat",
+      "operatingsystemrelease": [
+        "5",
+        "6",
+        "7"
+      ]
+    },
+    {
+      "operatingsystem": "CentOS",
+      "operatingsystemrelease": [
+        "5",
+        "6",
+        "7"
+      ]
+    },
+    {
+      "operatingsystem": "OracleLinux",
+      "operatingsystemrelease": [
+        "5",
+        "6",
+        "7"
+      ]
+    },
+    {
+      "operatingsystem": "Scientific",
+      "operatingsystemrelease": [
+        "5",
+        "6",
+        "7"
+      ]
+    },
+    {
+      "operatingsystem": "SLES",
+      "operatingsystemrelease": [
+        "11 SP1"
+      ]
+    },
+    {
+      "operatingsystem": "Debian",
+      "operatingsystemrelease": [
+        "6",
+        "7"
+      ]
+    },
+    {
+      "operatingsystem": "Ubuntu",
+      "operatingsystemrelease": [
+        "12.04",
+        "14.04"
+      ]
     }
   ],
   "requirements": [
@@ -32,7 +84,7 @@
       "version_requirement": ">= 3.3.0"
     }
   ],
-  "description": "This module provides a facility for managing reboots across nodes. Currently the only operating system supported is Windows.",
+  "description": "This module provides a facility for managing reboots across nodes.",
   "dependencies": [
   ]
 }
