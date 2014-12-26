@@ -18,7 +18,7 @@ linux_agents.each do |agent|
 
   #Apply the manifest.
   on agent, puppet('apply', '--debug'), :stdin => reboot_manifest do |result|
-    assert_match /shutdown -r \+2 &/,
+    assert_match /shutdown -r \+2/,
       result.stdout, 'Expected reboot timeout is incorrect'
   end
 
