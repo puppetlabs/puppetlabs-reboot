@@ -109,21 +109,6 @@ Puppet::Type.newtype(:reboot) do
     defaultto "Puppet is rebooting the computer"
   end
 
-  newparam(:catalog_apply_timeout) do
-    desc "The maximum amount of time in seconds to wait for puppet to finish
-      applying the catalog.  If puppet is still running when the timeout is
-      reached, the reboot will not be requested.  The default value is 7200
-      seconds (2 hours)."
-
-    validate do |value|
-      if value.to_s !~ /^\d+$/
-        raise ArgumentError, "The catalog_apply_timeout must be an integer."
-      end
-    end
-
-    defaultto 7200
-  end
-
   newparam(:timeout) do
     desc "The amount of time in seconds to wait between the time the reboot
       is requested and when the reboot is performed.  The default timeout

@@ -1,9 +1,6 @@
-require 'puppet/type'
-require 'open3'
-
 Puppet::Type.type(:reboot).provide :windows do
-  confine :kernel => :windows
-  defaultfor :kernel => :windows
+  confine :operatingsystem => :windows
+  defaultfor :operatingsystem => :windows
 
   has_features :manages_reboot_pending
 
@@ -63,19 +60,8 @@ Puppet::Type.type(:reboot).provide :windows do
   end
 
   def async_shutdown(shutdown_cmd)
-    if Puppet[:debug]
-      $stderr.puts(shutdown_cmd)
-    end
-
-    # execute a ruby process to shutdown after puppet exits
-    watcher = File.join(File.dirname(__FILE__), 'windows', 'watcher.rb')
-    if not File.exists?(watcher)
-      raise ArgumentError, "The watcher program #{watcher} does not exist"
-    end
-
-    Puppet.debug("Launching 'ruby.exe #{watcher}'")
-    pid = Process.spawn("ruby.exe '#{watcher}' #{Process.pid} #{@resource[:catalog_apply_timeout]} '#{shutdown_cmd}'")
-    Puppet.debug("Launched process #{pid}")
+    Puppet.debug("Adding #{shutdown_cmd} to ruby's at_exit handler")
+    at_exit { system shutdown_cmd }
   end
 
   def reboot_pending?
