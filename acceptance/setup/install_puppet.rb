@@ -9,7 +9,7 @@ test_name "Installing Puppet" do
                                   :version => version
                               })
     else
-      install_puppet({:version => version})
+      install_puppet({:version => version, :default_action => 'gem_install'})
     end
   end
 end
