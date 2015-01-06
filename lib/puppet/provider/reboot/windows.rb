@@ -5,7 +5,7 @@ Puppet::Type.type(:reboot).provide :windows do
   confine :kernel => :windows
   defaultfor :kernel => :windows
 
-  has_features :manages_reboot_pending, :supports_reboot_prompting
+  has_features :manages_reboot_pending
 
   def self.shutdown_command
     if File.exists?("#{ENV['SYSTEMROOT']}\\sysnative\\shutdown.exe")
@@ -51,9 +51,6 @@ Puppet::Type.type(:reboot).provide :windows do
       cancel_transaction
     end
 
-    # for demo/testing
-    interactive = @resource[:prompt] ? '/i' : nil
-
     shutdown_path = command(:shutdown)
     unless shutdown_path
       raise ArgumentError, "The shutdown.exe command was not found. On Windows 2003 x64 hotfix 942589 must be installed to access the 64-bit version of shutdown.exe from 32-bit version of ruby.exe."
@@ -61,7 +58,7 @@ Puppet::Type.type(:reboot).provide :windows do
 
     # Reason code
     # E P     4       1       Application: Maintenance (Planned)
-    shutdown_cmd = [shutdown_path, interactive, '/r', '/t', @resource[:timeout], '/d', 'p:4:1', '/c', "\"#{@resource[:message]}\""].join(' ')
+    shutdown_cmd = [shutdown_path, '/r', '/t', @resource[:timeout], '/d', 'p:4:1', '/c', "\"#{@resource[:message]}\""].join(' ')
     async_shutdown(shutdown_cmd)
   end
 
