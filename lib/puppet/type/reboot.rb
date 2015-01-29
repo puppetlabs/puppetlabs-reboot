@@ -147,10 +147,25 @@ Puppet::Type.newtype(:reboot) do
     defaultto 60
   end
 
+  @rebooting = false
+
+  def self.rebooting
+    @rebooting
+  end
+
+  def self.rebooting=(value)
+    @rebooting = value
+  end
+
   def refresh
     case self[:when]
     when :refreshed
-      provider.reboot
+      if self.class.rebooting
+        Puppet.debug("Reboot already scheduled; skipping")
+      else
+        self.class.rebooting = true
+        provider.reboot
+      end
     else
       Puppet.debug("Skipping reboot")
     end

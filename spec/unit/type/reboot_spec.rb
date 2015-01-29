@@ -9,6 +9,7 @@ describe Puppet::Type.type(:reboot) do
 
   before :each do
     resource.provider = provider
+    resource.class.rebooting = false
   end
 
   it "should be an instance of Puppet::Type::Reboot" do
@@ -143,6 +144,28 @@ describe Puppet::Type.type(:reboot) do
           resource[:timeout] = timeout
         }.to raise_error(Puppet::ResourceError, /The timeout must be an integer/)
       end
+    end
+  end
+
+  context "multiple reboot resources" do
+    let(:resource2) { Puppet::Type.type(:reboot).new(:name => "reboot2") }
+    let(:provider2) { Puppet::Provider.new(resource2) }
+
+    before :each do
+      resource2.provider = provider2
+    end
+
+    it "should only reboot once even if more than one triggers" do
+      resource[:apply] = :finished
+      resource[:when] = :refreshed
+      resource.provider.expects(:reboot)
+      resource.refresh
+
+      resource2[:apply] = :finished
+      resource2[:when] = :refreshed
+      resource2.provider.expects(:reboot).never
+      Puppet.expects(:debug).with(includes('already scheduled'))
+      resource2.refresh
     end
   end
 end
