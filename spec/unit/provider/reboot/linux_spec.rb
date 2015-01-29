@@ -57,7 +57,14 @@ describe Puppet::Type.type(:reboot).provider(:linux) do
     end
 
     it "includes a timeout in the future" do
-      provider.expects(:async_shutdown).with(includes("+#{resource[:timeout].to_i / 60}"))
+      provider.expects(:async_shutdown).with(includes("+#{(resource[:timeout].to_i / 60.0).ceil}"))
+      provider.reboot
+    end
+
+    it "rounds up and provides a warning if the timeout is not a multiple of 60" do
+      resource[:timeout] = 61
+      Puppet.expects(:warning).with(includes('rounding'))
+      provider.expects(:async_shutdown).with(includes("+#{(resource[:timeout].to_i / 60.0).ceil}"))
       provider.reboot
     end
 
