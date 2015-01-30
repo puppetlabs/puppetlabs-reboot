@@ -16,8 +16,6 @@ gem "hiera", *location_for(ENV['HIERA_LOCATION'] || '~> 1.0')
 
 is_ruby18 = RUBY_VERSION.start_with? '1.8'
 
-beaker_version = ENV['BEAKER_VERSION']
-beaker_version = "~> 1.20" if is_ruby18
 group :development, :test do
   if is_ruby18
     gem 'pry', "~> 0.9.12"
@@ -32,6 +30,10 @@ group :development, :test do
   gem 'mime-types', '<2.0',      :require => false
   gem 'puppet-lint',             :require => false
   gem 'simplecov',               :require => false
+end
+
+beaker_version = ENV['BEAKER_VERSION']
+group :system_tests do
   if beaker_version
     gem 'beaker', *location_for(beaker_version)
   else
