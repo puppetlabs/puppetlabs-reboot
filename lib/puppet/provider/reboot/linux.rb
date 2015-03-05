@@ -35,7 +35,10 @@ Puppet::Type.type(:reboot).provide :linux do
     end
 
     seconds = @resource[:timeout].to_i
-    minutes = seconds / 60
+    minutes = (seconds / 60.0).ceil
+    if seconds % 60 != 0
+      Puppet.warning("Shutdown command on this system specifies time in minutes, rounding #{seconds} seconds up to #{minutes} minutes.")
+    end
 
     shutdown_cmd = [shutdown_path, '-r', "+#{minutes}", %Q("#{@resource[:message]}"), '</dev/null', '>/dev/null', '2>&1', '&'].join(' ')
     async_shutdown(shutdown_cmd)
