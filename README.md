@@ -1,53 +1,65 @@
 # reboot
+[![Build Status](https://travis-ci.org/puppetlabs/puppetlabs-reboot.png?branch=master)](https://travis-ci.org/puppetlabs/puppetlabs-reboot)
+
+####Table of Contents
+
+1. [Overview](#overview)
+2. [Module Description - What the reboot module does and why it is useful](#module-description)
+3. [Setup - The basics of getting started with reboot](#setup)
+    * [Setup requirements](#setup-requirements)
+    * [Beginning with reboot](#beginning-with-reboot)
+4. [Usage - Configuration options and additional functionality](#usage)
+5. [Reference - An under-the-hood peek at what the module is doing and how](#reference)
+6. [Development - Guide for contributing to the module](#development)
 
 ##Overview
 
-This module adds a type and both Windows and generic Linux providers for managing system reboots.
+This module adds a type, and both Windows and generic Linux providers, for managing node reboots.
 
 ##Module Description
 
-This module provides a type and providers for managing systems reboots. Windows and Linux are supported.
+Some packages require a reboot of the node to complete their installation. Until that reboot is completed, the package might not be fully functional, and other installs might fail. This module provides a resource type to let Puppet perform that reboot, and providers to support Windows and Linux.
 
-The module supports two forms of reboots. The first form occurs when puppet installs a package, and a reboot is required to complete installation. This is the default mode of operation, as it ensures puppet will only reboot the system in response to another resource being applied, such as a package install.
-
-The second form is where a reboot is pending, and puppet needs to reboot the system before applying any other resources. For example, some Windows packages cannot be installed while a reboot is pending. The second form is specified via `when => pending`. Note that this is only supported for providers that offer the `manages_reboot_pending` feature. Currently, only the Windows provider offers this.
+By default, this module only reboots a node in response to another resource being applied --- e.g., after a package install. On Windows nodes, you can also have Puppet check for pending reboots and complete them *before* applying the next resource in the catalog, by specifying `when => pending`.
 
 ##Setup
 
+###Setup Requirements
+
+On Windows nodes, the 'shutdown.exe' command must be in the `PATH`.
+
+On Windows 2003 (non-R2) x64 nodes, [KB942589](http://support.microsoft.com/kb/942589) must be installed.
+
 ###Beginning with reboot
 
-The best way to install this module is with the `puppet module` subcommand.  On your puppet master, execute the following command, optionally specifying your puppet master's `modulepath` in which to install the module:
+The reboot module should work right out of the box. To test it, install a package (in this case 'SomePackage') and set up the module to reboot as follows:
 
-    $ puppet module install [--modulepath <path>] puppetlabs/reboot
-
-See the section [Installing Modules](http://docs.puppetlabs.com/puppet/2.7/reference/modules_installing.html) for more information.
-
-##Usage
-
-To install .NET 4.5 and reboot, but only if the package needed to be installed:
-
-    package { 'Microsoft .NET Framework 4.5':
+    package { 'SomeModule':
       ensure          => installed,
-      source          => '\\server\share\dotnetfx45_full_x86_x64.exe',
+      source          => '\\server\share\some_installer.exe',
       install_options => ['/Passive', '/NoRestart'],
     }
     reboot { 'after':
-      subscribe       => Package['Microsoft .NET Framework 4.5'],
+      subscribe       => Package['SomePackage'],
     }
 
-To check if a reboot is pending, and if so, reboot the system before installing .NET 4.5:
+##Usage
+
+###Complete any pending reboots before installing a package
 
     reboot { 'before':
       when            => pending,
     }
-    package { 'Microsoft .NET Framework 4.5':
+    package { 'SomePackage':
       ensure          => installed,
-      source          => '\\server\share\dotnetfx45_full_x86_x64.exe',
+      source          => '\\server\share\some_installer.exe',
       install_options => ['/Passive', '/NoRestart'],
       require         => Reboot['before'],
     }
 
-By default, when the provider triggers a reboot, it will skip any resources in the catalog that have not yet been applied. Alternatively, you can allow puppet to continue applying the entire catalog by specifying `apply => finished`. For example, if you have several packages that all require reboots, but will not block each other:
+###Install multiple packages before rebooting
+
+By default, when this module triggers a reboot, it skips any resources in the catalog that have not yet been applied. To apply the entire catalog before rebooting, specify `apply => finished`. For example, if you have several packages that all require reboots, but will not block each other:
 
     package { 'Microsoft .NET Framework 4.5':
       ensure => installed,
@@ -63,16 +75,68 @@ By default, when the provider triggers a reboot, it will skip any resources in t
       apply  => finished,
     }
 
-##Limitations
+##Reference
 
- * On Windows, the 'shutdown.exe' command must be in the `PATH`.
- * On Windows 2003 (non-R2) x64, [KB942589](http://support.microsoft.com/kb/942589) must be installed.
- * If using `when => pending` style reboots, puppet will apply heuristics to determine if a reboot is pending, e.g. the existence of the PendingFileRenameOperations registry key. If the system reboots, but does not resolve the reboot pending condition, then puppet will reboot the system again. This could lead to a reboot cycle.
- * If puppet performs a reboot, any remaining items in the catalog will be applied the next time puppet runs. In other words, it may take more than one run to reach consistency. In situations where puppet is running as a service, puppet should execute again after the machine boots.
- * In puppet 3.3.0 and up, if puppet performs a reboot, any resource in the catalog that is skipped will be marked as such in the report. In versions prior, skipped resources are omitted from the report.
- * The `prompt` parameter should only be used with `puppet apply`. The prompt isn't displayed during puppet agent runs, which causes the operation to wait indefinitely.
- * The `prompt` parameter is only supported with providers that offer the `supports_reboot_prompting` feature. Currently, only the Windows provider offers this.
+###Type: reboot
 
-##License
+The main type of the module, responsible for all its functionality.
 
-[Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.html)
+####Providers
+
+* `windows`: Default for :kernel => :windows
+* `linux`: Default for :kernel => :linux
+
+####Features
+
+* `supports_reboot_prompting`: Notifies the node's user that a reboot is pending, and let them cancel the pending reboot process. (Available with the `windows` provider. Linux terminal users get a shutdown notice regardless of this parameter, but they can't cancel the reboot.)
+* `manages_reboot_pending`: Detects whether a reboot is pending due to a prior change. If so, reboot the node. (Available with the `windows` provider.)
+
+####Parameters
+
+#####`apply`
+
+*Optional.* Specifies when to apply the reboot. If set to 'immediately', the provider stops applying additional resources and performs the reboot as soon as Puppet finishes syncing. If set to 'finished', it continues applying resources and then performs the reboot at the end of the run. Valid options: 'immediately' and 'finished'. Default value: 'immediately'.
+
+**Note:** With the default setting of 'immediately', resources further down in the catalog are skipped and recorded as such. (In Puppet versions prior to 3.3.0, they're left out of the report entirely.) The next time Puppet runs, it processes the skipped resources normally, and they might trigger additional reboots.
+
+#####`catalog_apply_timeout`
+
+*Optional.* Sets the number of seconds to wait for Puppet to finish applying the catalog. If the timeout is exceeded, the provider cancels the reboot. Valid options: any positive integer. Default value: '7200' (two hours).
+
+#####`message`
+
+*Optional.* Provides a message to log when the reboot is performed. Valid options: a string. Default value: undefined.
+
+#####`name`
+
+*Required.* Sets the name of the reboot resource. Valid options: a string.
+
+#####`prompt`
+
+*Optional.* Specifies whether to prompt the user to continue the reboot. Only for use in a masterless configuration. Valid options: 'true' and 'false'. Default value: 'false'.
+
+**Note:** If this parameter is set to 'true', you must prompt Puppet agent runs manually using `puppet apply`. Otherwise, the prompt is never displayed to the user, and the agent run waits indefinitely.
+
+Prompts are only available in Windows. Linux terminal users get a shutdown notice regardless of this parameter, but they can't cancel the reboot.
+
+#####`timeout`
+
+*Optional.* Sets the number of seconds to wait after the Puppet run completes for the reboot to happen. If the timeout is exceeded, the provider cancels the reboot. Valid options: any positive integer. Default value: '60'.
+
+#####`when`
+
+*Optional.* Specifies how reboots are triggered. If set to 'refreshed', the provider only reboots the node in response to a refresh event from another resource, e.g., installing a package. If set to 'pending', Puppet checks for signs of any pending reboots and completes them before applying the next resource in the catalog. Valid options: 'refreshed' and 'pending'. Default value: 'refreshed'.
+
+**Note:** For `when => pending` reboots, Puppet can normally detect a pending reboot based on some specific system conditions (such as the existence of the PendingFileRenameOperations registry key). However, if those conditions aren't resolved after the node reboots, Puppet triggers another reboot. This can lead to a reboot loop.
+
+##Development
+
+Puppet Labs modules on the Puppet Forge are open projects, and community contributions are essential for keeping them great. We can’t access the huge number of platforms and myriad of hardware, software, and deployment configurations that Puppet is intended to serve.
+
+We want to keep it as easy as possible to contribute changes so that our modules work in your environment. There are a few guidelines that we need contributors to follow so that we can have a chance of keeping on top of things.
+
+For more information, see our [module contribution guide.](https://docs.puppetlabs.com/forge/contributing.html)
+
+###Contributors
+
+To see who's already involved, see the [list of contributors.](https://github.com/puppetlabs/puppetlabs-reboot/graphs/contributors)
