@@ -4,7 +4,6 @@ file { 'c:/before.txt':
 }
 
 reboot { 'now':
-  prompt    => true,
   subscribe => File['c:/before.txt']
 }
 

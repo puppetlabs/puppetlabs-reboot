@@ -88,7 +88,6 @@ The main type of the module, responsible for all its functionality.
 
 ####Features
 
-* `supports_reboot_prompting`: Notifies the node's user that a reboot is pending, and let them cancel the pending reboot process. (Available with the `windows` provider. Linux terminal users get a shutdown notice regardless of this parameter, but they can't cancel the reboot.)
 * `manages_reboot_pending`: Detects whether a reboot is pending due to a prior change. If so, reboot the node. (Available with the `windows` provider.)
 
 ####Parameters
@@ -110,14 +109,6 @@ The main type of the module, responsible for all its functionality.
 #####`name`
 
 *Required.* Sets the name of the reboot resource. Valid options: a string.
-
-#####`prompt`
-
-*Optional.* Specifies whether to prompt the user to continue the reboot. Only for use in a masterless configuration. Valid options: 'true' and 'false'. Default value: 'false'.
-
-**Note:** If this parameter is set to 'true', you must prompt Puppet agent runs manually using `puppet apply`. Otherwise, the prompt is never displayed to the user, and the agent run waits indefinitely.
-
-Prompts are only available in Windows. Linux terminal users get a shutdown notice regardless of this parameter, but they can't cancel the reboot.
 
 #####`timeout`
 

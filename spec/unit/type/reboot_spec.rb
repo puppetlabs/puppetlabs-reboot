@@ -92,24 +92,6 @@ describe Puppet::Type.type(:reboot) do
     end
   end
 
-  context "parameter :prompt" do
-    it "should default to nil" do
-      resource[:prompt].must be_nil
-    end
-
-    it "should accept true on platforms that support prompting" do
-      reboot = Puppet::Type.type(:reboot).new(:name => 'reboot', :provider => :windows)
-      reboot[:prompt] = true
-    end
-
-    it "should reject non-boolean values on platforms that support prompting" do
-      reboot = Puppet::Type.type(:reboot).new(:name => 'reboot', :provider => :windows)
-      expect {
-        reboot[:prompt] = "I'm not sure"
-      }.to raise_error(Puppet::ResourceError, /Invalid value "I'm not sure"/)
-    end
-  end
-
   context "parameter :catalog_apply_timeout" do
     it "should default to 7200 seconds" do
       resource[:catalog_apply_timeout].must == 7200

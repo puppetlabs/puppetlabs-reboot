@@ -99,14 +99,8 @@ describe Puppet::Type.type(:reboot).provider(:windows), :if => Puppet.features.m
       provider.reboot
     end
 
-    it "does not include the interactive flag by default" do
+    it "does not include the interactive flag" do
       provider.expects(:async_shutdown).with(Not(includes('/i')))
-      provider.reboot
-    end
-
-    it "includes the interactive flag if specified" do
-      resource[:prompt] = true
-      provider.expects(:async_shutdown).with(includes('/i'))
       provider.reboot
     end
 
