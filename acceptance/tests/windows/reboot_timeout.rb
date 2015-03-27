@@ -18,7 +18,7 @@ windows_agents.each do |agent|
 
   #Apply the manifest.
   on agent, puppet('apply', '--debug'), :stdin => reboot_manifest do |result|
-    assert_match /shutdown\.exe  \/r \/t 120 \/d p:4:1/,
+    assert_match /shutdown\.exe \/r \/t 120 \/d p:4:1/,
       result.stderr, 'Expected reboot timeout is incorrect'
   end
 

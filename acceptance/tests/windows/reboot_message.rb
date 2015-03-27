@@ -18,7 +18,7 @@ windows_agents.each do |agent|
 
   #Apply the manifest.
   on agent, puppet('apply', '--debug'), :stdin => reboot_manifest do |result|
-    assert_match /shutdown\.exe  \/r \/t 60 \/d p:4:1 \/c \"A different message\"/,
+    assert_match /shutdown\.exe \/r \/t 60 \/d p:4:1 \/c \"A different message\"/,
       result.stderr, 'Expected reboot message is incorrect'
   end
 
