@@ -34,7 +34,12 @@ Puppet::Type.type(:reboot).provide :windows do
 
   def when=(value)
     if @resource[:when] == :pending
-      reboot
+      if @resource.class.rebooting
+        Puppet.debug("Reboot already scheduled; skipping")
+      else
+        @resource.class.rebooting = true
+        reboot
+      end
     end
   end
 
