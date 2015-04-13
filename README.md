@@ -114,6 +114,8 @@ The main type of the module, responsible for all its functionality.
 
 *Optional.* Sets the number of seconds to wait after the Puppet run completes for the reboot to happen. If the timeout is exceeded, the provider cancels the reboot. Valid options: any positive integer. Default value: '60'.
 
+**Note:** Linux only supports specifying the timeout as minutes. As such, the value of `timeout` must be a multiple of 60. Other values will be rounded up to the nearest minute and a warning will be issued.
+
 #####`when`
 
 *Optional.* Specifies how reboots are triggered. If set to 'refreshed', the provider only reboots the node in response to a refresh event from another resource, e.g., installing a package. If set to 'pending', Puppet checks for signs of any pending reboots and completes them before applying the next resource in the catalog. Valid options: 'refreshed' and 'pending'. Default value: 'refreshed'.
