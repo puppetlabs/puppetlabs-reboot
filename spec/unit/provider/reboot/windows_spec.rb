@@ -9,6 +9,10 @@ describe Puppet::Type.type(:reboot).provider(:windows), :if => Puppet.features.m
   let(:native_path)     { "#{ENV['SYSTEMROOT']}\\sysnative\\shutdown.exe" }
   let(:redirected_path) { "#{ENV['SYSTEMROOT']}\\system32\\shutdown.exe" }
 
+  before :each do
+    resource.class.rebooting = false
+  end
+
   it "should be an instance of Puppet::Type::Reboot::ProviderWindows" do
     provider.must be_an_instance_of Puppet::Type::Reboot::ProviderWindows
   end
@@ -123,6 +127,46 @@ describe Puppet::Type.type(:reboot).provider(:windows), :if => Puppet.features.m
       resource[:message] = "triggering a reboot"
       provider.expects(:async_shutdown).with(includes('"triggering a reboot"'))
       provider.reboot
+    end
+
+    context "multiple triggered reboots" do
+      let(:resource2) { Puppet::Type.type(:reboot).new(:provider => :windows, :name => "windows_reboot2") }
+      let(:provider2) { resource2.provider }
+
+      context "where the second resource has when set to pending" do
+        before :each do
+          resource2[:when] = :pending
+        end
+
+        context "where the first resource has apply set to finished" do
+          before :each do
+            resource[:apply] = :finished
+          end
+
+          it "should only reboot once" do
+            resource[:when] = :refreshed
+            provider.expects(:reboot)
+
+            resource.refresh
+
+            provider2.expects(:reboot).never
+            Puppet.expects(:debug).with(includes('already scheduled'))
+            provider2[:when] = :pending
+          end
+
+          it "should only reboot once when the first resource has when set to pending" do
+            # this isn't supported but no harm testing that it doesn't blow up
+            resource[:when] = :pending
+            provider.expects(:reboot)
+            Puppet.expects(:warning).with(includes('The combination'))
+            provider[:when] = :pending
+
+            provider2.expects(:reboot).never
+            Puppet.expects(:debug).with(includes('already scheduled'))
+            provider2[:when] = :pending
+          end
+        end
+      end
     end
   end
 
