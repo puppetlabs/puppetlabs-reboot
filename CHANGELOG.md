@@ -1,3 +1,13 @@
+##2015-04-15 - Supported Release 1.0.0
+###Summary
+This release adds support for rebooting Linux distributions in addition to Windows
+
+###Features
+* Add linux support
+* Remove prompt for windows reboot
+* Remove catalog_apply_timeout parameter
+* Reboot is now triggered at_exit instead of watching for ruby process to end
+
 ##2014-11-11 - Supported Release 0.1.9
 ###Summary
 
