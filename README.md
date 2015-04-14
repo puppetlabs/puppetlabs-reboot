@@ -98,10 +98,6 @@ The main type of the module, responsible for all its functionality.
 
 **Note:** With the default setting of 'immediately', resources further down in the catalog are skipped and recorded as such. (In Puppet versions prior to 3.3.0, they're left out of the report entirely.) The next time Puppet runs, it processes the skipped resources normally, and they might trigger additional reboots.
 
-#####`catalog_apply_timeout`
-
-*Optional.* Sets the number of seconds to wait for Puppet to finish applying the catalog. If the timeout is exceeded, the provider cancels the reboot. Valid options: any positive integer. Default value: '7200' (two hours).
-
 #####`message`
 
 *Optional.* Provides a message to log when the reboot is performed. Valid options: a string. Default value: undefined.
@@ -113,6 +109,8 @@ The main type of the module, responsible for all its functionality.
 #####`timeout`
 
 *Optional.* Sets the number of seconds to wait after the Puppet run completes for the reboot to happen. If the timeout is exceeded, the provider cancels the reboot. Valid options: any positive integer. Default value: '60'.
+
+**Note:** Linux only supports specifying the timeout as minutes. As such, the value of `timeout` must be a multiple of 60. Other values will be rounded up to the nearest minute and a warning will be issued.
 
 #####`when`
 
