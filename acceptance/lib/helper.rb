@@ -2,8 +2,15 @@ module Puppet
   module Acceptance
     module Reboot
       # due to a ruby bug the correct error code 1116, is returned modulo 256 = 92
+      # Puppet 3.4.0+ work around this issue
+      require 'rubygems' # this is necessary for ruby 1.8
+      require 'puppet/version'
       WINDOWS_SHUTDOWN_ABORT = 'cmd /c shutdown /a'
-      WINDOWS_SHUTDOWN_NOT_IN_PROGRESS = 1116 % 256
+      if Gem::Version.new(Puppet.version) < Gem::Version.new('3.4.0')
+        WINDOWS_SHUTDOWN_NOT_IN_PROGRESS = 1116 % 256
+      else
+        WINDOWS_SHUTDOWN_NOT_IN_PROGRESS = 1116
+      end
 
       LINUX_SHUTDOWN_ABORT = 'shutdown -c'
       LINUX_SHUTDOWN_NOT_IN_PROGRESS = 1

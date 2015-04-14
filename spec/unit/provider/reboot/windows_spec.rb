@@ -170,37 +170,6 @@ describe Puppet::Type.type(:reboot).provider(:windows), :if => Puppet.features.m
     end
   end
 
-  context "when executing the watcher process" do
-    let(:child_pid) { 0x1234 }
-    let(:command)  { 'cmd.exe /c echo hello' }
-
-    it "spawns the watcher with the parent process id" do
-      Process.expects(:spawn).with(regexp_matches(Regexp.new(Process.pid.to_s)))
-
-      provider.async_shutdown(command)
-    end
-
-    it "spawns the watcher with a 7200 second catalog_apply_timeout by default" do
-      Process.expects(:spawn).with(regexp_matches(/7200/))
-
-      provider.async_shutdown(command)
-    end
-
-    it "spawns the watcher with a 10 minute catalog_apply_timeout" do
-      resource[:catalog_apply_timeout] = 10 * 60
-      Process.expects(:spawn).with(regexp_matches(/600/))
-
-      provider.async_shutdown(command)
-    end
-
-    it "spawns the watcher with the quoted command to execute" do
-      quoted = "'#{command}'"
-      Process.expects(:spawn).with(regexp_matches(Regexp.new(quoted)))
-
-      provider.async_shutdown(command)
-    end
-  end
-
   context "when detecting if a reboot is pending" do
     def expects_registry_key(path)
       Win32::Registry::HKEY_LOCAL_MACHINE.expects(:open).with(path, anything)
