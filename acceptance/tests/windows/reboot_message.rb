@@ -20,6 +20,8 @@ windows_agents.each do |agent|
   on agent, puppet('apply', '--debug'), :stdin => reboot_manifest do |result|
     assert_match /shutdown\.exe \/r \/t 60 \/d p:4:1 \/c \"A different message\"/,
       result.stdout, 'Expected reboot message is incorrect'
+    assert_match /Scheduling system reboot with message: \"A different message\"/,
+      result.stdout, 'Reboot message was not logged'
   end
 
   #Verify that a shutdown has been initiated and clear the pending shutdown.
