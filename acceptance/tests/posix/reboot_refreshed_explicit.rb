@@ -1,4 +1,4 @@
-test_name "Reboot Module - Linux Provider - Reboot when Refreshed Explicit"
+test_name "Reboot Module - POSIX Provider - Reboot when Refreshed Explicit"
 extend Puppet::Acceptance::Reboot
 
 reboot_manifest = <<-MANIFEST
@@ -12,7 +12,7 @@ MANIFEST
 
 confine :except, :platform => 'windows'
 
-linux_agents.each do |agent|
+posix_agents.each do |agent|
   step "Reboot when Refreshed (Explicit)"
 
   #Apply the manifest.

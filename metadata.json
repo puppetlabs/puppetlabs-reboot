@@ -72,6 +72,14 @@
         "12.04",
         "14.04"
       ]
+    },
+    {
+      "operatingsystem": "AIX",
+      "operatingsystemrelease": [
+        "5.3",
+        "6.1",
+        "7.1"
+      ]
     }
   ],
   "requirements": [

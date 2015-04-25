@@ -1,29 +1,26 @@
-test_name "Reboot Module - Linux Provider - Custom Timeout"
+test_name "Reboot Module - POSIX Provider - Reboot when Finished"
 extend Puppet::Acceptance::Reboot
 
 reboot_manifest = <<-MANIFEST
 notify { 'step_1':
-}
-~>
+} ~>
 reboot { 'now':
-  when => refreshed,
-  timeout => 120,
+  apply => finished
+} ->
+notify { 'step_2':
 }
 MANIFEST
 
 confine :except, :platform => 'windows'
 
-linux_agents.each do |agent|
-  step "Reboot Immediately with a Custom Timeout"
+posix_agents.each do |agent|
+  step "Reboot After Finishing Complete Catalog"
 
   #Apply the manifest.
   on agent, puppet('apply', '--debug'), :stdin => reboot_manifest do |result|
-    assert_match /shutdown -r \+2/,
-      result.stdout, 'Expected reboot timeout is incorrect'
+    assert_match /defined 'message' as 'step_2'/,
+      result.stdout, 'Expected step was not finished before reboot'
   end
-
-  #Waiting 61 seconds guarantees that the default timeout is different.
-  sleep 61
 
   #Verify that a shutdown has been initiated and clear the pending shutdown.
   retry_shutdown_abort(agent)
