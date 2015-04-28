@@ -1,4 +1,4 @@
-test_name "Reboot Module - Linux Provider - Puppet Resume after Reboot"
+test_name "Reboot Module - POSIX Provider - Puppet Resume after Reboot"
 extend Puppet::Acceptance::Reboot
 
 reboot_manifest = <<-MANIFEST
@@ -30,7 +30,7 @@ teardown do
   on agents, puppet('apply', '--debug'), :stdin => remove_artifacts
 end
 
-linux_agents.each do |agent|
+posix_agents.each do |agent|
   step "Attempt First Reboot"
   on agent, puppet('apply', '--debug'), :stdin => reboot_manifest do |result|
     assert_match /\[\/first.txt\]\/ensure: created/,

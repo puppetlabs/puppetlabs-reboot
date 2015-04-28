@@ -1,8 +1,5 @@
-test_name "Reboot Module - Linux Provider - No Refresh"
+test_name "Reboot Module - POSIX Provider - No Refresh"
 extend Puppet::Acceptance::Reboot
-
-#Shutdown abort command.
-shutdown_abort = "shutdown -c"
 
 reboot_manifest = <<-MANIFEST
 reboot { 'now':
@@ -11,7 +8,7 @@ MANIFEST
 
 confine :except, :platform => 'windows'
 
-linux_agents.each do |agent|
+posix_agents.each do |agent|
   step "Attempt to Reboot Computer without Refresh"
 
   #Apply the manifest.

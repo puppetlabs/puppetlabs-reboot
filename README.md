@@ -14,11 +14,11 @@
 
 ##Overview
 
-This module adds a type, and both Windows and generic Linux providers, for managing node reboots.
+This module adds a type, and both Windows and generic POSIX providers, for managing node reboots.
 
 ##Module Description
 
-Some packages require a reboot of the node to complete their installation. Until that reboot is completed, the package might not be fully functional, and other installs might fail. This module provides a resource type to let Puppet perform that reboot, and providers to support Windows and Linux.
+Some packages require a reboot of the node to complete their installation. Until that reboot is completed, the package might not be fully functional, and other installs might fail. This module provides a resource type to let Puppet perform that reboot, and providers to support Windows and POSIX systems. HP-UX is not supported.
 
 By default, this module only reboots a node in response to another resource being applied --- e.g., after a package install. On Windows nodes, you can also have Puppet check for pending reboots and complete them *before* applying the next resource in the catalog, by specifying `when => pending`.
 
@@ -84,7 +84,7 @@ The main type of the module, responsible for all its functionality.
 ####Providers
 
 * `windows`: Default for :kernel => :windows
-* `linux`: Default for :kernel => :linux
+* `posix`: Default for :feature => :posix
 
 ####Features
 
@@ -110,7 +110,7 @@ The main type of the module, responsible for all its functionality.
 
 *Optional.* Sets the number of seconds to wait after the Puppet run completes for the reboot to happen. If the timeout is exceeded, the provider cancels the reboot. Valid options: any positive integer. Default value: '60'.
 
-**Note:** Linux only supports specifying the timeout as minutes. As such, the value of `timeout` must be a multiple of 60. Other values will be rounded up to the nearest minute and a warning will be issued.
+**Note:** POSIX systems (with the exception of Solaris) only support specifying the timeout as minutes. As such, the value of `timeout` must be a multiple of 60. Other values will be rounded up to the nearest minute and a warning will be issued.
 
 #####`when`
 

@@ -12,8 +12,24 @@ module Puppet
         WINDOWS_SHUTDOWN_NOT_IN_PROGRESS = 1116
       end
 
-      LINUX_SHUTDOWN_ABORT = 'shutdown -c'
-      LINUX_SHUTDOWN_NOT_IN_PROGRESS = 1
+      def shutdown_pid(agent)
+        # code to get ps command taken from Facter 2.x implementation
+        # as Facter 3.x is dropping the ps fact
+        ps = case fact_on(agent, 'operatingsystem')
+             when 'OpenWrt'
+               'ps www'
+             when 'FreeBSD', 'NetBSD', 'OpenBSD', 'Darwin', 'DragonFly'
+               'ps auxwww'
+             else
+               'ps -ef'
+             end
+        # code to isolate PID adapted from Puppet service base provider
+        on(agent, ps).stdout.each_line { |line|
+          if line.match(/shutdown/)
+            return line.sub(/^\s+/, '').split(/\s+/)[1]
+          end
+        }
+      end
 
       def ensure_shutdown_not_scheduled(agent)
         sleep 5
@@ -21,16 +37,19 @@ module Puppet
         if windows_agents.include?(agent)
           on(agent, WINDOWS_SHUTDOWN_ABORT, :acceptable_exit_codes => [WINDOWS_SHUTDOWN_NOT_IN_PROGRESS])
         else
-          on(agent, LINUX_SHUTDOWN_ABORT, :acceptable_exit_codes => [LINUX_SHUTDOWN_NOT_IN_PROGRESS])
+          on(agent, POSIX_SHUTDOWN_ABORT, :acceptable_exit_codes => [POSIX_SHUTDOWN_NOT_IN_PROGRESS])
         end
       end
 
       def retry_shutdown_abort(agent, max_retries = 6)
         i = 0
-        abort_cmd = windows_agents.include?(agent) ? WINDOWS_SHUTDOWN_ABORT : LINUX_SHUTDOWN_ABORT
-        not_in_progress = windows_agents.include?(agent) ? WINDOWS_SHUTDOWN_NOT_IN_PROGRESS : LINUX_SHUTDOWN_NOT_IN_PROGRESS
         while i < max_retries
-          result = on(agent, abort_cmd, :acceptable_exit_codes => [0, not_in_progress])
+          if windows_agents.include?(agent)
+            result = on(agent, WINDOWS_SHUTDOWN_ABORT, :acceptable_exit_codes => [0, WINDOWS_SHUTDOWN_NOT_IN_PROGRESS])
+          else
+            pid = shutdown_pid(agent)
+            result = on(agent, "kill #{pid}") if pid
+          end
           break if result.exit_code == 0
 
           Beaker::Log.warn("Reboot is not yet scheduled; sleeping for #{1 << i} seconds")
@@ -47,8 +66,8 @@ module Puppet
         agents.select { |agent| agent['platform'].include?('windows') }
       end
 
-      def linux_agents
-        agents.select { |agent| agent['platform'] =~ /centos|fedora|ubuntu|debian|sles/ }
+      def posix_agents
+        agents.select { |agent| !agent['platform'].include?('windows') }
       end
     end
   end
