@@ -84,6 +84,7 @@ The main type of the module, responsible for all its functionality.
 ####Providers
 
 * `windows`: Default for :kernel => :windows
+* `linux`: Deprecated. Use `posix` instead.
 * `posix`: Default for :feature => :posix
 
 ####Features

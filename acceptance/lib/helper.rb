@@ -69,6 +69,10 @@ module Puppet
       def posix_agents
         agents.select { |agent| !agent['platform'].include?('windows') }
       end
+
+      def linux_agents
+        agents.select { |agent| fact_on(agent, 'kernel') == 'Linux' }
+      end
     end
   end
 end
