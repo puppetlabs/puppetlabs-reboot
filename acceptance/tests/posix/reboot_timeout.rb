@@ -11,15 +11,20 @@ reboot { 'now':
 }
 MANIFEST
 
-#Solaris specifies reboot timeout in seconds
-confine :except, :platform => ['windows', 'solaris']
+confine :except, :platform => 'windows'
 
 posix_agents.each do |agent|
   step "Reboot Immediately with a Custom Timeout"
 
   #Apply the manifest.
   on agent, puppet('apply', '--debug'), :stdin => reboot_manifest do |result|
-    assert_match /shutdown -r \+2/,
+    case fact('kernel')
+    when 'SunOS'
+      expected_command = /shutdown -y -i 6 -g 120/
+    else
+      expected_command = /shutdown -r \+2/
+    end
+    assert_match expected_command,
       result.stdout, 'Expected reboot timeout is incorrect'
   end
 
