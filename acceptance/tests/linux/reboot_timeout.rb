@@ -1,4 +1,4 @@
-test_name "Reboot Module - POSIX Provider - Custom Timeout"
+test_name "Reboot Module - Linux Provider - Custom Timeout"
 extend Puppet::Acceptance::Reboot
 
 reboot_manifest = <<-MANIFEST
@@ -8,23 +8,20 @@ notify { 'step_1':
 reboot { 'now':
   when => refreshed,
   timeout => 120,
+  provider => linux,
 }
 MANIFEST
 
-confine :except, :platform => 'windows'
+confine :except, :platform => 'windows' do |agent|
+  fact_on(agent, 'kernel') == 'Linux'
+end
 
-posix_agents.each do |agent|
+linux_agents.each do |agent|
   step "Reboot Immediately with a Custom Timeout"
 
   #Apply the manifest.
   on agent, puppet('apply', '--debug'), :stdin => reboot_manifest do |result|
-    case fact('kernel')
-    when 'SunOS'
-      expected_command = /shutdown -y -i 6 -g 120/
-    else
-      expected_command = /shutdown -r \+2/
-    end
-    assert_match expected_command,
+    assert_match /shutdown -r \+2/,
       result.stdout, 'Expected reboot timeout is incorrect'
   end
 

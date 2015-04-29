@@ -37,7 +37,11 @@ module Puppet
         if windows_agents.include?(agent)
           on(agent, WINDOWS_SHUTDOWN_ABORT, :acceptable_exit_codes => [WINDOWS_SHUTDOWN_NOT_IN_PROGRESS])
         else
-          on(agent, POSIX_SHUTDOWN_ABORT, :acceptable_exit_codes => [POSIX_SHUTDOWN_NOT_IN_PROGRESS])
+          pid = shutdown_pid(agent)
+          if pid
+            on(agent, "kill #{pid}", :acceptable_exit_codes => [0])
+            raise CommandFailure, "Host '#{agent}' had unexpected scheduled shutdown with PID #{pid}."
+          end
         end
       end
 
@@ -48,7 +52,7 @@ module Puppet
             result = on(agent, WINDOWS_SHUTDOWN_ABORT, :acceptable_exit_codes => [0, WINDOWS_SHUTDOWN_NOT_IN_PROGRESS])
           else
             pid = shutdown_pid(agent)
-            result = on(agent, "kill #{pid}") if pid
+            result = on(agent, "kill #{pid}", :acceptable_exit_codes => [0]) if pid
           end
           break if result.exit_code == 0
 
@@ -68,6 +72,10 @@ module Puppet
 
       def posix_agents
         agents.select { |agent| !agent['platform'].include?('windows') }
+      end
+
+      def linux_agents
+        agents.select { |agent| fact_on(agent, 'kernel') == 'Linux' }
       end
     end
   end
