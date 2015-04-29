@@ -91,6 +91,14 @@ describe Puppet::Type.type(:reboot) do
         resource[:message] = 'a' * 8001
       }.to raise_error(Puppet::ResourceError, /The given message must not exceed 8000 characters./)
     end
+
+    it "should be logged on reboot" do
+      resource[:message] = "Custom message"
+      logmessage = "Scheduling system reboot with message: \"Custom message\""
+      Puppet.expects(:notice).with(logmessage)
+      resource.provider.expects(:reboot)
+      resource.refresh
+    end
   end
 
   context "parameter :timeout" do

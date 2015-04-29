@@ -26,6 +26,8 @@ posix_agents.each do |agent|
     end
     assert_match expected_command,
       result.stdout, 'Expected reboot message is incorrect'
+    assert_match /Scheduling system reboot with message: \"A different message\"/,
+      result.stdout, 'Reboot message was not logged'
   end
 
   #Verify that a shutdown has been initiated and clear the pending shutdown.
