@@ -23,7 +23,7 @@ confine :to, :platform => 'windows'
 
 teardown do
   step "Undo the Registry Changes for Required Reboot"
-  on agents, puppet('apply', '--debug'), :stdin => undo_pending_reboot_manifest
+  on windows_agents, puppet('apply', '--debug'), :stdin => undo_pending_reboot_manifest
 end
 
 windows_agents.each do |agent|

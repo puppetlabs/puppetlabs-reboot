@@ -18,12 +18,12 @@ posix_agents.each do |agent|
 
   #Apply the manifest.
   on agent, puppet('apply', '--debug'), :stdin => reboot_manifest do |result|
-    case fact('kernel')
-    when 'SunOS'
+    if fact_on(agent, 'kernel') == 'SunOS'
       expected_command = /shutdown -y -i 6 -g 60 \"A different message\"/
     else
       expected_command = /shutdown -r \+1 \"A different message\"/
     end
+
     assert_match expected_command,
       result.stdout, 'Expected reboot message is incorrect'
     assert_match /Scheduling system reboot with message: \"A different message\"/,

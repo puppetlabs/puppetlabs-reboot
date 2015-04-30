@@ -27,7 +27,7 @@ confine :except, :platform => 'windows'
 
 teardown do
   step "Remove Test Artifacts"
-  on agents, puppet('apply', '--debug'), :stdin => remove_artifacts
+  on posix_agents, puppet('apply', '--debug'), :stdin => remove_artifacts
 end
 
 posix_agents.each do |agent|

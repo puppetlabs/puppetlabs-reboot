@@ -29,6 +29,7 @@ module Puppet
             return line.sub(/^\s+/, '').split(/\s+/)[1]
           end
         }
+        nil
       end
 
       def ensure_shutdown_not_scheduled(agent)

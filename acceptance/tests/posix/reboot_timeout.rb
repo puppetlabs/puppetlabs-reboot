@@ -18,12 +18,12 @@ posix_agents.each do |agent|
 
   #Apply the manifest.
   on agent, puppet('apply', '--debug'), :stdin => reboot_manifest do |result|
-    case fact('kernel')
-    when 'SunOS'
+    if fact_on(agent, 'kernel') == 'SunOS'
       expected_command = /shutdown -y -i 6 -g 120/
     else
       expected_command = /shutdown -r \+2/
     end
+
     assert_match expected_command,
       result.stdout, 'Expected reboot timeout is incorrect'
   end
