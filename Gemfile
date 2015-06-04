@@ -10,9 +10,23 @@ def location_for(place, fake_version = nil)
   end
 end
 
-gem "puppet", *location_for(ENV['PUPPET_LOCATION'] || '~> 3.2.3')
-gem "facter", *location_for(ENV['FACTER_LOCATION'] || '~> 1.6')
-gem "hiera", *location_for(ENV['HIERA_LOCATION'] || '~> 1.0')
+if ENV['PUPPET_GEM_VERSION'] 
+  gem "puppet", *location_for(ENV['PUPPET_GEM_VERSION'] ) 
+else
+  gem "puppet", :require => false
+end
+
+if ENV['FACTER_GEM_VERSION']
+  gem "facter", *location_for(ENV['FACTER_GEM_VERSION'] || '~> 1.6')
+else
+  gem "facter", :require => false
+end
+
+if ENV['HIERA_GEM_VERSION']
+  gem "hiera", *location_for(ENV['HIERA_GEM_VERISON'])
+else
+  gem "hiera"
+end
 
 is_ruby18 = RUBY_VERSION.start_with? '1.8'
 
