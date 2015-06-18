@@ -17,7 +17,7 @@ windows_agents.each do |agent|
   step "Reboot After Finishing Complete Catalog"
 
   #Apply the manifest.
-  on agent, puppet('apply', '--debug'), :stdin => reboot_manifest do |result|
+  apply_manifest_on agent, reboot_manifest do |result|
     assert_match /defined 'message' as 'step_2'/,
                  result.stdout, 'Expected step was not finished before reboot'
   end

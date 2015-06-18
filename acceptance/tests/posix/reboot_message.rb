@@ -17,7 +17,7 @@ posix_agents.each do |agent|
   step "Reboot Immediately with a Custom Message"
 
   #Apply the manifest.
-  on agent, puppet('apply', '--debug'), :stdin => reboot_manifest do |result|
+  apply_manifest_on agent, reboot_manifest, {:debug => true} do |result|
     if fact_on(agent, 'kernel') == 'SunOS'
       expected_command = /shutdown -y -i 6 -g 60 \"A different message\"/
     else
@@ -25,9 +25,9 @@ posix_agents.each do |agent|
     end
 
     assert_match expected_command,
-      result.stdout, 'Expected reboot message is incorrect'
+                 result.stdout, 'Expected reboot message is incorrect'
     assert_match /Scheduling system reboot with message: \"A different message\"/,
-      result.stdout, 'Reboot message was not logged'
+                 result.stdout, 'Reboot message was not logged'
   end
 
   #Verify that a shutdown has been initiated and clear the pending shutdown.

@@ -1,6 +1,6 @@
 test_name "Installing Puppet" do
   hosts.each do |host|
-    version = ENV['PUPPET_VERSION'] || '3.6.2'
+    version = ENV['PUPPET_VERSION'] || '3.8.1'
     download_url = ENV['WIN_DOWNLOAD_URL'] || 'http://downloads.puppetlabs.com/windows/'
     if host['platform'] =~ /windows/
       install_puppet_from_msi(host,

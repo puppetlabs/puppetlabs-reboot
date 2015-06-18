@@ -17,7 +17,7 @@ posix_agents.each do |agent|
   step "Reboot Immediately with a Custom Timeout"
 
   #Apply the manifest.
-  on agent, puppet('apply', '--debug'), :stdin => reboot_manifest do |result|
+  apply_manifest_on agent, reboot_manifest, {:debug => true} do |result|
     if fact_on(agent, 'kernel') == 'SunOS'
       expected_command = /shutdown -y -i 6 -g 120/
     else
