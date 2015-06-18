@@ -32,7 +32,7 @@ end
 
 windows_agents.each do |agent|
   step "Attempt First Reboot"
-  on agent, puppet('apply', '--debug'), :stdin => reboot_manifest do |result|
+  apply_manifest_on agent,  reboot_manifest, {:debug => true} do |result|
     assert_match /\[c:\/first.txt\]\/ensure: created/,
       result.stdout, 'Expected file was not created'
   end
@@ -41,7 +41,7 @@ windows_agents.each do |agent|
   retry_shutdown_abort(agent)
 
   step "Resume After Reboot"
-  on agent, puppet('apply', '--debug'), :stdin => reboot_manifest do |result|
+  apply_manifest_on agent, reboot_manifest, {:debug => true} do |result|
     assert_match /\[c:\/second.txt\]\/ensure: created/,
       result.stdout, 'Expected file was not created'
   end
@@ -50,7 +50,7 @@ windows_agents.each do |agent|
   retry_shutdown_abort(agent)
 
   step "Verify Manifest is Finished"
-  on agent, puppet('apply', '--debug'), :stdin => reboot_manifest
+  apply_manifest_on agent, reboot_manifest
 
   #Verify that a shutdown has NOT been initiated.
   ensure_shutdown_not_scheduled(agent)

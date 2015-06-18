@@ -12,7 +12,7 @@ posix_agents.each do |agent|
   step "Attempt to Reboot Computer without Refresh"
 
   #Apply the manifest.
-  on agent, puppet('apply', '--debug'), :stdin => reboot_manifest
+  apply_manifest_on agent, reboot_manifest
 
   #Verify that a shutdown has NOT been initiated because reboot
   #was not refreshed.

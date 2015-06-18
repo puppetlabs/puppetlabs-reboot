@@ -27,12 +27,14 @@ confine :except, :platform => 'windows'
 
 teardown do
   step "Remove Test Artifacts"
-  on posix_agents, puppet('apply', '--debug'), :stdin => remove_artifacts
+  posix_agents.each { |agent|
+    apply_manifest_on agent, remove_artifacts
+  }
 end
 
 posix_agents.each do |agent|
   step "Attempt First Reboot"
-  on agent, puppet('apply', '--debug'), :stdin => reboot_manifest do |result|
+  apply_manifest_on agent, reboot_manifest do |result|
     assert_match /\[\/first.txt\]\/ensure: created/,
       result.stdout, 'Expected file was not created'
   end
@@ -41,7 +43,7 @@ posix_agents.each do |agent|
   retry_shutdown_abort(agent)
 
   step "Resume After Reboot"
-  on agent, puppet('apply', '--debug'), :stdin => reboot_manifest do |result|
+  apply_manifest_on agent, reboot_manifest do |result|
     assert_match /\[\/second.txt\]\/ensure: created/,
       result.stdout, 'Expected file was not created'
   end
@@ -50,7 +52,7 @@ posix_agents.each do |agent|
   retry_shutdown_abort(agent)
 
   step "Verify Manifest is Finished"
-  on agent, puppet('apply', '--debug'), :stdin => reboot_manifest
+  apply_manifest_on agent, reboot_manifest
 
   #Verify that a shutdown has NOT been initiated.
   ensure_shutdown_not_scheduled(agent)
