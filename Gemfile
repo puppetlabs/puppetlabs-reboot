@@ -10,8 +10,8 @@ def location_for(place, fake_version = nil)
   end
 end
 
-if ENV['PUPPET_GEM_VERSION'] 
-  gem "puppet", *location_for(ENV['PUPPET_GEM_VERSION'] ) 
+if ENV['PUPPET_GEM_VERSION']
+  gem "puppet", *location_for(ENV['PUPPET_GEM_VERSION'] )
 else
   gem "puppet", :require => false
 end
@@ -53,6 +53,7 @@ group :system_tests do
   else
     gem 'beaker',                :require => false, :platforms => :ruby
   end
+  gem 'beaker-puppet_install_helper', :require => false
 end
 
 # see http://projects.puppetlabs.com/issues/21698
