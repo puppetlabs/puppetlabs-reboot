@@ -32,7 +32,7 @@ group :development do
   gem 'puppetlabs_spec_helper',  :require => false
   gem 'puppet_facts',            :require => false
   gem 'mocha', '~>0.10.5',       :require => false
-  gem 'nokogiri', '~>1.5.10',    :require => false
+  gem 'nokogiri', '~>1.5.10',    :require => false, :platforms => :ruby
   gem 'mime-types', '<2.0',      :require => false
 end
 group :system_tests do
