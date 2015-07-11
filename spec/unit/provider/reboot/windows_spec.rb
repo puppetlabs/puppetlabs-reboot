@@ -5,7 +5,7 @@ require 'puppet/provider/reboot/windows'
 
 describe Puppet::Type.type(:reboot).provider(:windows), :if => Puppet.features.microsoft_windows? do
   let(:resource) { Puppet::Type.type(:reboot).new(:provider => :windows, :name => "windows_reboot") }
-  let(:provider) { resource.provider}
+  let(:provider) { resource.provider }
   let(:native_path)     { "#{ENV['SYSTEMROOT']}\\sysnative\\shutdown.exe" }
   let(:redirected_path) { "#{ENV['SYSTEMROOT']}\\system32\\shutdown.exe" }
 
@@ -151,19 +151,18 @@ describe Puppet::Type.type(:reboot).provider(:windows), :if => Puppet.features.m
 
             provider2.expects(:reboot).never
             Puppet.expects(:debug).with(includes('already scheduled'))
-            provider2[:when] = :pending
+            provider2.when = :pending
           end
 
           it "should only reboot once when the first resource has when set to pending" do
             # this isn't supported but no harm testing that it doesn't blow up
             resource[:when] = :pending
             provider.expects(:reboot)
-            Puppet.expects(:warning).with(includes('The combination'))
-            provider[:when] = :pending
+            provider.when = :pending
 
             provider2.expects(:reboot).never
             Puppet.expects(:debug).with(includes('already scheduled'))
-            provider2[:when] = :pending
+            provider2.when = :pending
           end
         end
       end
