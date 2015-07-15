@@ -35,13 +35,9 @@ group :development do
   gem 'nokogiri', '~>1.5.10',    :require => false, :platforms => :ruby
   gem 'mime-types', '<2.0',      :require => false
 end
+
 group :system_tests do
-  beaker_version = ENV['BEAKER_VERSION'] || '~> 2.2'
-  if beaker_version
-    gem 'beaker', *location_for(beaker_version)
-  else
-    gem 'beaker', :require => false, :platforms => :ruby
-  end
+  gem 'beaker', *location_for(ENV['BEAKER_VERSION'] || '~> 2.18')
   gem 'beaker-puppet_install_helper',  :require => false
 end
 
