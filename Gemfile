@@ -38,11 +38,6 @@ end
 
 group :system_tests do
   gem 'beaker', *location_for(ENV['BEAKER_VERSION'] || '~> 2.18')
-  if beaker_rspec_version = ENV['BEAKER_RSPEC_VERSION']
-    gem 'beaker-rspec', *location_for(beaker_rspec_version)
-  else
-    gem 'beaker-rspec',  :require => false
-  end
   gem 'beaker-puppet_install_helper',  :require => false
 end
 
