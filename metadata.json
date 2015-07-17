@@ -1,6 +1,6 @@
 {
   "name": "puppetlabs-reboot",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "author": "puppetlabs",
   "summary": "Adds a type and provider for managing system reboots.",
   "license": "Apache-2.0",
@@ -85,11 +85,11 @@
   "requirements": [
     {
       "name": "pe",
-      "version_requirement": "3.x"
+      "version_requirement": ">= 3.1.0 < 2015.3.0"
     },
     {
       "name": "puppet",
-      "version_requirement": ">= 3.3.0"
+      "version_requirement": ">= 3.3.0 < 5.0.0"
     }
   ],
   "description": "This module provides a facility for managing reboots across nodes.",
