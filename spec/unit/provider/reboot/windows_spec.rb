@@ -308,6 +308,41 @@ describe Puppet::Type.type(:reboot).provider(:windows), :if => Puppet.features.m
         end
       end
     end
+
+    context 'Pending computer rename' do
+      let(:active_path) { 'SYSTEM\CurrentControlSet\Control\ComputerName\ActiveComputerName' }
+      let(:pending_path) { 'SYSTEM\CurrentControlSet\Control\ComputerName\ComputerName' }
+      let(:reg_name) { 'ComputerName' }
+
+      it 'reboots if the pending computer name exists and does not match active computer name' do
+        expects_registry_value(active_path, reg_name, 'Foo')
+        expects_registry_value(pending_path, reg_name, 'Bar')
+
+        provider.should be_pending_computer_rename
+      end
+
+      it 'ignores if the pending computer name matches active computer name' do
+        computer_name = 'Foo'
+        expects_registry_value(active_path, reg_name, computer_name)
+        expects_registry_value(pending_path, reg_name, computer_name)
+
+        provider.should_not be_pending_computer_rename
+      end
+
+      it 'ignores if the active computer name key is absent' do
+        expects_registry_key_not_found(active_path)
+        expects_registry_value(pending_path, reg_name, 'Foo')
+
+        provider.should_not be_pending_computer_rename
+      end
+
+      it 'ignores if pending computer name key is absent' do
+        expects_registry_value(active_path, reg_name, 'Foo')
+        expects_registry_key_not_found(pending_path)
+
+        provider.should_not be_pending_computer_rename
+      end
+    end
   end
 
 end
