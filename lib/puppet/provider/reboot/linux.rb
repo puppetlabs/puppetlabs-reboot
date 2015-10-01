@@ -1,3 +1,5 @@
+require_relative '../reboot/posix'
+
 Puppet::Type.type(:reboot).provide :linux, :parent => :posix do
   confine :kernel => :linux
 
