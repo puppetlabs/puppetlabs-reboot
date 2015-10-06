@@ -76,7 +76,8 @@ Puppet::Type.type(:reboot).provide :windows do
       windows_auto_update? ||
       pending_file_rename_operations? ||
       package_installer? ||
-      package_installer_syswow64?
+      package_installer_syswow64? ||
+      pending_computer_rename?
   end
 
   def vista_sp1_or_later?
@@ -142,6 +143,19 @@ Puppet::Type.type(:reboot).provide :windows do
       false
     end
   end
+
+  def pending_computer_rename?
+    path = 'SYSTEM\CurrentControlSet\Control\ComputerName'
+    active_name = reg_value("#{path}\\ActiveComputerName", 'ComputerName')
+    pending_name = reg_value("#{path}\\ComputerName", 'ComputerName')
+    if active_name && pending_name && active_name != pending_name
+      Puppet.debug("Pending reboot: Computer being renamed from #{active_name} to #{pending_name}")
+      true
+    else
+      false
+    end
+  end
+
 
   private
 
