@@ -77,7 +77,8 @@ Puppet::Type.type(:reboot).provide :windows do
       pending_file_rename_operations? ||
       package_installer? ||
       package_installer_syswow64? ||
-      pending_computer_rename?
+      pending_computer_rename? ||
+      pending_dsc_reboot?
   end
 
   def vista_sp1_or_later?
@@ -156,6 +157,23 @@ Puppet::Type.type(:reboot).provide :windows do
     end
   end
 
+  def pending_dsc_reboot?
+    require 'win32ole'
+    root = 'winmgmts:\\\\.\\root\\Microsoft\\Windows\\DesiredStateConfiguration'
+    reboot = false
+
+    begin
+      dsc = WIN32OLE.connect(root)
+
+      lcm = dsc.Get('MSFT_DSCLocalConfigurationManager')
+
+      config = lcm.ExecMethod_('GetMetaConfiguration')
+      reboot = config.MetaConfiguration.LCMState == 'PendingReboot'
+    rescue
+    end
+
+    reboot
+  end
 
   private
 
