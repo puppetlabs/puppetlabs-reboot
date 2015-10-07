@@ -390,6 +390,79 @@ describe Puppet::Type.type(:reboot).provider(:windows), :if => Puppet.features.m
         end
       end
     end
+
+    context 'based on CCM' do
+      let(:root)            { 'winmgmts:\\\\.\\root\\ccm\\ClientSDK' }
+      let(:ccm)             { stub('ccm') }
+      let(:client_utils)    { stub('client_utils') }
+      let(:pending)         { stub('pending') }
+
+      describe 'when CCM is available on the system' do
+        before :each do
+          WIN32OLE.expects(:connect).with(root).returns(ccm)
+          ccm.expects(:Get).with('CCM_ClientUtilities').returns(client_utils)
+          client_utils.expects(:ExecMethod_).with('DetermineIfRebootPending').returns(pending)
+        end
+
+        [-1, 1, 255].each do |return_code|
+          it "does not reboot when CCM DetermineIfRebootPending returns a non-zero code #{return_code}" do
+            pending.expects(:ReturnValue).returns(return_code)
+
+            provider.should_not be_pending_ccm_reboot
+          end
+        end
+
+        it 'reboots when CCM RebootPending has IsHardRebootPending set, but not RebootPending' do
+          pending.expects(:ReturnValue).returns(0)
+          pending.stubs(:IsHardRebootPending).returns(true)
+          pending.stubs(:RebootPending).returns(false)
+
+          provider.should be_pending_ccm_reboot
+        end
+
+        it 'reboots when CCM RebootPending has RebootPending set, but not IsHardRebootPending' do
+          pending.expects(:ReturnValue).returns(0)
+          pending.stubs(:IsHardRebootPending).returns(false)
+          pending.stubs(:RebootPending).returns(true)
+
+          provider.should be_pending_ccm_reboot
+        end
+
+        it 'does not reboot when CCM RebootPending has neither RebootPending nor IsHardRebootPending set' do
+          pending.expects(:ReturnValue).returns(0)
+          pending.stubs(:IsHardRebootPending).returns(false)
+          pending.stubs(:RebootPending).returns(false)
+
+          provider.should_not be_pending_ccm_reboot
+        end
+      end
+
+      describe 'when querying CCM on the system fails' do
+        it 'does not reboot when CCM namespace is inaccessible' do
+          WIN32OLE.expects(:connect).with(root).raises(WIN32OLERuntimeError)
+
+          provider.should_not be_pending_ccm_reboot
+        end
+
+        it 'does not reboot when CCM_ClientUtilities class is inaccessible' do
+          ccm = stub('ccm')
+          WIN32OLE.expects(:connect).with(root).returns(ccm)
+          ccm.expects(:Get).with('CCM_ClientUtilities').raises
+
+          provider.should_not be_pending_ccm_reboot
+        end
+
+        it 'does not reboot when CCM_ClientUtilities fails calling DetermineIfRebootPending' do
+          ccm = stub('ccm')
+          client_utils = stub('client_utils')
+          WIN32OLE.expects(:connect).with(root).returns(ccm)
+          ccm.expects(:Get).with('CCM_ClientUtilities').returns(client_utils)
+          client_utils.expects(:ExecMethod_).with('DetermineIfRebootPending').raises
+
+          provider.should_not be_pending_ccm_reboot
+        end
+      end
+    end
   end
 
 end
