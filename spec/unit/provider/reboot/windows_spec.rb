@@ -343,6 +343,53 @@ describe Puppet::Type.type(:reboot).provider(:windows), :if => Puppet.features.m
         provider.should_not be_pending_computer_rename
       end
     end
+
+    context 'based on DSC' do
+      let(:root)            { 'winmgmts:\\\\.\\root\\Microsoft\\Windows\\DesiredStateConfiguration' }
+      let(:dsc)             { stub('dsc') }
+      let(:lcm)             { stub('lcm') }
+      let(:ole_config)      { stub('ole_config') }
+      let(:dsc_meta_config) { stub('dsc_meta_config') }
+
+      describe 'when DSC is available on the system' do
+        before :each do
+          WIN32OLE.expects(:connect).with(root).returns(dsc)
+          dsc.expects(:Get).with('MSFT_DSCLocalConfigurationManager').returns(lcm)
+          lcm.expects(:ExecMethod_).with('GetMetaConfiguration').returns(ole_config)
+          ole_config.expects(:MetaConfiguration).returns(dsc_meta_config)
+        end
+
+        it 'reboots when DSC LCMState is "PendingReboot"' do
+          dsc_meta_config.expects(:LCMState).returns('PendingReboot')
+
+          provider.should be_pending_dsc_reboot
+        end
+
+        ['Idle', '', nil].each do |state|
+          it "does not reboot when DSC LCMState is \"#{state}\"" do
+            dsc_meta_config.expects(:LCMState).returns(state)
+
+            provider.should_not be_pending_dsc_reboot
+          end
+        end
+      end
+
+      describe 'when querying DSC on the system fails' do
+        it 'does not reboot when DSC namespace is inaccessible' do
+          WIN32OLE.expects(:connect).with(root).raises(WIN32OLERuntimeError)
+
+          provider.should_not be_pending_dsc_reboot
+        end
+
+        it 'does not reboot when MSFT_DSCLocalConfigurationManager class is inaccessible' do
+          dsc = stub('dsc')
+          WIN32OLE.expects(:connect).with(root).returns(dsc)
+          dsc.expects(:Get).with('MSFT_DSCLocalConfigurationManager').raises
+
+          provider.should_not be_pending_dsc_reboot
+        end
+      end
+    end
   end
 
 end
