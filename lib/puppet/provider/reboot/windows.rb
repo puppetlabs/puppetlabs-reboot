@@ -173,6 +173,7 @@ Puppet::Type.type(:reboot).provide :windows do
     rescue
     end
 
+    Puppet.debug("Pending reboot: DSC LocalConfigurationManager LCMState") if reboot
     reboot
   end
 
@@ -191,6 +192,7 @@ Puppet::Type.type(:reboot).provide :windows do
     rescue
     end
 
+    Puppet.debug("Pending reboot: CCM ClientUtilities") if reboot
     reboot
   end
 
