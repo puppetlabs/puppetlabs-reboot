@@ -1,4 +1,17 @@
-##2015-07-28 - Supported Release 1.1.0 
+##2015-10-14 - Supported Release 1.2.0
+###Summary
+
+Detect more pending reboot scenarios.
+
+###Features
+* Pending reboot - detect computer rename ([MODULES-2657](https://tickets.puppetlabs.com/browse/MODULES-2657))
+* Pending reboot - Detect DSC pending reboot state ([MODULES-2658](https://tickets.puppetlabs.com/browse/MODULES-2658))
+* Pending reboot - Detect CCM pending reboot state ([MODULES-2659](https://tickets.puppetlabs.com/browse/MODULES-2659))
+
+###Bugfixes
+* Fix Linux provider failing ([MODULES-2585](https://tickets.puppetlabs.com/browse/MODULES-2585))
+
+##2015-07-28 - Supported Release 1.1.0
 ###Summary
 
 Deprecate Linux provider in favor of POSIX provider

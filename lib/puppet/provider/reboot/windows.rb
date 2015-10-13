@@ -76,7 +76,10 @@ Puppet::Type.type(:reboot).provide :windows do
       windows_auto_update? ||
       pending_file_rename_operations? ||
       package_installer? ||
-      package_installer_syswow64?
+      package_installer_syswow64? ||
+      pending_computer_rename? ||
+      pending_dsc_reboot? ||
+      pending_ccm_reboot?
   end
 
   def vista_sp1_or_later?
@@ -141,6 +144,54 @@ Puppet::Type.type(:reboot).provide :windows do
     else
       false
     end
+  end
+
+  def pending_computer_rename?
+    path = 'SYSTEM\CurrentControlSet\Control\ComputerName'
+    active_name = reg_value("#{path}\\ActiveComputerName", 'ComputerName')
+    pending_name = reg_value("#{path}\\ComputerName", 'ComputerName')
+    if active_name && pending_name && active_name != pending_name
+      Puppet.debug("Pending reboot: Computer being renamed from #{active_name} to #{pending_name}")
+      true
+    else
+      false
+    end
+  end
+
+  def pending_dsc_reboot?
+    require 'win32ole'
+    root = 'winmgmts:\\\\.\\root\\Microsoft\\Windows\\DesiredStateConfiguration'
+    reboot = false
+
+    begin
+      dsc = WIN32OLE.connect(root)
+
+      lcm = dsc.Get('MSFT_DSCLocalConfigurationManager')
+
+      config = lcm.ExecMethod_('GetMetaConfiguration')
+      reboot = config.MetaConfiguration.LCMState == 'PendingReboot'
+    rescue
+    end
+
+    reboot
+  end
+
+  def pending_ccm_reboot?
+    require 'win32ole'
+    root = 'winmgmts:\\\\.\\root\\ccm\\ClientSDK'
+    reboot = false
+
+    begin
+      ccm = WIN32OLE.connect(root)
+
+      ccm_client_utils = ccm.Get('CCM_ClientUtilities')
+
+      pending = ccm_client_utils.ExecMethod_('DetermineIfRebootPending')
+      reboot = (pending.ReturnValue == 0) && (pending.IsHardRebootPending || pending.RebootPending)
+    rescue
+    end
+
+    reboot
   end
 
   private

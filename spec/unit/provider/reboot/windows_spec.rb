@@ -308,6 +308,161 @@ describe Puppet::Type.type(:reboot).provider(:windows), :if => Puppet.features.m
         end
       end
     end
+
+    context 'Pending computer rename' do
+      let(:active_path) { 'SYSTEM\CurrentControlSet\Control\ComputerName\ActiveComputerName' }
+      let(:pending_path) { 'SYSTEM\CurrentControlSet\Control\ComputerName\ComputerName' }
+      let(:reg_name) { 'ComputerName' }
+
+      it 'reboots if the pending computer name exists and does not match active computer name' do
+        expects_registry_value(active_path, reg_name, 'Foo')
+        expects_registry_value(pending_path, reg_name, 'Bar')
+
+        provider.should be_pending_computer_rename
+      end
+
+      it 'ignores if the pending computer name matches active computer name' do
+        computer_name = 'Foo'
+        expects_registry_value(active_path, reg_name, computer_name)
+        expects_registry_value(pending_path, reg_name, computer_name)
+
+        provider.should_not be_pending_computer_rename
+      end
+
+      it 'ignores if the active computer name key is absent' do
+        expects_registry_key_not_found(active_path)
+        expects_registry_value(pending_path, reg_name, 'Foo')
+
+        provider.should_not be_pending_computer_rename
+      end
+
+      it 'ignores if pending computer name key is absent' do
+        expects_registry_value(active_path, reg_name, 'Foo')
+        expects_registry_key_not_found(pending_path)
+
+        provider.should_not be_pending_computer_rename
+      end
+    end
+
+    context 'based on DSC' do
+      let(:root)            { 'winmgmts:\\\\.\\root\\Microsoft\\Windows\\DesiredStateConfiguration' }
+      let(:dsc)             { stub('dsc') }
+      let(:lcm)             { stub('lcm') }
+      let(:ole_config)      { stub('ole_config') }
+      let(:dsc_meta_config) { stub('dsc_meta_config') }
+
+      describe 'when DSC is available on the system' do
+        before :each do
+          WIN32OLE.expects(:connect).with(root).returns(dsc)
+          dsc.expects(:Get).with('MSFT_DSCLocalConfigurationManager').returns(lcm)
+          lcm.expects(:ExecMethod_).with('GetMetaConfiguration').returns(ole_config)
+          ole_config.expects(:MetaConfiguration).returns(dsc_meta_config)
+        end
+
+        it 'reboots when DSC LCMState is "PendingReboot"' do
+          dsc_meta_config.expects(:LCMState).returns('PendingReboot')
+
+          provider.should be_pending_dsc_reboot
+        end
+
+        ['Idle', '', nil].each do |state|
+          it "does not reboot when DSC LCMState is \"#{state}\"" do
+            dsc_meta_config.expects(:LCMState).returns(state)
+
+            provider.should_not be_pending_dsc_reboot
+          end
+        end
+      end
+
+      describe 'when querying DSC on the system fails' do
+        it 'does not reboot when DSC namespace is inaccessible' do
+          WIN32OLE.expects(:connect).with(root).raises(WIN32OLERuntimeError)
+
+          provider.should_not be_pending_dsc_reboot
+        end
+
+        it 'does not reboot when MSFT_DSCLocalConfigurationManager class is inaccessible' do
+          dsc = stub('dsc')
+          WIN32OLE.expects(:connect).with(root).returns(dsc)
+          dsc.expects(:Get).with('MSFT_DSCLocalConfigurationManager').raises
+
+          provider.should_not be_pending_dsc_reboot
+        end
+      end
+    end
+
+    context 'based on CCM' do
+      let(:root)            { 'winmgmts:\\\\.\\root\\ccm\\ClientSDK' }
+      let(:ccm)             { stub('ccm') }
+      let(:client_utils)    { stub('client_utils') }
+      let(:pending)         { stub('pending') }
+
+      describe 'when CCM is available on the system' do
+        before :each do
+          WIN32OLE.expects(:connect).with(root).returns(ccm)
+          ccm.expects(:Get).with('CCM_ClientUtilities').returns(client_utils)
+          client_utils.expects(:ExecMethod_).with('DetermineIfRebootPending').returns(pending)
+        end
+
+        [-1, 1, 255].each do |return_code|
+          it "does not reboot when CCM DetermineIfRebootPending returns a non-zero code #{return_code}" do
+            pending.expects(:ReturnValue).returns(return_code)
+
+            provider.should_not be_pending_ccm_reboot
+          end
+        end
+
+        it 'reboots when CCM RebootPending has IsHardRebootPending set, but not RebootPending' do
+          pending.expects(:ReturnValue).returns(0)
+          pending.stubs(:IsHardRebootPending).returns(true)
+          pending.stubs(:RebootPending).returns(false)
+
+          provider.should be_pending_ccm_reboot
+        end
+
+        it 'reboots when CCM RebootPending has RebootPending set, but not IsHardRebootPending' do
+          pending.expects(:ReturnValue).returns(0)
+          pending.stubs(:IsHardRebootPending).returns(false)
+          pending.stubs(:RebootPending).returns(true)
+
+          provider.should be_pending_ccm_reboot
+        end
+
+        it 'does not reboot when CCM RebootPending has neither RebootPending nor IsHardRebootPending set' do
+          pending.expects(:ReturnValue).returns(0)
+          pending.stubs(:IsHardRebootPending).returns(false)
+          pending.stubs(:RebootPending).returns(false)
+
+          provider.should_not be_pending_ccm_reboot
+        end
+      end
+
+      describe 'when querying CCM on the system fails' do
+        it 'does not reboot when CCM namespace is inaccessible' do
+          WIN32OLE.expects(:connect).with(root).raises(WIN32OLERuntimeError)
+
+          provider.should_not be_pending_ccm_reboot
+        end
+
+        it 'does not reboot when CCM_ClientUtilities class is inaccessible' do
+          ccm = stub('ccm')
+          WIN32OLE.expects(:connect).with(root).returns(ccm)
+          ccm.expects(:Get).with('CCM_ClientUtilities').raises
+
+          provider.should_not be_pending_ccm_reboot
+        end
+
+        it 'does not reboot when CCM_ClientUtilities fails calling DetermineIfRebootPending' do
+          ccm = stub('ccm')
+          client_utils = stub('client_utils')
+          WIN32OLE.expects(:connect).with(root).returns(ccm)
+          ccm.expects(:Get).with('CCM_ClientUtilities').returns(client_utils)
+          client_utils.expects(:ExecMethod_).with('DetermineIfRebootPending').raises
+
+          provider.should_not be_pending_ccm_reboot
+        end
+      end
+    end
   end
 
 end

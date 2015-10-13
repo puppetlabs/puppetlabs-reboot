@@ -1,15 +1,15 @@
 test_name 'Install modules' do
+  proj_root = File.expand_path(File.join(File.dirname(__FILE__), '..', '..'))
+  staging = { :module_name => 'puppetlabs-reboot' }
+  local = { :module_name => 'reboot', :source => proj_root }
 
   hosts.each do |host|
-    on host, "mkdir -p #{host['distmoduledir']}"
-    if host['platform'] =~ /windows/
-      on host, "cd #{host['distmoduledir']} && git clone --branch 1.1.x --depth 1 git://github.com/puppetlabs/puppetlabs-registry.git registry"
-      on host, "cd #{host['distmoduledir']} && git clone --branch 4.6.x --depth 1 git://github.com/puppetlabs/puppetlabs-stdlib.git stdlib"
-    else
-      on host, 'rm -rf /etc/puppetlabs/puppet/environments/production/modules/reboot'
-      on host, puppet('module install puppetlabs/stdlib')
-      on host, puppet('module install puppetlabs/registry')
-    end
-    copy_root_module_to(host, :module_name => 'reboot')
+    step 'Install Reboot Module Dependencies'
+    on(host, puppet('module install puppetlabs-stdlib'))
+    on(host, puppet('module install puppetlabs-registry'))
+
+    step 'Install Reboot Module'
+    # in CI allow install from staging forge, otherwise from local
+    install_dev_puppet_module_on(host, options[:forge_host] ? staging : local)
   end
 end
