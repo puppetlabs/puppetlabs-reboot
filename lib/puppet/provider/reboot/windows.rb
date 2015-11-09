@@ -110,7 +110,7 @@ Puppet::Type.type(:reboot).provide :windows do
     with_key(path) do |reg|
       renames = reg.read('PendingFileRenameOperations') rescue nil
       if renames
-        pending = renames.length > 0
+        pending = renames[1].length > 0
         if pending
           Puppet.debug("Pending reboot: HKLM\\PendingFileRenameOperations")
         end
@@ -214,7 +214,7 @@ Puppet::Type.type(:reboot).provide :windows do
     rval = nil
 
     with_key(path) do |reg|
-      rval = reg.read(value)
+      rval = reg.read(value)[1]
     end
 
     rval
