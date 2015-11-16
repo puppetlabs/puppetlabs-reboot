@@ -463,6 +463,24 @@ describe Puppet::Type.type(:reboot).provider(:windows), :if => Puppet.features.m
         end
       end
     end
+
+    context 'With required_reboot provider property' do
+      it 'does not reboot by default' do
+        provider.should_not be_reboot_pending
+      end
+
+      it 'reboots when reboot_required is set to true' do
+        provider.reboot_required = true
+
+        provider.should be_reboot_pending
+      end
+
+      it 'does not reboot when reboot_required is set to false' do
+        provider.reboot_required = false
+
+        provider.should_not be_reboot_pending
+      end
+    end
   end
 
 end

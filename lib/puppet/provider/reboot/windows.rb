@@ -3,6 +3,7 @@ Puppet::Type.type(:reboot).provide :windows do
   defaultfor :operatingsystem => :windows
 
   has_features :manages_reboot_pending
+  attr_accessor :reboot_required
 
   def self.shutdown_command
     if File.exists?("#{ENV['SYSTEMROOT']}\\sysnative\\shutdown.exe")
@@ -72,7 +73,8 @@ Puppet::Type.type(:reboot).provide :windows do
   def reboot_pending?
     # http://gallery.technet.microsoft.com/scriptcenter/Get-PendingReboot-Query-bdb79542
 
-    component_based_servicing? ||
+    reboot_required ||
+      component_based_servicing? ||
       windows_auto_update? ||
       pending_file_rename_operations? ||
       package_installer? ||
