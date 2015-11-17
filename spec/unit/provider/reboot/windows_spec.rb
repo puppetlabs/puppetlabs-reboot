@@ -465,8 +465,8 @@ describe Puppet::Type.type(:reboot).provider(:windows), :if => Puppet.features.m
     end
 
     context 'with reboot_required provider property' do
-      it 'does not reboot by default' do
-        provider.should_not be_reboot_pending
+      it 'does not indicate a reboot by default' do
+        provider.reboot_required.should be_false
       end
 
       it 'reboots when reboot_required is set to true' do
@@ -477,6 +477,16 @@ describe Puppet::Type.type(:reboot).provider(:windows), :if => Puppet.features.m
 
       it 'does not reboot when reboot_required is set to false' do
         provider.reboot_required = false
+
+        # prevent actual reboot system state from triggering a false positive
+        provider.expects(:component_based_servicing?).returns(false)
+        provider.expects(:windows_auto_update?).returns(false)
+        provider.expects(:pending_file_rename_operations?).returns(false)
+        provider.expects(:package_installer?).returns(false)
+        provider.expects(:package_installer_syswow64?).returns(false)
+        provider.expects(:pending_computer_rename?).returns(false)
+        provider.expects(:pending_dsc_reboot?).returns(false)
+        provider.expects(:pending_ccm_reboot?).returns(false)
 
         provider.should_not be_reboot_pending
       end
