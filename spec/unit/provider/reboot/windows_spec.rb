@@ -180,7 +180,7 @@ describe Puppet::Type.type(:reboot).provider(:windows), :if => Puppet.features.m
 
     def expects_registry_value(path, name, value)
       reg = stub('reg')
-      reg.expects(:read).with(name).returns(value)
+      reg.expects(:read).with(name).returns(['whatever_type', value])
       expects_registry_key(path).yields(reg)
     end
 
