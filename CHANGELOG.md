@@ -1,3 +1,14 @@
+##2015-11-24 - Supported Release 1.2.1
+###Summary
+
+Add additional pending reboot scenario. Small bug fix.
+
+###Features
+* Pending reboot - Allow setting a flag directly on provider ([MODULES-2822](https://tickets.puppetlabs.com/browse/MODULES-2822))
+
+###Bugfixes
+* Fix use of read method from Registry ([MODULES-2804](https://tickets.puppetlabs.com/browse/MODULES-2804))
+
 ##2015-10-14 - Supported Release 1.2.0
 ###Summary
 
