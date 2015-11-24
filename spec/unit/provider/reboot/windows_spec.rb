@@ -180,7 +180,7 @@ describe Puppet::Type.type(:reboot).provider(:windows), :if => Puppet.features.m
 
     def expects_registry_value(path, name, value)
       reg = stub('reg')
-      reg.expects(:read).with(name).returns(value)
+      reg.expects(:read).with(name).returns(['whatever_type', value])
       expects_registry_key(path).yields(reg)
     end
 
@@ -461,6 +461,34 @@ describe Puppet::Type.type(:reboot).provider(:windows), :if => Puppet.features.m
 
           provider.should_not be_pending_ccm_reboot
         end
+      end
+    end
+
+    context 'with reboot_required provider property' do
+      it 'does not indicate a reboot by default' do
+        provider.reboot_required.should be_false
+      end
+
+      it 'reboots when reboot_required is set to true' do
+        provider.reboot_required = true
+
+        provider.should be_reboot_pending
+      end
+
+      it 'does not reboot when reboot_required is set to false' do
+        provider.reboot_required = false
+
+        # prevent actual reboot system state from triggering a false positive
+        provider.expects(:component_based_servicing?).returns(false)
+        provider.expects(:windows_auto_update?).returns(false)
+        provider.expects(:pending_file_rename_operations?).returns(false)
+        provider.expects(:package_installer?).returns(false)
+        provider.expects(:package_installer_syswow64?).returns(false)
+        provider.expects(:pending_computer_rename?).returns(false)
+        provider.expects(:pending_dsc_reboot?).returns(false)
+        provider.expects(:pending_ccm_reboot?).returns(false)
+
+        provider.should_not be_reboot_pending
       end
     end
   end
