@@ -83,7 +83,7 @@ Puppet::Type.type(:reboot).provide :windows do
   end
 
   def vista_sp1_or_later?
-    match = Facter[:kernelversion].value.match(/\d+\.\d+\.(\d+)/) and match[1].to_i >= 6001
+    match = Facter[:kernelversion].value.match(/\d+\.\d+\.(\d+)/) && match[1].to_i >= 6001
   end
 
   def component_based_servicing?
@@ -125,7 +125,7 @@ Puppet::Type.type(:reboot).provide :windows do
     # 0x00000000 (0)	No pending restart.
     path = 'SOFTWARE\Microsoft\Updates'
     value = reg_value(path, 'UpdateExeVolatile')
-    if value and value != 0
+    if value && value != 0
       Puppet.debug("Pending reboot: HKLM\\#{path}\\UpdateExeVolatile=#{value}")
       true
     else
@@ -138,7 +138,7 @@ Puppet::Type.type(:reboot).provide :windows do
     # 0x00000000 (0)	No pending restart.
     path = 'SOFTWARE\Wow6432Node\Microsoft\Updates'
     value = reg_value(path, 'UpdateExeVolatile')
-    if value and value != 0
+    if value && value != 0
       Puppet.debug("Pending reboot: HKLM\\#{path}\\UpdateExeVolatile=#{value}")
       true
     else
