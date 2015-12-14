@@ -43,9 +43,6 @@ group :development do
   gem 'puppet_facts',                        :require => false
   gem 'mocha', '~>0.10.5',                   :require => false
   gem 'pry',                                 :require => false
-  gem 'pry-stack_explorer',                  :require => false
-  gem 'pry-byebug',                          :require => false if RUBY_VERSION >= '2.0'
-  gem 'pry-debugger',                        :require => false if RUBY_VERSION < '2.0'
   gem 'nokogiri', '~>1.5.10',                :require => false, :platforms => :ruby
   gem 'mime-types', '<2.0',                  :require => false
 end
