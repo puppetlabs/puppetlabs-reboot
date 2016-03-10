@@ -466,7 +466,7 @@ describe Puppet::Type.type(:reboot).provider(:windows), :if => Puppet.features.m
 
     context 'with reboot_required provider property' do
       it 'does not indicate a reboot by default' do
-        provider.reboot_required.should be_false
+        provider.reboot_required.should be_falsey
       end
 
       it 'reboots when reboot_required is set to true' do
