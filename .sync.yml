@@ -9,6 +9,7 @@ Gemfile:
   required:
     ':development':
       - gem: rake
+        version: '~>10.1'
       - gem: rspec
         version: '~>3.0'
       - gem: puppet-lint
