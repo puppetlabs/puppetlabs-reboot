@@ -8,6 +8,9 @@ RSpec.configure do |config|
     config.error_stream = $stderr
     config.formatters.each { |f| f.instance_variable_set(:@output, $stdout) }
   end
+  config.expect_with :rspec do |c|
+    c.syntax = [:should, :expect]
+  end
 end
 
 # We need this because the RAL uses 'should' as a method.  This
