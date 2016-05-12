@@ -1,12 +1,12 @@
 {
   "name": "puppetlabs-reboot",
   "version": "1.2.1",
-  "author": "puppetlabs",
+  "author": "Puppet Inc",
   "summary": "Adds a type and provider for managing system reboots.",
   "license": "Apache-2.0",
   "source": "git://github.com/puppetlabs/puppetlabs-reboot.git",
   "project_page": "https://github.com/puppetlabs/puppetlabs-reboot",
-  "issues_url": "https://tickets.puppetlabs.com/browse/MODULES/component/12016/",
+  "issues_url": "https://tickets.puppet.com/browse/MODULES/component/12016/",
   "operatingsystem_support": [
     {
       "operatingsystem": "Windows",
