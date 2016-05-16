@@ -4,10 +4,10 @@
 Add additional pending reboot scenario. Small bug fix.
 
 ###Features
-* Pending reboot - Allow setting a flag directly on provider ([MODULES-2822](https://tickets.puppetlabs.com/browse/MODULES-2822))
+* Pending reboot - Allow setting a flag directly on provider ([MODULES-2822](https://tickets.puppet.com/browse/MODULES-2822))
 
 ###Bugfixes
-* Fix use of read method from Registry ([MODULES-2804](https://tickets.puppetlabs.com/browse/MODULES-2804))
+* Fix use of read method from Registry ([MODULES-2804](https://tickets.puppet.com/browse/MODULES-2804))
 
 ##2015-10-14 - Supported Release 1.2.0
 ###Summary
@@ -15,12 +15,12 @@ Add additional pending reboot scenario. Small bug fix.
 Detect more pending reboot scenarios.
 
 ###Features
-* Pending reboot - detect computer rename ([MODULES-2657](https://tickets.puppetlabs.com/browse/MODULES-2657))
-* Pending reboot - Detect DSC pending reboot state ([MODULES-2658](https://tickets.puppetlabs.com/browse/MODULES-2658))
-* Pending reboot - Detect CCM pending reboot state ([MODULES-2659](https://tickets.puppetlabs.com/browse/MODULES-2659))
+* Pending reboot - detect computer rename ([MODULES-2657](https://tickets.puppet.com/browse/MODULES-2657))
+* Pending reboot - Detect DSC pending reboot state ([MODULES-2658](https://tickets.puppet.com/browse/MODULES-2658))
+* Pending reboot - Detect CCM pending reboot state ([MODULES-2659](https://tickets.puppet.com/browse/MODULES-2659))
 
 ###Bugfixes
-* Fix Linux provider failing ([MODULES-2585](https://tickets.puppetlabs.com/browse/MODULES-2585))
+* Fix Linux provider failing ([MODULES-2585](https://tickets.puppet.com/browse/MODULES-2585))
 
 ##2015-07-28 - Supported Release 1.1.0
 ###Summary
