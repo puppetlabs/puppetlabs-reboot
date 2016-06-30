@@ -20,4 +20,9 @@ end
 
 PuppetLint.configuration.fail_on_warnings
 PuppetLint.configuration.send('disable_autoloader_layout')
-PuppetLint.configuration.ignore_paths = ["spec/**/*.pp", "pkg/**/*.pp","tests/*.pp"]
+
+# These lint exclusions are in puppetlabs_spec_helper but needs a version above 0.10.3 
+# Line length test is 80 chars in puppet-lint 1.1.0
+PuppetLint.configuration.send('disable_80chars')
+# Line length test is 140 chars in puppet-lint 2.x
+PuppetLint.configuration.send('disable_140chars')
