@@ -466,13 +466,13 @@ describe Puppet::Type.type(:reboot).provider(:windows), :if => Puppet.features.m
 
     context 'with reboot_required provider property' do
       it 'does not indicate a reboot by default' do
-        provider.reboot_required.should be_falsey
+        expect(provider.reboot_required).to be_falsey
       end
 
       it 'reboots when reboot_required is set to true' do
         provider.reboot_required = true
 
-        provider.should be_reboot_pending
+        expect(provider.reboot_pending?).to be (true)
       end
 
       it 'does not reboot when reboot_required is set to false' do
@@ -488,7 +488,7 @@ describe Puppet::Type.type(:reboot).provider(:windows), :if => Puppet.features.m
         provider.expects(:pending_dsc_reboot?).returns(false)
         provider.expects(:pending_ccm_reboot?).returns(false)
 
-        provider.should_not be_reboot_pending
+        expect(provider.reboot_pending?).to be_falsey
       end
     end
   end

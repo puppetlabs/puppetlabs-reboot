@@ -6,27 +6,11 @@
     env: PUPPET_GEM_VERSION="3.3.0"
 Gemfile:
   supports_windows: true
-  required:
+  optional:
     ':development':
-      - gem: rake
-        version: '~>10.1'
-      - gem: rspec
-        version: '~>3.0'
-      - gem: puppet-lint
-      - gem: puppetlabs_spec_helper
-        version: '~>0.10.3'
-      - gem: puppet_facts
-      - gem: mocha
-        version: '~>0.10.5'
-      - gem: pry
       - gem: 'nokogiri'
         version: '~>1.5.10'
         platforms: ':ruby'
-      - gem: 'mime-types'
-        version: '<2.0'
-    ':system_tests':
-      - gem: beaker
-      - gem: beaker-puppet_install_helper
 Rakefile:
   unmanaged: true
 spec/spec_helper.rb:
