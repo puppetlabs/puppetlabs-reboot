@@ -5,12 +5,11 @@
   - rvm: 1.9.3
     env: PUPPET_GEM_VERSION="3.3.0"
 Gemfile:
-  supports_windows: true
   optional:
     ':development':
       - gem: 'nokogiri'
         version: '~>1.5.10'
-        platforms: ':ruby'
+        platforms: 'ruby'
 Rakefile:
   unmanaged: true
 spec/spec_helper.rb:
