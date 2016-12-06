@@ -1,6 +1,6 @@
 file { 'c:/before.txt':
-  content   => 'one',
-  before    => File['c:/after.txt']
+  content => 'one',
+  before  => File['c:/after.txt']
 }
 
 reboot { 'now':
@@ -8,5 +8,5 @@ reboot { 'now':
 }
 
 file { 'c:/after.txt':
-  content   => 'two'
+  content => 'two'
 }
