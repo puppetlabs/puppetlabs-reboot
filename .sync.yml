@@ -10,9 +10,6 @@ Rakefile:
 spec/spec_helper.rb:
   unmanaged: true
 appveyor.yml:
-  matrix_extras:
-    - PUPPET_GEM_VERSION: 3.3.0
-      RUBY_VER: 193
   test_script:
     - 'bundle exec rspec spec/unit -fd -b'
 MAINTAINERS.md:
