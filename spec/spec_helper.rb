@@ -3,11 +3,6 @@ require 'rspec-puppet'
 require 'rspec'
 
 RSpec.configure do |config|
-  if Puppet::Util::Platform.windows?
-    config.output_stream = $stdout
-    config.error_stream = $stderr
-    config.formatters.each { |f| f.instance_variable_set(:@output, $stdout) }
-  end
   config.expect_with :rspec do |c|
     c.syntax = [:should, :expect]
   end
