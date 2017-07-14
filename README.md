@@ -34,7 +34,7 @@ On Windows 2003 (non-R2) x64 nodes, [KB942589](http://support.microsoft.com/kb/9
 
 The reboot module should work right out of the box. To test it, install a package (in this case 'SomePackage') and set up the module to reboot as follows:
 
-    package { 'SomeModule':
+    package { 'SomePackage':
       ensure          => installed,
       source          => '\\server\share\some_installer.exe',
       install_options => ['/Passive', '/NoRestart'],
