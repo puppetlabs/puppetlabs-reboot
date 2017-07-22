@@ -491,6 +491,42 @@ describe Puppet::Type.type(:reboot).provider(:windows), :if => Puppet.features.m
         expect(provider.reboot_pending?).to be_falsey
       end
     end
+
+    context 'with onlyif provider property' do
+      it 'does not reboot when onlyif is set' do
+        resource[:onlyif] = [:pending_dsc_reboot]
+        resource[:when] = :pending
+
+        #provider.expects(:component_based_servicing?).returns(true)
+        #provider.expects(:windows_auto_update?).returns(true)
+        #provider.expects(:pending_file_rename_operations?).returns(true)
+        #provider.expects(:package_installer?).returns(true)
+        #provider.expects(:package_installer_syswow64?).returns(true)
+        #provider.expects(:pending_computer_rename?).returns(true)
+        provider.expects(:pending_dsc_reboot?).returns(false)
+        #provider.expects(:pending_ccm_reboot?).returns(true)
+
+        expect(provider.reboot_pending?).to be_falsey
+      end
+    end
+
+    context 'with unless provider property' do
+      it 'does not reboot when unless is set' do
+        resource[:unless] = [:pending_dsc_reboot]
+        resource[:when] = :pending
+
+        provider.expects(:component_based_servicing?).returns(false)
+        provider.expects(:windows_auto_update?).returns(false)
+        provider.expects(:pending_file_rename_operations?).returns(false)
+        provider.expects(:package_installer?).returns(false)
+        provider.expects(:package_installer_syswow64?).returns(false)
+        provider.expects(:pending_computer_rename?).returns(false)
+        #provider.expects(:pending_dsc_reboot?).returns(true)
+        provider.expects(:pending_ccm_reboot?).returns(false)
+
+        expect(provider.reboot_pending?).to be_falsey
+      end
+    end
   end
 
 end

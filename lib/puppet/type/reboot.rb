@@ -52,6 +52,15 @@ Puppet::Type.newtype(:reboot) do
           apply           => finished,
           subscribe       => Package['Microsoft .NET Framework 4.5'],
         }
+
+    On windows we can limit the reasons for a pending reboot.
+
+    Sample usage:
+
+        reboot { 'renames only':
+          when            => pending,
+          onlyif          => 'pending_rename_file_operations',
+        }
   EOT
 
   feature :manages_reboot_pending, "The provider can detect if a reboot is pending, and reboot as needed."
@@ -78,6 +87,71 @@ Puppet::Type.newtype(:reboot) do
       else
         super
       end
+    end
+  end
+
+  newparam(:onlyif, :required_features => [:manages_reboot_pending]) do
+    desc "For pending reboots, only reboot if the reboot is pending
+      for one of the supplied reasons."
+
+    possible_values = [
+      :reboot_required, :component_based_servicing, :windows_auto_update,
+      :pending_file_rename_operations, :package_installer,
+      :pending_computer_rename, :pending_dsc_reboot, :pending_ccm_reboot
+    ]
+
+    validate do |values|
+      if values == []
+        raise ArgumentError, "There must be at least one element in the list"
+      end
+
+      values = [values] unless values.is_a?(Array)
+
+      values.each do |value|
+        value = value.to_sym if value.is_a?(String)
+
+        unless possible_values.include?(value)
+          raise ArgumentError, "value must be one of #{possible_values.join(', ')}"
+        end
+      end
+    end
+
+    munge do |values|
+      values = [values] unless values.is_a?(Array)
+
+      values.map(&:to_sym)
+    end
+  end
+
+  newparam(:unless, :required_features => [:manages_reboot_pending]) do
+    desc "For pending reboots, ignore the supplied reasons when checking pennding reboot"
+
+    possible_values = [
+      :reboot_required, :component_based_servicing, :windows_auto_update,
+      :pending_file_rename_operations, :package_installer,
+      :pending_computer_rename, :pending_dsc_reboot, :pending_ccm_reboot
+    ]
+
+    validate do |values|
+      if values == []
+        raise ArgumentError, "There must be at least one element in the list"
+      end
+
+      values = [values] unless values.is_a?(Array)
+
+      values.each do |value|
+        value = value.to_sym if value.is_a?(String)
+
+        unless possible_values.include?(value)
+          raise ArgumentError, "value must be one of #{possible_values.join(', ')}"
+        end
+      end
+    end
+
+    munge do |values|
+      values = [values] unless values.is_a?(Array)
+
+      values.map(&:to_sym)
     end
   end
 

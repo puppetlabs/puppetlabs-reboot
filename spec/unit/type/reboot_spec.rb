@@ -119,6 +119,70 @@ describe Puppet::Type.type(:reboot) do
     end
   end
 
+  context "parameter :onlyif" do
+    it "should default :onlyif to nil" do
+      resource[:onlyif].must == nil
+    end
+
+    it "should accept package_installer reason" do
+      resource.provider.class.expects(:satisfies?).with(:manages_reboot_pending).returns(true)
+      resource[:onlyif] = [:package_installer]
+    end
+
+    it "should accept package_installer reason" do
+      resource.provider.class.expects(:satisfies?).with(:manages_reboot_pending).returns(true)
+      resource[:onlyif] = :package_installer
+    end
+
+    it "shouldn't accept an empty list" do
+      expect {
+        resource.provider.class.expects(:satisfies?).with(:manages_reboot_pending).returns(true)
+        resource[:onlyif] = []
+      }.to raise_error(Puppet::ResourceError, /There must be at least one element in the list/)
+    end
+
+    ["pks_install", :pkg_install, {}, true].each do |reason|
+      it "should reject invalid reasons (#{reason})" do
+        expect {
+          resource.provider.class.expects(:satisfies?).with(:manages_reboot_pending).returns(true)
+          resource[:onlyif] = reason
+        }.to raise_error(Puppet::ResourceError, /value must be one of/)
+      end
+    end
+  end
+
+  context "parameter :unless" do
+    it "should default :timeout to nil" do
+      resource[:unless].must == nil
+    end
+
+    it "should accept package_installer reason" do
+      resource.provider.class.expects(:satisfies?).with(:manages_reboot_pending).returns(true)
+      resource[:unless] = [:package_installer]
+    end
+
+    it "should accept package_installer reason" do
+      resource.provider.class.expects(:satisfies?).with(:manages_reboot_pending).returns(true)
+      resource[:unless] = :package_installer
+    end
+
+    it "shouldn't accept an empty list" do
+      expect {
+        resource.provider.class.expects(:satisfies?).with(:manages_reboot_pending).returns(true)
+        resource[:unless] = []
+      }.to raise_error(Puppet::ResourceError, /There must be at least one element in the list/)
+    end
+
+    ["pks_install", :pkg_install, {}, true].each do |reason|
+      it "should reject invalid reasons (#{reason})" do
+        expect {
+          resource.provider.class.expects(:satisfies?).with(:manages_reboot_pending).returns(true)
+          resource[:unless] = reason
+        }.to raise_error(Puppet::ResourceError, /value must be one of/)
+      end
+    end
+  end
+
   context "multiple reboot resources" do
     let(:resource2) { Puppet::Type.type(:reboot).new(:name => "reboot2") }
     let(:provider2) { Puppet::Provider.new(resource2) }

@@ -75,6 +75,28 @@ By default, when this module triggers a reboot, it skips any resources in the ca
       apply  => finished,
     }
 
+### Reboot when certain conditions are met (Windows Only)
+
+When using `when => pending`, there are a number of reasons why a reboot might be pending. `onlyif` or `unless` can be used to specify which reasons you care about.
+
+    reboot { 'reboot on file renames':
+      when   => 'pending',
+      onlyif => 'pending_file_rename_operations'
+    }
+
+The possible reasons for rebooting are:
+
+* reboot_required - A reboot has manually been requested through the provider
+* component_based_servicing - New component has been installed (We think, no good docs on this registry key)
+* windows_auto_update - Automatic update requested a reboot
+* pending_file_rename_operations - There are files that need to be renamed at the next reboot
+* package_installer - A software update requested a reboot
+* package_installer_syswow64 - A software update requested a reboot
+* pending_computer_rename - The computer needs to be renamed
+* pending_dsc_reboot - DSC has requested a reboot
+* pending_ccm_reboot - CCM has requested a reboot
+
+
 ## Reference
 
 ### Type: reboot
@@ -118,6 +140,40 @@ The main type of the module, responsible for all its functionality.
 *Optional.* Specifies how reboots are triggered. If set to 'refreshed', the provider only reboots the node in response to a refresh event from another resource, e.g., installing a package. If set to 'pending', Puppet checks for signs of any pending reboots and completes them before applying the next resource in the catalog. Valid options: 'refreshed' and 'pending'. Default value: 'refreshed'.
 
 **Note:** For `when => pending` reboots, Puppet can normally detect a pending reboot based on some specific system conditions (such as the existence of the PendingFileRenameOperations registry key). However, if those conditions aren't resolved after the node reboots, Puppet triggers another reboot. This can lead to a reboot loop.
+
+#### `onlyif`
+
+*Optional.* Applies a pending reboot only for the specified reasons.
+This can take a single reason or an array of reasons.
+
+The possible reasons for rebooting are:
+
+* reboot_required - A reboot has manually been requested through the provider
+* component_based_servicing - New component has been installed (We think, no good docs on this registry key)
+* windows_auto_update - Automatic update requested a reboot
+* pending_file_rename_operations - There are files that need to be renamed at the next reboot
+* package_installer - A software update requested a reboot
+* package_installer_syswow64 - A software update requested a reboot
+* pending_computer_rename - The computer needs to be renamed
+* pending_dsc_reboot - DSC has requested a reboot
+* pending_ccm_reboot - CCM has requested a reboot
+
+#### `unless`
+
+*Optional.* Ignores the specified reasons when checking for a pending reboot.
+This can take a single reason or an array of reasons.
+
+The possible reasons for rebooting are:
+
+* reboot_required - A reboot has manually been requested through the provider
+* component_based_servicing - New component has been installed (We think, no good docs on this registry key)
+* windows_auto_update - Automatic update requested a reboot
+* pending_file_rename_operations - There are files that need to be renamed at the next reboot
+* package_installer - A software update requested a reboot
+* package_installer_syswow64 - A software update requested a reboot
+* pending_computer_rename - The computer needs to be renamed
+* pending_dsc_reboot - DSC has requested a reboot
+* pending_ccm_reboot - CCM has requested a reboot
 
 ## Development
 
