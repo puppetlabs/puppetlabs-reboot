@@ -70,18 +70,38 @@ Puppet::Type.type(:reboot).provide :windows do
     at_exit { system shutdown_cmd }
   end
 
+  def reboot_required?
+    reboot_required
+  end
+
   def reboot_pending?
     # http://gallery.technet.microsoft.com/scriptcenter/Get-PendingReboot-Query-bdb79542
+    reasons = [
+      :reboot_required,
+      :component_based_servicing,
+      :windows_auto_update,
+      :pending_file_rename_operations,
+      :package_installer,
+      :package_installer_syswow64,
+      :pending_computer_rename,
+      :pending_dsc_reboot,
+      :pending_ccm_reboot
+    ]
 
-    reboot_required ||
-      component_based_servicing? ||
-      windows_auto_update? ||
-      pending_file_rename_operations? ||
-      package_installer? ||
-      package_installer_syswow64? ||
-      pending_computer_rename? ||
-      pending_dsc_reboot? ||
-      pending_ccm_reboot?
+    if @resource[:onlyif] && @resource[:unless]
+      raise ArgumentError, "You can't specify 'onlyif' and 'unless'"
+    end
+
+    reasons = @resource[:onlyif] if @resource[:onlyif]
+    reasons = reasons - @resource[:unless] if @resource[:unless]
+
+    result = false
+
+    reasons.each do |reason|
+      result ||= send("#{reason}?".to_sym)
+    end
+
+    result
   end
 
   def vista_sp1_or_later?
