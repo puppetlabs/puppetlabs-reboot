@@ -190,7 +190,7 @@ Run the tests by issuing the following command
 % bundle exec rspec spec/acceptance
 ```
 
-This will now download a pre-fabricated image configured in the [default node-set](./spec/acceptance/nodesets/default.yml),
+This will now download a pre-fabricated image configured in the [default node-set](spec/acceptance/nodesets/hosts.yml),
 install Puppet, copy this module, and install its dependencies per [spec/spec_helper_acceptance.rb](./spec/spec_helper_acceptance.rb)
 and then run all the tests under [spec/acceptance](./spec/acceptance).
 
