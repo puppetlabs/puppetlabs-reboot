@@ -7,19 +7,6 @@ rescue LoadError
   puts "Unable to load beaker/tasks/test for rake tasks"
 end
 
-# The acceptance tests for Reboot are written in standard beaker format however
-# the preferred method is using beaker-rspec.  This rake task overrides the 
-# default `beaker` task, which would normally use beaker-rspec, and instead
-# invokes beaker directly.  This is only need while the module tests are migrated
-# to the newer rspec-beaker format
-task_exists = Rake.application.tasks.any? { |t| t.name == 'beaker' }
-Rake::Task['beaker'].clear if task_exists
-desc 'Run acceptance testing shim'
-task :beaker do |t, args|
-  beaker_cmd = "beaker --options-file acceptance/.beaker-pe.cfg --hosts #{ENV['BEAKER_setfile']} --tests acceptance/tests --keyfile #{ENV['BEAKER_keyfile']}"
-  Kernel.system( beaker_cmd )
-end
-
 desc 'Run RSpec'
 RSpec::Core::RakeTask.new(:test) do |t|
   t.pattern = 'spec/{unit}/**/*.rb'
@@ -32,11 +19,24 @@ RSpec::Core::RakeTask.new(:coverage) do |t|
   t.rcov_opts = ['--exclude', 'spec']
 end
 
-PuppetLint.configuration.fail_on_warnings
-PuppetLint.configuration.send('disable_autoloader_layout')
-
 # These lint exclusions are in puppetlabs_spec_helper but needs a version above 0.10.3 
 # Line length test is 80 chars in puppet-lint 1.1.0
 PuppetLint.configuration.send('disable_80chars')
 # Line length test is 140 chars in puppet-lint 2.x
 PuppetLint.configuration.send('disable_140chars')
+
+#Due to puppet-lint not ignoring tests folder or the ignore paths attribute
+#we have to ignore many things
+# #Due to bug in puppet-lint we have to clear and redo the lint tasks to achieve ignore paths
+Rake::Task[:lint].clear
+PuppetLint::RakeTask.new(:lint) do |config|
+  config.pattern = 'manifests/**/*.pp'
+  config.fail_on_warnings = true
+  config.disable_checks = [
+      '80chars',
+      'class_inherits_from_params_class',
+      'class_parameter_defaults',
+      'documentation',
+      'single_quote_string_with_variables']
+  config.ignore_paths = ["tests/*.pp", "spec/**/*.pp", "pkg/**/*.pp"]
+end
