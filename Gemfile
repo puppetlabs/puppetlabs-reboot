@@ -50,7 +50,7 @@ group :development do
   gem "json_pure", '<= 2.0.1',                            :require => false if Gem::Version.new(RUBY_VERSION.dup) < Gem::Version.new('2.0.0')
   gem "fast_gettext", '1.1.0',                            :require => false if Gem::Version.new(RUBY_VERSION.dup) < Gem::Version.new('2.1.0')
   gem "fast_gettext",                                     :require => false if Gem::Version.new(RUBY_VERSION.dup) >= Gem::Version.new('2.1.0')
-  gem "nokogiri", '~>1.5.10',                             :require => false, :platforms => "ruby"
+  gem "nokogiri", '~>1.8.1',                              :require => false, :platforms => "ruby"
 end
 
 group :system_tests do
