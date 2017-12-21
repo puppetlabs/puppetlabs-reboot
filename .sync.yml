@@ -1,10 +1,4 @@
 ---
-Gemfile:
-  optional:
-    ':development':
-      - gem: 'nokogiri'
-        version: '~>1.8.1'
-        platforms: 'ruby'
 Rakefile:
   unmanaged: true
 spec/spec_helper.rb:
