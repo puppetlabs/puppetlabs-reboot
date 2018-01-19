@@ -89,14 +89,5 @@
     }
   ],
   "description": "This module provides a facility for managing reboots across nodes.",
-  "dependencies": [
-    {
-      "name": "puppetlabs/stdlib",
-      "version_requirement": ">= 2.3.0 < 5.0.0"
-    },
-    {
-      "name": "puppetlabs/registry",
-      "version_requirement": ">= 1.1.0 < 2.0.0"
-    }
-  ]
+  "dependencies": []
 }
