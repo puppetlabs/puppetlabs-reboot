@@ -1,91 +1,93 @@
-##2015-11-24 - Supported Release 1.2.1
-###Summary
+# Changelog
+All notable changes to this project will be documented in this file.
 
-Add additional pending reboot scenario. Small bug fix.
+The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-###Features
-* Pending reboot - Allow setting a flag directly on provider ([MODULES-2822](https://tickets.puppet.com/browse/MODULES-2822))
+## [Unreleased]
+### Added
+- Support for Puppet 5
+- Add a [Puppet Task](https://puppet.com/docs/bolt/0.x/running_tasks_and_plans_with_bolt.html#concept-1376) for performing on-demand reboots ([MODULES5804](https://tickets.puppetlabs.com/browse/MODULES-5804))
+- Add capability to reboot a Windows machine if [specific conditions](https://github.com/puppetlabs/puppetlabs-reboot#onlyif) are met ([MODULES-4328](https://tickets.puppetlabs.com/browse/MODULES-4328))
+- Add capability to prevent a reboot resource from rebooting a Windows machine if [specific conditions](https://github.com/puppetlabs/puppetlabs-reboot#unless) are met ([MODULES-4328](https://tickets.puppetlabs.com/browse/MODULES-4328))
 
-###Bugfixes
-* Fix use of read method from Registry ([MODULES-2804](https://tickets.puppet.com/browse/MODULES-2804))
+### Fixed
+- Converted test framework from Beaker to Beaker-RSpec ([MODULES-5977](https://tickets.puppetlabs.com/browse/MODULES-5977))
 
-##2015-10-14 - Supported Release 1.2.0
-###Summary
+### Removed
+- Ended support for Puppet 3
 
-Detect more pending reboot scenarios.
 
-###Features
-* Pending reboot - detect computer rename ([MODULES-2657](https://tickets.puppet.com/browse/MODULES-2657))
-* Pending reboot - Detect DSC pending reboot state ([MODULES-2658](https://tickets.puppet.com/browse/MODULES-2658))
-* Pending reboot - Detect CCM pending reboot state ([MODULES-2659](https://tickets.puppet.com/browse/MODULES-2659))
+## [1.2.1] - 2015-11-24
+### Added
+- Pending reboot - Allow setting a flag directly on provider ([MODULES-2822](https://tickets.puppet.com/browse/MODULES-2822))
 
-###Bugfixes
-* Fix Linux provider failing ([MODULES-2585](https://tickets.puppet.com/browse/MODULES-2585))
+### Changed
+- Fix use of read method from Registry ([MODULES-2804](https://tickets.puppet.com/browse/MODULES-2804))
 
-##2015-07-28 - Supported Release 1.1.0
-###Summary
+## [1.2.0] - 2015-10-14
+### Added 
+- Pending reboot - detect computer rename ([MODULES-2657](https://tickets.puppet.com/browse/MODULES-2657))
+- Pending reboot - Detect DSC pending reboot state ([MODULES-2658](https://tickets.puppet.com/browse/MODULES-2658))
+- Pending reboot - Detect CCM pending reboot state ([MODULES-2659](https://tickets.puppet.com/browse/MODULES-2659))
 
-Deprecate Linux provider in favor of POSIX provider
+### Changed
+- Fix Linux provider failing ([MODULES-2585](https://tickets.puppet.com/browse/MODULES-2585))
 
-###Features
-* Move Linux provider to use new POSIX provider
-* Unit and Acceptance Test case fixes
-* Add notice when system is scheduling a reboot
+## [1.1.0] - 2015-07-28 - Supported Release 1.1.0
+### Added
+- Add notice when system is scheduling a reboot
 
-##2015-04-15 - Supported Release 1.0.0
-###Summary
-This release adds support for rebooting Linux distributions in addition to Windows
+### Changed
+- Move Linux provider to use new POSIX provider
+- Fix Unit and Acceptance Test cases
 
-###Features
-* Add linux support
-* Remove prompt for windows reboot
-* Remove catalog_apply_timeout parameter
-* Reboot is now triggered at_exit instead of watching for ruby process to end
+## [1.0.0] - 2015-04-15
+### Added
+- Linux support
 
-##2014-11-11 - Supported Release 0.1.9
-###Summary
+### Changed
+- Reboot is now triggered `at_exit` instead of watching for ruby process to end
 
-Fixes issues URL in metadata
+### Removed
+- Prompt for windows reboot
+- `catalog_apply_timeout` parameter
 
-##2014-08-25 - Supported Release 0.1.8
-###Summary
+## [0.1.9] - 2014-11-11
+### Changed
+- Fixes issues URL in metadata
 
-This release contains fixes for working on x64-native ruby.
+## [0.1.8] - 2014-08-25
+### Changed
+- Fixes for working on x64-native ruby.
 
-##2014-07-15 - Supported Release 0.1.7
-###Summary
+## [0.1.7] - 2014-07-15
+### Changed
+ - Update `metadata.json` so the module can be uninstalled and upgraded via the `puppet module` command.
 
-This release merely updates metadata.json so the module can be uninstalled and
-upgraded via the puppet module command.
+## [0.1.6] - 2014-04-15
+### Changed
+- Updated metadata.
 
-##2014-04-15, Supported Release 0.1.6
-###Summary
-This is a supported release.  No changes except metadata.
-
-##2014-03-04, Supported Release 0.1.5
-###Summary
-This is a supported release.
-
-####Known Bugs
-
-* The version is `0.x` but should be considered a `1.x` for semantic versioning purposes.
+## [0.1.5] - 2014-03-04
+### Added
+- The version is `0.x` but should be considered a `1.x` for semantic versioning purposes.
 
 ---
 
-###2014-02-07, Release 0.1.4
+## [0.1.4] - 2014-02-07
+### Changed
+- Add a workaround for a ruby bug that can prevent ruby.exe from exiting ([PUP-1578](https://tickets.puppetlabs.com/browse/PUP-1578)) 
 
- * (PUP-1578) Workaround ruby bug that can prevent ruby.exe from exiting
+## [0.1.2] - 2013-09-27
+### Changed
+- Never load sample.pp in production
 
-###2013-09-27, Release 0.1.2
+## [0.1.1] - 2013-09-27
+###
+- Only manage reboot resources on systems where shutdown.exe exists ([FM-105](https://tickets.puppetlabs.com/browse/FM-105))
+- Module does not work on Windows 2003 ([FM-106](https://tickets.puppetlabs.com/browse/FM-106))
+- Update description in init.pp ([PP-433](https://tickets.puppetlabs.com/browse/PUP-433))
 
- * (PE-1669) Never load sample.pp in production
-
-###2013-09-27, Release 0.1.1
-
- * (FM-105) Only manage reboot resources on systems where shutdown.exe exists
- * (FM-106) Module does not work on Windows 2003
- * (PP-433) Update description in init.pp
-
-###2013-09-17, Release 0.1.0
-
-Initial release of the reboot module
+### [0.1.0] - 2013-09-17
+### Added
+- Initial release of the reboot module
