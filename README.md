@@ -75,9 +75,11 @@ By default, when this module triggers a reboot, it skips any resources in the ca
       apply  => finished,
     }
 
-### Reboot when certain conditions are met (Windows Only)
+### Reboot when certain conditions are met
 
-When using `when => pending`, there are a number of reasons why a reboot might be pending. `onlyif` or `unless` can be used to specify which reasons you care about.
+This usage applies to Windows only. 
+
+When using `when => pending`, use `onlyif` or `unless` to specify the reasons in which to reboot.
 
     reboot { 'reboot on file renames':
       when   => 'pending',
@@ -86,15 +88,15 @@ When using `when => pending`, there are a number of reasons why a reboot might b
 
 The possible reasons for rebooting are:
 
-* reboot_required - A reboot has manually been requested through the provider
-* component_based_servicing - New component has been installed (We think, no good docs on this registry key)
-* windows_auto_update - Automatic update requested a reboot
-* pending_file_rename_operations - There are files that need to be renamed at the next reboot
-* package_installer - A software update requested a reboot
-* package_installer_syswow64 - A software update requested a reboot
-* pending_computer_rename - The computer needs to be renamed
-* pending_dsc_reboot - DSC has requested a reboot
-* pending_ccm_reboot - CCM has requested a reboot
+* reboot_required: A reboot has manually been requested through the provider.
+* component_based_servicing: A new component has been installed.
+* windows_auto_update: An automatic update requested a reboot.
+* pending_file_rename_operations: There are files that need to be renamed at the next reboot.
+* package_installer: A software update requested a reboot.
+* package_installer_syswow64: A software update requested a reboot.
+* pending_computer_rename: The computer needs to be renamed.
+* pending_dsc_reboot: DSC has requested a reboot.
+* pending_ccm_reboot: CCM has requested a reboot.
 
 
 ## Reference
@@ -146,34 +148,14 @@ The main type of the module, responsible for all its functionality.
 *Optional.* Applies a pending reboot only for the specified reasons.
 This can take a single reason or an array of reasons.
 
-The possible reasons for rebooting are:
-
-* reboot_required - A reboot has manually been requested through the provider
-* component_based_servicing - New component has been installed (We think, no good docs on this registry key)
-* windows_auto_update - Automatic update requested a reboot
-* pending_file_rename_operations - There are files that need to be renamed at the next reboot
-* package_installer - A software update requested a reboot
-* package_installer_syswow64 - A software update requested a reboot
-* pending_computer_rename - The computer needs to be renamed
-* pending_dsc_reboot - DSC has requested a reboot
-* pending_ccm_reboot - CCM has requested a reboot
+See the [Reboot when certain conditions are met](#reboot-when-certain-conditions-are-met) section for reasons why you might reboot. 
 
 #### `unless`
 
 *Optional.* Ignores the specified reasons when checking for a pending reboot.
 This can take a single reason or an array of reasons.
 
-The possible reasons for rebooting are:
-
-* reboot_required - A reboot has manually been requested through the provider
-* component_based_servicing - New component has been installed (We think, no good docs on this registry key)
-* windows_auto_update - Automatic update requested a reboot
-* pending_file_rename_operations - There are files that need to be renamed at the next reboot
-* package_installer - A software update requested a reboot
-* package_installer_syswow64 - A software update requested a reboot
-* pending_computer_rename - The computer needs to be renamed
-* pending_dsc_reboot - DSC has requested a reboot
-* pending_ccm_reboot - CCM has requested a reboot
+See the [Reboot when certain conditions are met](#reboot-when-certain-conditions-are-met) section for reasons why you might reboot. 
 
 ## Development
 
