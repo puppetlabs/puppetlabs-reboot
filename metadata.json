@@ -11,14 +11,14 @@
     {
       "operatingsystem": "Windows",
       "operatingsystemrelease": [
-        "Server 2003",
-        "Server 2003 R2",
         "Server 2008",
         "Server 2008 R2",
         "Server 2012",
         "Server 2012 R2",
+        "Server 2016",
         "7",
-        "8"
+        "8",
+        "10"
       ]
     },
     {
@@ -56,21 +56,23 @@
     {
       "operatingsystem": "SLES",
       "operatingsystemrelease": [
-        "11 SP1"
+        "11 SP1",
+        "12"
       ]
     },
     {
       "operatingsystem": "Debian",
       "operatingsystemrelease": [
-        "6",
-        "7"
+        "7",
+        "8",
+        "9"
       ]
     },
     {
       "operatingsystem": "Ubuntu",
       "operatingsystemrelease": [
-        "12.04",
-        "14.04"
+        "14.04",
+        "16.04"
       ]
     },
     {
