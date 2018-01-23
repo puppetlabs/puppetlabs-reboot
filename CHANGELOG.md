@@ -4,11 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [2.0.0] - 2018-01-23
 ### Added
 - Support for Puppet 5
 - Add a [Puppet Task](https://puppet.com/docs/bolt/0.x/running_tasks_and_plans_with_bolt.html#concept-1376) for performing on-demand reboots ([MODULES5804](https://tickets.puppetlabs.com/browse/MODULES-5804))
-- Add capability to reboot a Windows machine if [specific conditions](https://github.com/puppetlabs/puppetlabs-reboot#onlyif) are met ([MODULES-4328](https://tickets.puppetlabs.com/browse/MODULES-4328))
-- Add capability to prevent a reboot resource from rebooting a Windows machine if [specific conditions](https://github.com/puppetlabs/puppetlabs-reboot#unless) are met ([MODULES-4328](https://tickets.puppetlabs.com/browse/MODULES-4328))
+- Add capability to reboot a Windows machine if [specific conditions](https://github.com/puppetlabs/puppetlabs-reboot#onlyif) are met via the `onlyif` parameter ([MODULES-4328](https://tickets.puppetlabs.com/browse/MODULES-4328))
+- Add capability to prevent a reboot resource from rebooting a Windows machine if [specific conditions](https://github.com/puppetlabs/puppetlabs-reboot#unless) are met via the `unless` parameter ([MODULES-4328](https://tickets.puppetlabs.com/browse/MODULES-4328))
 
 ### Fixed
 - Converted test framework from Beaker to Beaker-RSpec ([MODULES-5977](https://tickets.puppetlabs.com/browse/MODULES-5977))
