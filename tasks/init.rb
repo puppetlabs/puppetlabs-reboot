@@ -1,4 +1,3 @@
-#!/opt/puppetlabs/puppet/bin/ruby
 require 'facter'
 require 'json'
 
@@ -13,10 +12,8 @@ def async_command(cmd)
     # This appears to be the only way to get the processes to properly detach
     # themselves, it was a HUGE PAIN to fugure out
     require 'win32/process'
-    Process.create({
-      command_line: "cmd /c start #{cmd}",
-      creation_flags: Process::DETACHED_PROCESS,
-    })
+    Process.create(command_line: "cmd /c start #{cmd}",
+                   creation_flags: Process::DETACHED_PROCESS)
   else
     # Fork the process so that we can have one return the status and one
     # actually do the work
@@ -32,9 +29,9 @@ def async_command(cmd)
 end
 
 def shutdown_executable_windows
-  if File.exists?("#{ENV['SYSTEMROOT']}\\sysnative\\shutdown.exe")
+  if File.exist?("#{ENV['SYSTEMROOT']}\\sysnative\\shutdown.exe")
     "#{ENV['SYSTEMROOT']}\\sysnative\\shutdown.exe"
-  elsif File.exists?("#{ENV['SYSTEMROOT']}\\system32\\shutdown.exe")
+  elsif File.exist?("#{ENV['SYSTEMROOT']}\\system32\\shutdown.exe")
     "#{ENV['SYSTEMROOT']}\\system32\\shutdown.exe"
   else
     'shutdown.exe'
@@ -48,36 +45,28 @@ def windows_shutdown_command(params)
 end
 
 def unix_shutdown_command(params)
-  case Facter.value(:kernel)
-  when 'SunOS'
-    flags = ['-y', '-i', '6', '-g', params[:timeout], "\"#{params[:message]}\""]
-  else
-    flags = ['-r', "+#{params[:timeout]}", "\"#{params[:message]}\""]
-  end
+  flags = if Facter.value(:kernel) == 'SunOS'
+            ['-y', '-i', '6', '-g', params[:timeout], "\"#{params[:message]}\""]
+          else
+            ['-r', "+#{params[:timeout]}", "\"#{params[:message]}\""]
+          end
   ['shutdown', flags, '</dev/null', '>/dev/null', '2>&1', '&'].join(' ')
 end
 
 # Actually shut down the computer
-case Facter.value(:kernel)
-when 'windows'
-  async_command(windows_shutdown_command({
-    timeout: timeout,
-    message: message,
-  }))
+if Facter.value(:kernel) == 'windows'
+  async_command(windows_shutdown_command(timeout: timeout, message: message))
 else
   # Round to minutes for everything but SunOS
   unless Facter.value(:kernel) == 'SunOS'
     minutes = (timeout / 60.0).ceil
     timeout = minutes
   end
-  async_command(unix_shutdown_command({
-    timeout: timeout,
-    message: message,
-  }))
+  async_command(unix_shutdown_command(timeout: timeout, message: message))
 end
 
 result = {
-  "status" => "queued",
-  "timeout" => timeout,
+  'status' => 'queued',
+  'timeout' => timeout,
 }
 JSON.dump(result, STDOUT)

@@ -1,13 +1,12 @@
 require 'spec_helper_acceptance'
 
 describe 'Reboot Immediately and Explicit Immediately' do
-
   def apply_reboot_manifest(agent, reboot_manifest)
     apply_manifest_on agent, reboot_manifest
     retry_shutdown_abort(agent)
   end
 
-  let(:reboot_manifest) {
+  let(:reboot_manifest) do
     <<-MANIFEST
       notify { 'step_1':
       }
@@ -15,9 +14,9 @@ describe 'Reboot Immediately and Explicit Immediately' do
       reboot { 'now':
       }
     MANIFEST
-  }
+  end
 
-  let(:reboot_immediate_manifest) {
+  let(:reboot_immediate_manifest) do
     <<-MANIFEST
       notify { 'step_1':
       }
@@ -26,7 +25,7 @@ describe 'Reboot Immediately and Explicit Immediately' do
         apply => immediately
       }
     MANIFEST
-  }
+  end
 
   windows_agents.each do |agent|
     context "on #{agent}" do

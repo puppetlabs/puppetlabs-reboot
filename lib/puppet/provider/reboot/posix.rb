@@ -4,11 +4,11 @@ Puppet::Type.type(:reboot).provide :posix do
   This provider handles rebooting for POSIX systems. It does not support
   HP-UX."
 
-  confine :feature => :posix
-  confine :false => (Facter.value(:kernel) == 'HP-UX')
-  defaultfor :feature => :posix
+  confine feature: :posix
+  confine false: (Facter.value(:kernel) == 'HP-UX')
+  defaultfor feature: :posix
 
-  commands :shutdown => 'shutdown'
+  commands shutdown: 'shutdown'
 
   def shutdown_flags
     case Facter.value(:kernel)
@@ -28,8 +28,7 @@ Puppet::Type.type(:reboot).provide :posix do
     :absent
   end
 
-  def when=(value)
-  end
+  def when=(value); end
 
   def cancel_transaction
     Puppet::Application.stop!
@@ -42,7 +41,7 @@ Puppet::Type.type(:reboot).provide :posix do
 
     shutdown_path = command(:shutdown)
     unless shutdown_path
-      raise ArgumentError, "The shutdown command was not found."
+      raise ArgumentError, 'The shutdown command was not found.'
     end
 
     timeout = @resource[:timeout].to_i

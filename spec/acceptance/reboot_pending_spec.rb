@@ -1,21 +1,20 @@
 require 'spec_helper_acceptance'
 
 describe 'Windows Provider - Pending Reboot' do
-
-  let(:reboot_manifest) {
+  let(:reboot_manifest) do
     <<-MANIFEST
       reboot { 'now':
         when => pending
       }
     MANIFEST
-  }
-  let(:pending_reboot_manifest) {
+  end
+  let(:pending_reboot_manifest) do
     <<-MANIFEST
       registry_key { 'HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\WindowsUpdate\\Auto Update\\RebootRequired':
         ensure => present,
       }
     MANIFEST
-  }
+  end
 
   # Undo the Registry Changes for Required Reboot
   after(:all) do
@@ -24,9 +23,9 @@ describe 'Windows Provider - Pending Reboot' do
         ensure => absent,
       }
       MANIFEST
-    windows_agents.each { |agent|
+    windows_agents.each do |agent|
       apply_manifest_on agent, undo_pending_reboot_manifest
-    }
+    end
   end
 
   windows_agents.each do |agent|
@@ -46,7 +45,7 @@ describe 'Windows Provider - Pending Reboot' do
     context "on #{agent}" do
       original_name = on(agent, 'cmd /c hostname').stdout.chomp
 
-      new_name = ('a'..'z').to_a.shuffle[0, 12].join
+      new_name = ('a'..'z').to_a.sample(12).join
       it "Rename the computer to #{new_name} temporarily" do
         on agent, powershell("\"& { (Get-WmiObject -Class Win32_ComputerSystem).Rename('#{new_name}') }\"")
       end
