@@ -90,6 +90,10 @@ RSpec/DescribeClass:
   Enabled: false
 RSpec/MessageExpectation:
   Enabled: false
+Rspec/ExampleLength:
+  Enabled: false
+Rspec/NestedGroups:
+  Enabled: false
 Style/AsciiComments:
   Enabled: false
 Style/IfUnlessModifier:
