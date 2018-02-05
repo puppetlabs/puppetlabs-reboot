@@ -1,17 +1,16 @@
 require 'spec_helper_acceptance'
 
 describe 'No Refresh' do
-
-  let(:reboot_manifest) {
+  let(:reboot_manifest) do
     <<-MANIFEST
       reboot { 'now':
       }
     MANIFEST
-  }
+  end
 
   posix_agents.each do |agent|
     context "on #{agent}" do
-      it 'Should not Reboot Computer without Refresh' do
+      it 'does not Reboot Computer without Refresh' do
         apply_manifest_on agent, reboot_manifest
         ensure_shutdown_not_scheduled(agent)
       end
@@ -20,7 +19,7 @@ describe 'No Refresh' do
 
   windows_agents.each do |agent|
     context "on #{agent}" do
-      it 'Should not Reboot Computer without Refresh' do
+      it 'does not Reboot Computer without Refresh' do
         apply_manifest_on agent, reboot_manifest
         ensure_shutdown_not_scheduled(agent)
       end

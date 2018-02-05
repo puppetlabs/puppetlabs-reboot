@@ -1,21 +1,21 @@
 Puppet::Type.type(:reboot).provide :windows do
-  confine :operatingsystem => :windows
-  defaultfor :operatingsystem => :windows
+  confine operatingsystem: :windows
+  defaultfor operatingsystem: :windows
 
   has_features :manages_reboot_pending
   attr_accessor :reboot_required
 
   def self.shutdown_command
-    if File.exists?("#{ENV['SYSTEMROOT']}\\sysnative\\shutdown.exe")
+    if File.exist?("#{ENV['SYSTEMROOT']}\\sysnative\\shutdown.exe")
       "#{ENV['SYSTEMROOT']}\\sysnative\\shutdown.exe"
-    elsif File.exists?("#{ENV['SYSTEMROOT']}\\system32\\shutdown.exe")
+    elsif File.exist?("#{ENV['SYSTEMROOT']}\\system32\\shutdown.exe")
       "#{ENV['SYSTEMROOT']}\\system32\\shutdown.exe"
     else
       'shutdown.exe'
     end
   end
 
-  commands :shutdown => shutdown_command
+  commands shutdown: shutdown_command
 
   def self.instances
     []
@@ -30,14 +30,13 @@ Puppet::Type.type(:reboot).provide :windows do
     end
   end
 
-  def when=(value)
-    if @resource[:when] == :pending
-      if @resource.class.rebooting
-        Puppet.debug("Reboot already scheduled; skipping")
-      else
-        @resource.class.rebooting = true
-        reboot
-      end
+  def when=(_value)
+    return unless @resource[:when] == :pending
+    if @resource.class.rebooting
+      Puppet.debug('Reboot already scheduled; skipping')
+    else
+      @resource.class.rebooting = true
+      reboot
     end
   end
 
@@ -47,7 +46,8 @@ Puppet::Type.type(:reboot).provide :windows do
 
   def reboot
     if @resource[:apply] == :finished && @resource[:when] == :pending
-      Puppet.warning("The combination of `when => pending` and `apply => finished` is not a recommended or supported scenario. Please only use this scenario if you know exactly what you are doing. The puppet agent run will continue.")
+      Puppet.warning('The combination of `when => pending` and `apply => finished` is not a recommended or supported scenario. Please only use this scenario \
+                      if you know exactly what you are doing. The puppet agent run will continue.')
     end
 
     if @resource[:apply] != :finished
@@ -56,7 +56,7 @@ Puppet::Type.type(:reboot).provide :windows do
 
     shutdown_path = command(:shutdown)
     unless shutdown_path
-      raise ArgumentError, "The shutdown.exe command was not found. On Windows 2003 x64 hotfix 942589 must be installed to access the 64-bit version of shutdown.exe from 32-bit version of ruby.exe."
+      raise ArgumentError, 'The shutdown.exe command was not found. On Windows 2003 x64 hotfix 942589 must be installed to access the 64-bit version of shutdown.exe from 32-bit version of ruby.exe.'
     end
 
     # Reason code
@@ -85,7 +85,7 @@ Puppet::Type.type(:reboot).provide :windows do
       :package_installer_syswow64,
       :pending_computer_rename,
       :pending_dsc_reboot,
-      :pending_ccm_reboot
+      :pending_ccm_reboot,
     ]
 
     if @resource[:onlyif] && @resource[:unless]
@@ -93,7 +93,7 @@ Puppet::Type.type(:reboot).provide :windows do
     end
 
     reasons = @resource[:onlyif] if @resource[:onlyif]
-    reasons = reasons - @resource[:unless] if @resource[:unless]
+    reasons -= @resource[:unless] if @resource[:unless]
 
     result = false
 
@@ -105,8 +105,8 @@ Puppet::Type.type(:reboot).provide :windows do
   end
 
   def vista_sp1_or_later?
-    # this errors if this is not a control flow construct
-    match = Facter[:kernelversion].value.match(/\d+\.\d+\.(\d+)/) and match[1].to_i >= 6001
+    match = Facter[:kernelversion].value.match(%r{\d+\.\d+\.(\d+)})
+    match.nil? ? false : match[1].to_i >= 6001
   end
 
   def component_based_servicing?
@@ -131,11 +131,15 @@ Puppet::Type.type(:reboot).provide :windows do
 
     path = 'SYSTEM\CurrentControlSet\Control\Session Manager'
     with_key(path) do |reg|
-      renames = reg.read('PendingFileRenameOperations') rescue nil
+      renames = begin
+                  reg.read('PendingFileRenameOperations')
+                rescue
+                  nil
+                end
       if renames
-        pending = renames[1].length > 0
+        pending = !renames[1].empty?
         if pending
-          Puppet.debug("Pending reboot: HKLM\\PendingFileRenameOperations")
+          Puppet.debug('Pending reboot: HKLM\\PendingFileRenameOperations')
         end
       end
     end
@@ -148,13 +152,9 @@ Puppet::Type.type(:reboot).provide :windows do
     # 0x00000000 (0)	No pending restart.
     path = 'SOFTWARE\Microsoft\Updates'
     value = reg_value(path, 'UpdateExeVolatile')
-     # this may error if this is not a control flow construct
-    if value and value != 0
-      Puppet.debug("Pending reboot: HKLM\\#{path}\\UpdateExeVolatile=#{value}")
-      true
-    else
-      false
-    end
+    return false if value.nil? || value.zero?
+    Puppet.debug("Pending reboot: HKLM\\#{path}\\UpdateExeVolatile=#{value}")
+    true
   end
 
   def package_installer_syswow64?
@@ -162,13 +162,9 @@ Puppet::Type.type(:reboot).provide :windows do
     # 0x00000000 (0)	No pending restart.
     path = 'SOFTWARE\Wow6432Node\Microsoft\Updates'
     value = reg_value(path, 'UpdateExeVolatile')
-    # this may error if this is not a control flow construct
-    if value and value != 0
-      Puppet.debug("Pending reboot: HKLM\\#{path}\\UpdateExeVolatile=#{value}")
-      true
-    else
-      false
-    end
+    return false if value.nil? || value.zero?
+    Puppet.debug("Pending reboot: HKLM\\#{path}\\UpdateExeVolatile=#{value}")
+    true
   end
 
   def pending_computer_rename?
@@ -195,10 +191,11 @@ Puppet::Type.type(:reboot).provide :windows do
 
       config = lcm.ExecMethod_('GetMetaConfiguration')
       reboot = config.MetaConfiguration.LCMState == 'PendingReboot'
-    rescue
+    rescue # rubocop:disable Lint/HandleExceptions
+      # WIN32OLE errors are very bad to diagnose.  In this case any errors are ignored.
     end
 
-    Puppet.debug("Pending reboot: DSC LocalConfigurationManager LCMState") if reboot
+    Puppet.debug('Pending reboot: DSC LocalConfigurationManager LCMState') if reboot
     reboot
   end
 
@@ -213,17 +210,18 @@ Puppet::Type.type(:reboot).provide :windows do
       ccm_client_utils = ccm.Get('CCM_ClientUtilities')
 
       pending = ccm_client_utils.ExecMethod_('DetermineIfRebootPending')
-      reboot = (pending.ReturnValue == 0) && (pending.IsHardRebootPending || pending.RebootPending)
-    rescue
+      reboot = pending.ReturnValue.zero? && (pending.IsHardRebootPending || pending.RebootPending)
+    rescue # rubocop:disable Lint/HandleExceptions
+      # WIN32OLE errors are very bad to diagnose.  In this case any errors are ignored.
     end
 
-    Puppet.debug("Pending reboot: CCM ClientUtilities") if reboot
+    Puppet.debug('Pending reboot: CCM ClientUtilities') if reboot
     reboot
   end
 
   private
 
-  def with_key(name, &block)
+  def with_key(name)
     require 'win32/registry'
 
     Win32::Registry::HKEY_LOCAL_MACHINE.open(name, Win32::Registry::KEY_READ | 0x100) do |reg|

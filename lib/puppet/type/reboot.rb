@@ -63,10 +63,10 @@ Puppet::Type.newtype(:reboot) do
         }
   EOT
 
-  feature :manages_reboot_pending, "The provider can detect if a reboot is pending, and reboot as needed."
+  feature :manages_reboot_pending, 'The provider can detect if a reboot is pending, and reboot as needed.'
 
   newparam(:name) do
-    desc "The name of the reboot resource.  Used for uniqueness."
+    desc 'The name of the reboot resource.  Used for uniqueness.'
     isnamevar
   end
 
@@ -77,7 +77,7 @@ Puppet::Type.newtype(:reboot) do
       will only be performed in response to a refresh event from
       another resource, e.g. `package`."
     newvalue(:refreshed)
-    newvalue(:pending, :required_features => :manages_reboot_pending)
+    newvalue(:pending, required_features: :manages_reboot_pending)
     defaultto :refreshed
 
     def insync?(is)
@@ -90,7 +90,7 @@ Puppet::Type.newtype(:reboot) do
     end
   end
 
-  newparam(:onlyif, :required_features => [:manages_reboot_pending]) do
+  newparam(:onlyif, required_features: [:manages_reboot_pending]) do
     desc "For pending reboots, only reboot if the reboot is pending
       for one of the supplied reasons."
 
@@ -102,7 +102,7 @@ Puppet::Type.newtype(:reboot) do
 
     validate do |values|
       if values == []
-        raise ArgumentError, "There must be at least one element in the list"
+        raise ArgumentError, 'There must be at least one element in the list'
       end
 
       values = [values] unless values.is_a?(Array)
@@ -123,8 +123,8 @@ Puppet::Type.newtype(:reboot) do
     end
   end
 
-  newparam(:unless, :required_features => [:manages_reboot_pending]) do
-    desc "For pending reboots, ignore the supplied reasons when checking pennding reboot"
+  newparam(:unless, required_features: [:manages_reboot_pending]) do
+    desc 'For pending reboots, ignore the supplied reasons when checking pennding reboot'
 
     possible_values = [
       :reboot_required, :component_based_servicing, :windows_auto_update,
@@ -134,7 +134,7 @@ Puppet::Type.newtype(:reboot) do
 
     validate do |values|
       if values == []
-        raise ArgumentError, "There must be at least one element in the list"
+        raise ArgumentError, 'There must be at least one element in the list'
       end
 
       values = [values] unless values.is_a?(Array)
@@ -166,21 +166,21 @@ Puppet::Type.newtype(:reboot) do
   end
 
   newparam(:message) do
-    desc "The message to log when the reboot is performed."
+    desc 'The message to log when the reboot is performed.'
 
     validate do |value|
-      if value.nil? or value == ""
-        raise ArgumentError, "A non-empty message must be specified."
+      if value.nil? || value == ''
+        raise ArgumentError, 'A non-empty message must be specified.'
       end
 
       # Maximum command line length in Windows is 8191 characters, so this is
       # an approximation based on the other parts of the shutdown command
       if value.length > 8000
-        raise ArgumentError, "The given message must not exceed 8000 characters."
+        raise ArgumentError, 'The given message must not exceed 8000 characters.'
       end
     end
 
-    defaultto "Puppet is rebooting the computer"
+    defaultto 'Puppet is rebooting the computer'
   end
 
   newparam(:timeout) do
@@ -190,8 +190,8 @@ Puppet::Type.newtype(:reboot) do
       current run."
 
     validate do |value|
-      if value.to_s !~ /^\d+$/
-        raise ArgumentError, "The timeout must be an integer."
+      if value.to_s !~ %r{^\d+$}
+        raise ArgumentError, 'The timeout must be an integer.'
       end
     end
 
@@ -200,26 +200,26 @@ Puppet::Type.newtype(:reboot) do
 
   @rebooting = false
 
-  def self.rebooting
-    @rebooting
+  class << self
+    attr_reader :rebooting
   end
 
-  def self.rebooting=(value)
-    @rebooting = value
+  class << self
+    attr_writer :rebooting
   end
 
   def refresh
     case self[:when]
     when :refreshed
       if self.class.rebooting
-        Puppet.debug("Reboot already scheduled; skipping")
+        Puppet.debug('Reboot already scheduled; skipping')
       else
         self.class.rebooting = true
         Puppet.notice("Scheduling system reboot with message: \"#{self[:message]}\"")
         provider.reboot
       end
     else
-      Puppet.debug("Skipping reboot")
+      Puppet.debug('Skipping reboot')
     end
   end
 end

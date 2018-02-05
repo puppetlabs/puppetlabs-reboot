@@ -1,7 +1,6 @@
 require 'spec_helper_acceptance'
 
 describe 'Puppet Resume after Reboot' do
-
   def apply_reboot_manifest(agent, reboot_manifest, match)
     apply_manifest_on(agent, reboot_manifest) do |result|
       assert_match match, result.stdout, 'Expected file was not created'
@@ -9,7 +8,7 @@ describe 'Puppet Resume after Reboot' do
     retry_shutdown_abort(agent)
   end
 
-  let(:reboot_manifest) {
+  let(:reboot_manifest) do
     <<-MANIFEST
       file { '/first.txt':
         ensure => file,
@@ -22,9 +21,9 @@ describe 'Puppet Resume after Reboot' do
       reboot { 'second_reboot':
       }
     MANIFEST
-  }
+  end
 
-  let(:windows_reboot_manifest) {
+  let(:windows_reboot_manifest) do
     <<-MANIFEST
       file { 'c:/first.txt':
         ensure => file,
@@ -37,11 +36,11 @@ describe 'Puppet Resume after Reboot' do
       reboot { 'second_reboot':
       }
     MANIFEST
-  }
+  end
 
   # Remove Test Artifacts
   after(:all) do
-    remove_artifacts =  <<-MANIFEST
+    remove_artifacts = <<-MANIFEST
       file { '/first.txt':
         ensure => absent,
       }
@@ -59,22 +58,22 @@ describe 'Puppet Resume after Reboot' do
       }
       MANIFEST
 
-    posix_agents.each { |agent|
+    posix_agents.each do |agent|
       apply_manifest_on agent, remove_artifacts
-    }
-    windows_agents.each { |agent|
+    end
+    windows_agents.each do |agent|
       apply_manifest_on agent, windows_remove_artifacts
-    }
+    end
   end
 
   posix_agents.each do |agent|
     context "on #{agent}" do
       it 'Attempt First Reboot' do
-        apply_reboot_manifest(agent, reboot_manifest, /\[\/first.txt\]\/ensure: created/)
+        apply_reboot_manifest(agent, reboot_manifest, %r{\[\/first.txt\]\/ensure: created})
       end
 
       it 'Resume After Reboot' do
-        apply_reboot_manifest(agent, reboot_manifest, /\[\/second.txt\]\/ensure: created/)
+        apply_reboot_manifest(agent, reboot_manifest, %r{\[\/second.txt\]\/ensure: created})
       end
 
       it 'Verify Manifest is Finished' do
@@ -87,11 +86,11 @@ describe 'Puppet Resume after Reboot' do
   windows_agents.each do |agent|
     context "on #{agent}" do
       it 'Attempt First Reboot' do
-        apply_reboot_manifest(agent, windows_reboot_manifest, /\[c:\/first.txt\]\/ensure: created/)
+        apply_reboot_manifest(agent, windows_reboot_manifest, %r{\[c:\/first.txt\]\/ensure: created})
       end
 
       it 'Resume After Reboot' do
-        apply_reboot_manifest(agent, windows_reboot_manifest, /\[c:\/second.txt\]\/ensure: created/)
+        apply_reboot_manifest(agent, windows_reboot_manifest, %r{\[c:\/second.txt\]\/ensure: created})
       end
 
       it 'Verify Manifest is Finished' do
