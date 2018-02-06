@@ -6,6 +6,10 @@ spec/spec_helper.rb:
 appveyor.yml:
   test_script:
     - 'bundle exec rspec spec/unit -fd -b'
+travis.yml:
+  extras:
+    - rvm: 2.1.9
+      script: bundle exec rake rubocop
 MAINTAINERS.md:
   maintainers:
     - "Puppet Windows Team `windows |at| puppet |dot| com`"
