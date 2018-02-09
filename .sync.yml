@@ -6,7 +6,7 @@ spec/spec_helper.rb:
 appveyor.yml:
   test_script:
     - 'bundle exec rspec spec/unit -fd -b'
-travis.yml:
+.travis.yml:
   extras:
     - rvm: 2.1.9
       script: bundle exec rake rubocop
