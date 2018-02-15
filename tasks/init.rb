@@ -23,7 +23,7 @@ def async_command(cmd)
       # Wait the prescribed amount of time
       sleep wait_time
       # Replace itself with the reboot command
-      exec(cmd)
+      exec(*cmd)
     end
   end
 end
@@ -45,12 +45,14 @@ def windows_shutdown_command(params)
 end
 
 def unix_shutdown_command(params)
+  require 'shellwords'
+  escaped_message = Shellwords.escape(params[:message])
   flags = if Facter.value(:kernel) == 'SunOS'
-            ['-y', '-i', '6', '-g', params[:timeout], "\"#{params[:message]}\""]
+            ['-y', '-i', '6', '-g', params[:timeout], escaped_message]
           else
-            ['-r', "+#{params[:timeout]}", "\"#{params[:message]}\""]
+            ['-r', "+#{params[:timeout]}", escaped_message]
           end
-  ['shutdown', flags, '</dev/null', '>/dev/null', '2>&1', '&'].join(' ')
+  ['shutdown', flags, '</dev/null', '>/dev/null', '2>&1', '&'].flatten
 end
 
 # Actually shut down the computer
