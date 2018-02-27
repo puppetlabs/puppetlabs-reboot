@@ -2,7 +2,7 @@ require 'spec_helper'
 require 'puppet/type'
 require 'puppet/provider/reboot/windows'
 
-describe Puppet::Type.type(:reboot).provider(:windows), if: Puppet.features.microsoft_windows? do
+describe Puppet::Type.type(:reboot).provider(:windows), if: Puppet::Util::Platform.windows? do
   let(:resource) { Puppet::Type.type(:reboot).new(provider: :windows, name: 'windows_reboot') }
   let(:provider) { resource.provider }
   let(:native_path)     { "#{ENV['SYSTEMROOT']}\\sysnative\\shutdown.exe" }
