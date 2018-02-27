@@ -4,11 +4,11 @@
   "parameters": {
     "timeout": {
       "description": "Timeout before shutdown (seconds)",
-      "type": "Optional[Variant[String,Integer]]"
+      "type": "Optional[Variant[Pattern[/^[0-9]*$/],Integer]]"
     },
     "message": {
       "description": "Shutdown message for systems that support it",
-      "type": "Optional[String[1]]"
+      "type": "Optional[Pattern[/^[^|&]*$/]]"
     }
   }
 }
