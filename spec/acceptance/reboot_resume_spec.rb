@@ -2,7 +2,7 @@ require 'spec_helper_acceptance'
 
 describe 'Puppet Resume after Reboot' do
   def apply_reboot_manifest(agent, reboot_manifest, match)
-    apply_manifest_on(agent, reboot_manifest) do |result|
+    execute_manifest_on(agent, reboot_manifest) do |result|
       assert_match match, result.stdout, 'Expected file was not created'
     end
     retry_shutdown_abort(agent)
@@ -77,7 +77,7 @@ describe 'Puppet Resume after Reboot' do
       end
 
       it 'Verify Manifest is Finished' do
-        apply_manifest_on agent, reboot_manifest
+        execute_manifest_on(agent, reboot_manifest)
         ensure_shutdown_not_scheduled(agent)
       end
     end
@@ -94,7 +94,7 @@ describe 'Puppet Resume after Reboot' do
       end
 
       it 'Verify Manifest is Finished' do
-        apply_manifest_on agent, windows_reboot_manifest
+        execute_manifest_on(agent, windows_reboot_manifest)
         ensure_shutdown_not_scheduled(agent)
       end
     end

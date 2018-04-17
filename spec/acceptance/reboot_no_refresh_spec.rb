@@ -11,7 +11,7 @@ describe 'No Refresh' do
   posix_agents.each do |agent|
     context "on #{agent}" do
       it 'does not Reboot Computer without Refresh' do
-        apply_manifest_on agent, reboot_manifest
+        execute_manifest_on(agent, reboot_manifest)
         ensure_shutdown_not_scheduled(agent)
       end
     end
@@ -20,7 +20,7 @@ describe 'No Refresh' do
   windows_agents.each do |agent|
     context "on #{agent}" do
       it 'does not Reboot Computer without Refresh' do
-        apply_manifest_on agent, reboot_manifest
+        execute_manifest_on(agent, reboot_manifest)
         ensure_shutdown_not_scheduled(agent)
       end
     end

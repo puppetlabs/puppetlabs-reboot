@@ -2,7 +2,7 @@ require 'spec_helper_acceptance'
 
 describe 'Reboot Skip' do
   def apply_reboot_manifest(agent, reboot_manifest)
-    apply_manifest_on(agent, reboot_manifest, debug: true) do |result|
+    execute_manifest_on(agent, reboot_manifest, debug: true) do |result|
       assert_match %r{Transaction canceled, skipping},
                    result.stdout, 'Expected resource was not skipped'
     end
