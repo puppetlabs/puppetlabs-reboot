@@ -2,7 +2,7 @@ require 'spec_helper_acceptance'
 
 describe 'Custom Message' do
   def apply_reboot_manifest(agent, reboot_manifest)
-    apply_manifest_on agent, reboot_manifest, debug: true do |result|
+    execute_manifest_on(agent, reboot_manifest, debug: true) do |result|
       expected_command = if fact_on(agent, 'kernel') == 'SunOS'
                            %r{shutdown -y -i 6 -g 60 \"A different message\"}
                          else

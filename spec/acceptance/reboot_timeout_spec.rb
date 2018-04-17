@@ -16,7 +16,7 @@ describe 'Custom Timeout' do
   posix_agents.each do |agent|
     context "on #{agent}" do
       it 'Reboot Immediately with a Custom Timeout' do
-        apply_manifest_on agent, reboot_manifest, debug: true do |result|
+        execute_manifest_on(agent, reboot_manifest, debug: true) do |result|
           expected_command = if fact_on(agent, 'kernel') == 'SunOS'
                                %r{shutdown -y -i 6 -g 120}
                              else
@@ -35,7 +35,7 @@ describe 'Custom Timeout' do
   windows_agents.each do |agent|
     context "on #{agent}" do
       it 'Reboot Immediately with a Custom Timeout' do
-        apply_manifest_on agent, reboot_manifest, debug: true do |result|
+        execute_manifest_on(agent, reboot_manifest, debug: true) do |result|
           assert_match %r{shutdown\.exe \/r \/t 120 \/d p:4:1},
                        result.stdout, 'Expected reboot timeout is incorrect'
         end

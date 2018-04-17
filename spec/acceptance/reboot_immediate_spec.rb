@@ -2,7 +2,7 @@ require 'spec_helper_acceptance'
 
 describe 'Reboot Immediately and Explicit Immediately' do
   def apply_reboot_manifest(agent, reboot_manifest)
-    apply_manifest_on agent, reboot_manifest
+    execute_manifest_on(agent, reboot_manifest)
     retry_shutdown_abort(agent)
   end
 

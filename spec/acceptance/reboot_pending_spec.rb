@@ -35,7 +35,7 @@ describe 'Windows Provider - Pending Reboot' do
       end
 
       it 'Reboot if Pending Reboot Required' do
-        apply_manifest_on agent, reboot_manifest
+        execute_manifest_on(agent, reboot_manifest)
         retry_shutdown_abort(agent)
       end
     end
@@ -50,7 +50,7 @@ describe 'Windows Provider - Pending Reboot' do
         on agent, powershell("\"& { (Get-WmiObject -Class Win32_ComputerSystem).Rename('#{new_name}') }\"")
       end
       it 'Reboot if Pending Reboot Required' do
-        apply_manifest_on agent, reboot_manifest
+        execute_manifest_on(agent, reboot_manifest)
         retry_shutdown_abort(agent)
       end
       if original_name
