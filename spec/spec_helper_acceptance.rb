@@ -63,18 +63,30 @@ def ensure_shutdown_not_scheduled(agent)
   end
 end
 
+# If test is run on Debian 9 it does not seem possible to catch the shutdown command.
+# As such code has beem implanted so that the loss of connection is caught instead.
 def retry_shutdown_abort(agent, max_retries = 6)
+  sleep 55 if (fact('operatingsystem') =~ %r{Debian} && fact('operatingsystemrelease') =~ %r{^9\.}) ||
+              (fact('operatingsystem') =~ %r{Ubuntu} && (fact('operatingsystemrelease') =~ %r{^16\.} ||
+                                                         fact('operatingsystemrelease') =~ %r{^18\.}))
   i = 0
   while i < max_retries
     if windows_agents.include?(agent)
       result = on(agent, WINDOWS_SHUTDOWN_ABORT, acceptable_exit_codes: [0, WINDOWS_SHUTDOWN_NOT_IN_PROGRESS].flatten)
     else
-      pid = shutdown_pid(agent)
-      result = on(agent, "kill #{pid}", acceptable_exit_codes: [0]) if pid
+      begin
+        pid = shutdown_pid(agent)
+        result = on(agent, "kill #{pid}", acceptable_exit_codes: [0]) if pid
+      rescue Beaker::Host::CommandFailure
+        break if (fact('operatingsystem') =~ %r{Debian} && fact('operatingsystemrelease') =~ %r{^9\.}) || # rubocop:disable Metrics/BlockNesting
+                 (fact('operatingsystem') =~ %r{Ubuntu} && (fact('operatingsystemrelease') =~ %r{^16\.} ||
+                                                            fact('operatingsystemrelease') =~ %r{^18\.}))
+        raise
+      end
     end
     break if result.exit_code == 0
 
-    Beaker::Log.warn("Reboot is not yet scheduled; sleeping for #{1 << i} seconds")
+    warn("Reboot is not yet scheduled; sleeping for #{1 << i} seconds")
     sleep 1 << i
     i += 1
   end
