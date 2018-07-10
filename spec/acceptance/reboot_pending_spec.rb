@@ -24,14 +24,14 @@ describe 'Windows Provider - Pending Reboot' do
       }
       MANIFEST
     windows_agents.each do |agent|
-      apply_manifest_on agent, undo_pending_reboot_manifest
+      execute_manifest_on(agent, undo_pending_reboot_manifest)
     end
   end
 
   windows_agents.each do |agent|
     context "Agent #{agent}" do
       it 'Declare Reboot Required in the Registry' do
-        apply_manifest_on agent, pending_reboot_manifest
+        execute_manifest_on(agent, pending_reboot_manifest)
       end
 
       it 'Reboot if Pending Reboot Required' do

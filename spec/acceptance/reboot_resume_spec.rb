@@ -59,10 +59,10 @@ describe 'Puppet Resume after Reboot' do
       MANIFEST
 
     posix_agents.each do |agent|
-      apply_manifest_on agent, remove_artifacts
+      execute_manifest_on(agent, remove_artifacts)
     end
     windows_agents.each do |agent|
-      apply_manifest_on agent, windows_remove_artifacts
+      execute_manifest_on(agent, windows_remove_artifacts)
     end
   end
 
