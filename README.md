@@ -10,7 +10,8 @@
     * [Beginning with reboot](#beginning-with-reboot)
 4. [Usage - Configuration options and additional functionality](#usage)
 5. [Reference - An under-the-hood peek at what the module is doing and how](#reference)
-6. [Development - Guide for contributing to the module](#development)
+6. [Limitations - OS compatibility, etc.](#limitations)
+7. [Development - Guide for contributing to the module](#development)
 
 ## Overview
 
@@ -156,6 +157,10 @@ See the [Reboot when certain conditions are met](#reboot-when-certain-conditions
 This can take a single reason or an array of reasons.
 
 See the [Reboot when certain conditions are met](#reboot-when-certain-conditions-are-met) section for reasons why you might reboot. 
+
+## Limitations
+
+For an extensive list of supported operating systems, see [metadata.json](https://github.com/puppetlabs/puppetlabs-reboot/blob/master/metadata.json)
 
 ## Development
 
