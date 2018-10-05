@@ -149,14 +149,57 @@ The main type of the module, responsible for all its functionality.
 *Optional.* Applies a pending reboot only for the specified reasons.
 This can take a single reason or an array of reasons.
 
-See the [Reboot when certain conditions are met](#reboot-when-certain-conditions-are-met) section for reasons why you might reboot. 
+See the [Reboot when certain conditions are met](#reboot-when-certain-conditions-are-met) section for reasons why you might reboot.
 
 #### `unless`
 
 *Optional.* Ignores the specified reasons when checking for a pending reboot.
 This can take a single reason or an array of reasons.
 
-See the [Reboot when certain conditions are met](#reboot-when-certain-conditions-are-met) section for reasons why you might reboot. 
+See the [Reboot when certain conditions are met](#reboot-when-certain-conditions-are-met) section for reasons why you might reboot.
+
+### Function: `reboot::wait`
+
+This function is intended to be used as part of a [plan](https://puppet.com/docs/bolt/0.x/writing_plans.html) and allows Bolt to wait for a server to reboot before continuing. This function has no use in normal Puppet code (outside of plans) and will not work.
+
+Here is an example of using this module to reboot servers, wait for them to come back, then check the status of a service:
+
+```puppet
+plan myapp::patch (
+  $servers,
+  $version,
+) {
+  # Upgrade the application
+  run_task('myapp::upgrade', $servers, { 'version' => $version })
+
+  # Reboot the servers
+  run_task('reboot', $servers)
+
+  # Wait for them to come back, this app is slow to shut down so give them
+  # 5 min to shut down
+  reboot::wait($servers, { 'disconnect_wait' => 300 })
+
+  # Check the status of the service
+  return run_task('service', $nodes, {
+    'name'   => 'myapp',
+    'action' => 'status',
+  })
+}
+```
+
+#### Parameters
+
+##### `targets`
+
+A `TargetSpec` object containing all nodes to wait for.
+
+##### `params`
+
+A `Hash` of optional timing parameters, these should be specified as an `Integer` representing seconds. Available parameters are:
+
+* `disconnect_wait`
+* `reconnect_wait`
+* `retry_interval`
 
 ## Limitations
 
