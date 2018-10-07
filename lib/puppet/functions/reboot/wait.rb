@@ -12,11 +12,13 @@ Puppet::Functions.create_function(:'reboot::wait') do
   # @example Wait for some very slow nodes to reboot.
   #   reboot::wait($nodes, { 'disconnect_wait' => 120, 'reconnect_wait' => 600 })
   dispatch :wait do
-    required_param 'Tuple', :targets
+    required_param 'Variant[Array,Target]', :targets
     optional_param 'Hash', :params
   end
 
   def wait(targets, params = { disconnect_wait: 20, reconnect_wait: 120, retry_interval: 1 })
+    # Convert to array
+    targets = [targets].flatten
     threads = []
 
     targets.each do |target|
