@@ -28,3 +28,7 @@ def tasks_available?
   # Tasks (--tasks) were introduced in Puppet Agent 5.4.0 (PUP-7898)
   Gem::Version.new(Puppet.version) >= Gem::Version.new('5.4.0')
 end
+
+def fixtures_dir
+  @fixtures_dir_location ||= File.join(File.dirname(__FILE__), 'fixtures')
+end

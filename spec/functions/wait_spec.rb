@@ -12,6 +12,13 @@ describe 'reboot::wait', if: bolt_loaded? && tasks_available? do
     end
   end
 
+  before(:each) do
+    # There's no easy way to mock the config file location within the orchestrator client
+    # so instead modify the class methods to use our fixtures
+    OrchestratorClient::Config.any_instance.stubs(:puppetlabs_root).returns(fixtures_dir)
+    OrchestratorClient::Config.any_instance.stubs(:user_root).returns(fixtures_dir)
+  end
+
   context 'when using orchestrator' do
     let(:target) { Bolt::Target.new('example.puppet.com', 'protocol' => 'pcp') }
 

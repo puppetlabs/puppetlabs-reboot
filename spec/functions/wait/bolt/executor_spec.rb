@@ -5,6 +5,13 @@ require 'spec_helper'
 describe 'Bolt::Executor', if: bolt_loaded? && tasks_available? do
   let(:executor) { Bolt::Executor.new }
 
+  before(:each) do
+    # There's no easy way to mock the config file location within the orchestrator client
+    # so instead modify the class methods to use our fixtures
+    OrchestratorClient::Config.any_instance.stubs(:puppetlabs_root).returns(fixtures_dir) # rubocop:disable RSpec/AnyInstance
+    OrchestratorClient::Config.any_instance.stubs(:user_root).returns(fixtures_dir) # rubocop:disable RSpec/AnyInstance
+  end
+
   it 'returns transports' do
     expect(executor).to respond_to(:transports)
   end
