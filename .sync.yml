@@ -14,6 +14,10 @@ Gemfile:
       - gem: master_manipulator
       - gem: puppet-blacksmith
         version: '~> 3.4'
+  optional:
+    ':development':
+      - gem: 'bolt'
+        condition: "Gem::Version.new(RUBY_VERSION.dup) >= Gem::Version.new('2.3.0')"
 
 appveyor.yml:
   matrix_extras:
@@ -30,6 +34,15 @@ appveyor.yml:
 
 .gitlab-ci.yml:
   delete: true
+
+# Due to https://tickets.puppetlabs.com/browse/PDK-1199 we need to stop the symlink checks in Travis CI
+# The symlink checks are still done in Appveyor so there's no loss in coverage
+.travis.yml:
+  includes:
+    - env: CHECK="syntax lint metadata_lint check:git_ignore check:dot_underscore check:test_file rubocop"
+    - env: CHECK=parallel_spec
+    - env: PUPPET_GEM_VERSION="~> 4.0" CHECK=parallel_spec
+      rvm: 2.1.9
 
 spec/default_facts.yml:
   unmanaged: true
