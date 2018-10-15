@@ -160,7 +160,7 @@ See the [Reboot when certain conditions are met](#reboot-when-certain-conditions
 
 ### Function: `reboot::wait`
 
-This function is intended to be used as part of a [plan](https://puppet.com/docs/bolt/0.x/writing_plans.html) and allows Bolt to wait for a server to reboot before continuing. This function has no use in normal Puppet code (outside of plans) and will not work.
+This function is intended to be used as part of a [plan](https://puppet.com/docs/bolt/latest/writing_plans.html) and allows Bolt to wait for a server to reboot before continuing. This function has no use in normal Puppet code (outside of plans) and will not work.
 
 Here is an example of using this module to reboot servers, wait for them to come back, then check the status of a service:
 
