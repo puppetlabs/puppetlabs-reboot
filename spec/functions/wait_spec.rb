@@ -23,6 +23,8 @@ describe 'reboot::wait', if: bolt_loaded? && tasks_available? do
     let(:target) { Bolt::Target.new('example.puppet.com', 'protocol' => 'pcp') }
 
     it 'will run with a single Target' do
+      Puppet::Pops::Functions::Function.any_instance.stubs(:call_function).with('get_targets', target).returns([target])
+
       # Mock the disconnection and reconnection of a client
       OrchestratorClient.any_instance.expects(:get).with('inventory/example.puppet.com').returns('connected' => true)
       OrchestratorClient.any_instance.expects(:get).with('inventory/example.puppet.com').returns('connected' => false)
@@ -35,6 +37,8 @@ describe 'reboot::wait', if: bolt_loaded? && tasks_available? do
       targets = (1..100).map do |num|
         Bolt::Target.new("example#{num}.puppet.com", 'protocol' => 'pcp')
       end
+
+      Puppet::Pops::Functions::Function.any_instance.stubs(:call_function).with('get_targets', targets).returns(targets)
 
       # Mock the disconnection and reconnection of all clients
       targets.each do |targ|
