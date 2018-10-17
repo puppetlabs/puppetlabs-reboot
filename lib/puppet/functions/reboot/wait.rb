@@ -5,6 +5,10 @@
 #
 # This has no valid use outside plans!
 Puppet::Functions.create_function(:'reboot::wait') do
+  local_types do
+    type 'TargetOrTargets = Variant[String[1], Target, Array[TargetOrTargets]]'
+  end
+
   # @param targets A TargetSpec containing all targets to wait for
   # @param params Extra parameters defined as a hash, valid keys are:
   #   disconnect_wait, reconnect_wait and retry_interval. All values should be
@@ -12,13 +16,13 @@ Puppet::Functions.create_function(:'reboot::wait') do
   # @example Wait for some very slow nodes to reboot.
   #   reboot::wait($nodes, { 'disconnect_wait' => 120, 'reconnect_wait' => 600 })
   dispatch :wait do
-    required_param 'Variant[Array,Target]', :targets
+    required_param 'TargetOrTargets', :targets
     optional_param 'Hash', :params
   end
 
   def wait(targets, params = { disconnect_wait: 20, reconnect_wait: 120, retry_interval: 1 })
     # Convert to array
-    targets = [targets].flatten
+    targets = call_function('get_targets', targets)
     threads = []
 
     targets.each do |target|
