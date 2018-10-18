@@ -1,6 +1,3 @@
 fixtures:
   symlinks:
     reboot: "#{source_dir}"
-    boltlib: "#{source_dir}/spec/fixtures/modules/bolt/bolt-modules/boltlib"
-  repositories:
-    bolt: https://github.com/puppetlabs/bolt.git
