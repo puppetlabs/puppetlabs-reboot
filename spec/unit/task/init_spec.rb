@@ -1,3 +1,4 @@
+require 'spec_helper'
 require_relative '../../../tasks/init'
 
 describe Reboot::Task do # rubocop:disable RSpec/FilePath
