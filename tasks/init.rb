@@ -60,11 +60,13 @@ if Facter.value(:kernel) == 'windows'
   async_command(windows_shutdown_command(timeout: timeout, message: message))
 else
   # Round to minutes for everything but SunOS
-  unless Facter.value(:kernel) == 'SunOS'
-    minutes = (timeout / 60.0).ceil
-    timeout = minutes
+  if Facter.value(:kernel) == 'SunOS'
+    timeout_os = timeout
+  else
+    timeout_os = (timeout / 60.0).ceil
+    timeout = timeout_os * 60
   end
-  async_command(unix_shutdown_command(timeout: timeout, message: message))
+  async_command(unix_shutdown_command(timeout: timeout_os, message: message))
 end
 
 result = {
