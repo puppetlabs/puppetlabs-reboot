@@ -149,14 +149,65 @@ The main type of the module, responsible for all its functionality.
 *Optional.* Applies a pending reboot only for the specified reasons.
 This can take a single reason or an array of reasons.
 
-See the [Reboot when certain conditions are met](#reboot-when-certain-conditions-are-met) section for reasons why you might reboot. 
+See the [Reboot when certain conditions are met](#reboot-when-certain-conditions-are-met) section for reasons why you might reboot.
 
 #### `unless`
 
 *Optional.* Ignores the specified reasons when checking for a pending reboot.
 This can take a single reason or an array of reasons.
 
-See the [Reboot when certain conditions are met](#reboot-when-certain-conditions-are-met) section for reasons why you might reboot. 
+See the [Reboot when certain conditions are met](#reboot-when-certain-conditions-are-met) section for reasons why you might reboot.
+
+### Plan: `reboot::wait`
+
+This plan is intended to be used as part of other [plans](https://puppet.com/docs/bolt/latest/writing_plans.html) and allows Bolt to wait for a server to reboot before continuing.
+
+Here is an example of using this module to reboot servers, wait for them to come back, then check the status of a service:
+
+```puppet
+plan myapp::patch (
+  $servers,
+  $version,
+) {
+  # Upgrade the application
+  run_task('myapp::upgrade', $servers, { 'version' => $version })
+
+  # Reboot the servers. This app is slow to shut down so give them 5 minutes to reboot.
+  run_plan('reboot', $servers, reconnect_timeout => 300)
+
+  # Check the status of the service
+  return run_task('service', $nodes, {
+    'name'   => 'myapp',
+    'action' => 'status',
+  })
+}
+```
+
+#### Parameters
+
+##### `nodes`
+
+A `TargetSpec` object containing all nodes to wait for.
+
+##### `message`
+
+An optional message to log when rebooting.
+
+##### `reboot_delay`
+
+How long (in seconds) to wait before shutting down. Defaults to 0, shutdown immediately.
+
+##### `disconnect_wait`
+
+How long (in seconds) to wait before checking whether the server has rebooted. Defaults to 1.
+
+##### `reconnect_timeout`
+
+How long (in seconds) to attempt to reconnect before giving up. Defaults to 180.
+
+##### `retry_interval`
+
+How long (in seconds) to wait between retries. Defaults to 1.
 
 ## Limitations
 
