@@ -86,6 +86,7 @@ Puppet::Type.type(:reboot).provide :windows do
       :pending_computer_rename,
       :pending_dsc_reboot,
       :pending_ccm_reboot,
+      :pending_domain_join,
     ]
 
     if @resource[:onlyif] && @resource[:unless]
@@ -217,6 +218,13 @@ Puppet::Type.type(:reboot).provide :windows do
 
     Puppet.debug('Pending reboot: CCM ClientUtilities') if reboot
     reboot
+  end
+
+  def pending_domain_join?
+    path = 'SYSTEM\CurrentControlSet\Services\Netlogon\JoinDomain'
+    pending = key_exists?(path)
+    Puppet.debug("Pending reboot: HKLM\\#{path}") if pending
+    pending
   end
 
   private

@@ -465,6 +465,22 @@ describe Puppet::Type.type(:reboot).provider(:windows) do
       end
     end
 
+    context 'Domain Join' do
+      let(:path) { 'SYSTEM\CurrentControlSet\Services\Netlogon\JoinDomain' }
+
+      it 'reboots if the JoinDomain key is present' do
+        expects_registry_key(path).yields(stub('reg'))
+
+        provider.should be_pending_domain_join
+      end
+
+      it 'ignores if the JoinDomain key is absent' do
+        expects_registry_key_not_found(path)
+
+        provider.should_not be_pending_domain_join
+      end
+    end
+
     context 'with reboot_required provider property' do
       it 'does not indicate a reboot by default' do
         expect(provider.reboot_required).to be_falsey
@@ -488,6 +504,7 @@ describe Puppet::Type.type(:reboot).provider(:windows) do
         provider.expects(:pending_computer_rename?).returns(false)
         provider.expects(:pending_dsc_reboot?).returns(false)
         provider.expects(:pending_ccm_reboot?).returns(false)
+        provider.expects(:pending_domain_join?).returns(false)
 
         expect(provider).not_to be_reboot_pending
       end
@@ -506,6 +523,7 @@ describe Puppet::Type.type(:reboot).provider(:windows) do
         # provider.expects(:pending_computer_rename?).returns(true)
         provider.expects(:pending_dsc_reboot?).returns(false)
         # provider.expects(:pending_ccm_reboot?).returns(true)
+        # provider.expects(:pending_domain_join?).returns(true)
 
         expect(provider).not_to be_reboot_pending
       end
@@ -524,6 +542,7 @@ describe Puppet::Type.type(:reboot).provider(:windows) do
         provider.expects(:pending_computer_rename?).returns(false)
         # provider.expects(:pending_dsc_reboot?).returns(true)
         provider.expects(:pending_ccm_reboot?).returns(false)
+        provider.expects(:pending_domain_join?).returns(false)
 
         expect(provider).not_to be_reboot_pending
       end

@@ -98,7 +98,7 @@ The possible reasons for rebooting are:
 * pending_computer_rename: The computer needs to be renamed.
 * pending_dsc_reboot: DSC has requested a reboot.
 * pending_ccm_reboot: CCM has requested a reboot.
-
+* pending_domain_join: System has joined domain and is pending a reboot.
 
 ## Reference
 
