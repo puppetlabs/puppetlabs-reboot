@@ -25,6 +25,17 @@ hosts.each do |host|
   install_dev_puppet_module_on(host, options[:forge_host] ? staging : local)
 end
 
+base_dir = File.dirname(File.expand_path(__FILE__))
+
+RSpec.configure do |c|
+  # Skip tasks tests unless Bolt is available
+  c.filter_run_excluding(bolt: true) unless ENV['GEM_BOLT']
+
+  # Make modules available locally for Bolt
+  c.add_setting :module_path
+  c.module_path = File.join(base_dir, 'fixtures', 'modules')
+end
+
 require 'rubygems' # this is necessary for ruby 1.8
 require 'puppet/version'
 WINDOWS_SHUTDOWN_ABORT = 'cmd /c shutdown /a'.freeze

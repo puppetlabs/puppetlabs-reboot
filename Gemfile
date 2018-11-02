@@ -43,6 +43,10 @@ group :system_tests do
   gem "beaker-testmode_switcher", '~> 0.4',           require: false
   gem "master_manipulator",                           require: false
   gem "puppet-blacksmith", '~> 3.4',                  require: false
+  if ENV['GEM_BOLT']
+    gem 'bolt', '~> 1.1', require: false
+    gem 'beaker-task_helper', '~> 1.5', require: false
+  end
 end
 
 puppet_version = ENV['PUPPET_GEM_VERSION']

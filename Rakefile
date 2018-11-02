@@ -4,3 +4,5 @@ require 'puppet_blacksmith/rake_tasks' if Bundler.rubygems.find_name('puppet-bla
 
 PuppetLint.configuration.send('disable_relative')
 PuppetSyntax.exclude_paths << %w[plans/*]
+
+task :beaker => :spec_prep
