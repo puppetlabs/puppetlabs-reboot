@@ -1,3 +1,13 @@
+if ENV['GEM_BOLT']
+  # Ensure tasks are enabled when rspec-puppet sets up an environment so we get task loaders.
+  # Note that this is probably not safe to do in modules that also test Puppet manifest code.
+  require 'puppet'
+  Puppet[:tasks] = true
+
+  # Ensure logger is initialized with Puppet levels so 'notice' works when running plan specs.
+  require 'logging'
+  Logging.init :debug, :info, :notice, :warn, :error, :fatal, :any
+end
 
 require 'puppetlabs_spec_helper/module_spec_helper'
 require 'rspec-puppet-facts'
@@ -33,6 +43,9 @@ RSpec.configure do |c|
     # by default Puppet runs at warning level
     Puppet.settings[:strict] = :warning
   end
+
+  # Skip tasks tests unless Bolt is available
+  c.filter_run_excluding(bolt: true) unless ENV['GEM_BOLT']
 end
 
 def ensure_module_defined(module_name)
