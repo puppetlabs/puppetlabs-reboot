@@ -34,7 +34,7 @@ group :development do
   gem "puppet-module-win-default-r#{minor_version}",   require: false, platforms: [:mswin, :mingw, :x64_mingw]
   gem "puppet-module-win-dev-r#{minor_version}",       require: false, platforms: [:mswin, :mingw, :x64_mingw]
   if ENV['GEM_BOLT']
-    gem 'bolt', '~> 1.1', require: false
+    gem 'bolt', '~> 1.3', require: false
   end
 end
 group :system_tests do
@@ -44,7 +44,7 @@ group :system_tests do
   gem "master_manipulator",                           require: false
   gem "puppet-blacksmith", '~> 3.4',                  require: false
   if ENV['GEM_BOLT']
-    gem 'bolt', '~> 1.1', require: false
+    gem 'bolt', '~> 1.3', require: false
     gem 'beaker-task_helper', '~> 1.5', require: false
   end
 end

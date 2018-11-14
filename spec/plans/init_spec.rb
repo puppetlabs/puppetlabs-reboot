@@ -2,16 +2,7 @@ require 'spec_helper'
 
 # Tests generally use 0 timeouts to skip sleep in plans.
 describe 'reboot plan', bolt: true do
-  if ENV['GEM_BOLT']
-    require 'bolt_spec/plans'
-    include BoltSpec::Plans
-    # Implement without_default_logging in MockExecutor. This should be merged back to Bolt.
-    BoltSpec::Plans::MockExecutor.class_eval do
-      def without_default_logging
-        yield
-      end
-    end
-  end
+  include BoltSpec::Plans if ENV['GEM_BOLT']
 
   it 'reboots a target' do
     time_seq = [Time.now - 1, Time.now]
