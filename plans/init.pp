@@ -79,6 +79,10 @@ plan reboot (
 
         # sleep for a small time before trying again
         reboot::sleep($retry_interval)
+
+        # wait for all targets to be available again
+        $remaining_time = $reconnect_timeout - $elapsed_time_sec
+        wait_until_available($failed_targets, wait_time => $remaining_time, retry_interval => $retry_interval)
       }
 
       $failed_targets

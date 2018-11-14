@@ -2,7 +2,15 @@ require 'spec_helper'
 
 # Tests generally use 0 timeouts to skip sleep in plans.
 describe 'reboot plan', bolt: true do
-  include BoltSpec::Plans if ENV['GEM_BOLT']
+  if ENV['GEM_BOLT']
+    include BoltSpec::Plans
+    # Fix wait_until_available, it's broken in Bolt 1.3.0.
+    BoltSpec::Plans::MockExecutor.class_eval do
+      def wait_until_available(targets, _options)
+        Bolt::ResultSet.new(targets.map { |target| Bolt::Result.new(target) })
+      end
+    end
+  end
 
   it 'reboots a target' do
     time_seq = [Time.now - 1, Time.now]
