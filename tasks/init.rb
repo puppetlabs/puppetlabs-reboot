@@ -1,3 +1,4 @@
+#!/opt/puppetlabs/puppet/bin/ruby
 require 'facter'
 require 'json'
 
@@ -5,8 +6,10 @@ params   = JSON.parse(STDIN.read)
 timeout  = params['timeout'].to_i || 3
 message  = params['message']
 
-def async_command(cmd)
-  wait_time = 3
+# Force a minimum timeout of 3 seconds to allow the task response to be delivered.
+timeout = 3 if timeout < 3
+
+def async_command(cmd, wait_time = nil)
   case Facter.value(:kernel)
   when 'windows'
     # This appears to be the only way to get the processes to properly detach
@@ -21,7 +24,7 @@ def async_command(cmd)
       # Detatch itself completely
       Process.daemon
       # Wait the prescribed amount of time
-      sleep wait_time
+      sleep wait_time if wait_time
       # Replace itself with the reboot command
       exec(*cmd)
     end
@@ -39,7 +42,6 @@ def shutdown_executable_windows
 end
 
 def windows_shutdown_command(params)
-  params[:timeout] = 3 if params[:timeout] < 3
   message_params = ['/c', "\"#{params[:message]}\""] if params[:message]
   [shutdown_executable_windows, '/r', '/t', params[:timeout], '/d', 'p:4:1', message_params].join(' ')
 end
@@ -50,7 +52,7 @@ def unix_shutdown_command(params)
   flags = if Facter.value(:kernel) == 'SunOS'
             ['-y', '-i', '6', '-g', params[:timeout], escaped_message]
           else
-            ['-r', "+#{params[:timeout]}", escaped_message]
+            ['-r', params[:timeout], escaped_message]
           end
   ['shutdown', flags, '</dev/null', '>/dev/null', '2>&1', '&'].flatten
 end
@@ -58,13 +60,14 @@ end
 # Actually shut down the computer
 if Facter.value(:kernel) == 'windows'
   async_command(windows_shutdown_command(timeout: timeout, message: message))
-else
-  # Round to minutes for everything but SunOS
-  unless Facter.value(:kernel) == 'SunOS'
-    minutes = (timeout / 60.0).ceil
-    timeout = minutes
-  end
+elsif Facter.value(:kernel) == 'SunOS'
   async_command(unix_shutdown_command(timeout: timeout, message: message))
+else
+  # Specify timeout in minutes, or now. Let the forked process sleep to handle seconds.
+  timeout_min = timeout / 60
+  timeout_min = (timeout_min > 0) ? "+#{timeout_min}" : 'now'
+  timeout_sec = timeout % 60
+  async_command(unix_shutdown_command(timeout: timeout_min, message: message), timeout_sec)
 end
 
 result = {
