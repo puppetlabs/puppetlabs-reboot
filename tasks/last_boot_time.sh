@@ -1,6 +1,4 @@
 #!/bin/sh
-if [ $(uname) = Darwin ]; then
-  last -1 reboot
-else
-  last -1 -F reboot
-fi
+
+# Try -F for time in seconds, fall back to without if unavailable
+last -1 -F reboot 2>/dev/null || last -1 reboot
