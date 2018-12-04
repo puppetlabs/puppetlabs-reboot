@@ -12,7 +12,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 - Support for Puppet 6 ([MODULES-7832](https://tickets.puppetlabs.com/browse/MODULES-7832))
 - Add Rubocop to enforce PDK rules ([MODULES-5896](https://tickets.puppetlabs.com/browse/MODULES-5896))
 - Add Beaker Testmode Switcher ([MODULES-6745](https://tickets.puppetlabs.com/browse/MODULES-6745))
-- Add support for Debian 9, Ubuntu 16.04 and Ubuntu 18.04 ([MODULES-7417](https://tickets.puppetlabs.com/browse/MODULES-7417))
+- Add acceptance-test support for Debian 9, Ubuntu 16.04 and Ubuntu 18.04 ([MODULES-7417](https://tickets.puppetlabs.com/browse/MODULES-7417))
 
 ### Changed
 - Update limitations in README ([MODULES-7634](https://tickets.puppetlabs.com/browse/MODULES-7634))
