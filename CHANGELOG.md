@@ -22,6 +22,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 ### Fixed
 - Fix conditionals in Windows provider ([MODULES-3975](https://tickets.puppetlabs.com/browse/MODULES-3975))
 
+### Removed
+- Support for SLES 5 and Debian 7 ([FM-6968](https://tickets.puppetlabs.com/browse/FM-6968))
+
 ### Security
 - Fix [CVE-2018-6508](https://nvd.nist.gov/vuln/detail/CVE-2018-6508)
 
