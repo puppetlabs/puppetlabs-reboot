@@ -5,7 +5,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 
 ## [Unreleased]
 
-## [2.1.0] - 2018-12-06
+## [2.1.1] - 2018-12-06
 ### Added
 - Use wait_until_available to reduce task runs ([BOLT-956](https://tickets.puppetlabs.com/browse/BOLT-956))
 - Add bash and powershell implementations of reboot task ([BOLT-459](https://tickets.puppetlabs.com/browse/BOLT-459))
