@@ -5,6 +5,29 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 
 ## [Unreleased]
 
+## [2.1.1] - 2018-12-06
+### Added
+- Use wait_until_available to reduce task runs ([BOLT-956](https://tickets.puppetlabs.com/browse/BOLT-956))
+- Add bash and powershell implementations of reboot task ([BOLT-459](https://tickets.puppetlabs.com/browse/BOLT-459))
+- Support for Puppet 6 ([MODULES-7832](https://tickets.puppetlabs.com/browse/MODULES-7832))
+- Add Rubocop to enforce PDK rules ([MODULES-5896](https://tickets.puppetlabs.com/browse/MODULES-5896))
+- Add Beaker Testmode Switcher ([MODULES-6745](https://tickets.puppetlabs.com/browse/MODULES-6745))
+- Add acceptance-test support for Debian 9, Ubuntu 16.04 and Ubuntu 18.04 ([MODULES-7417](https://tickets.puppetlabs.com/browse/MODULES-7417))
+
+### Changed
+- Update limitations in README ([MODULES-7634](https://tickets.puppetlabs.com/browse/MODULES-7634))
+- Convert module to PDK format ([MODULES-7403](https://tickets.puppetlabs.com/browse/MODULES-7403))
+- Use Beaker 4 ([MODULES-7658](https://tickets.puppetlabs.com/browse/MODULES-7658))
+
+### Fixed
+- Fix conditionals in Windows provider ([MODULES-3975](https://tickets.puppetlabs.com/browse/MODULES-3975))
+
+### Removed
+- Support for SLES 5 and Debian 7 ([FM-6968](https://tickets.puppetlabs.com/browse/FM-6968))
+
+### Security
+- Fix [CVE-2018-6508](https://nvd.nist.gov/vuln/detail/CVE-2018-6508)
+
 ## [2.0.0] - 2018-01-23
 ### Added
 - Support for Puppet 5
@@ -18,7 +41,6 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 ### Removed
 - Ended support for Puppet 3
 
-
 ## [1.2.1] - 2015-11-24
 ### Added
 - Pending reboot - Allow setting a flag directly on provider ([MODULES-2822](https://tickets.puppet.com/browse/MODULES-2822))
@@ -27,7 +49,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 - Fix use of read method from Registry ([MODULES-2804](https://tickets.puppet.com/browse/MODULES-2804))
 
 ## [1.2.0] - 2015-10-14
-### Added 
+### Added
 - Pending reboot - detect computer rename ([MODULES-2657](https://tickets.puppet.com/browse/MODULES-2657))
 - Pending reboot - Detect DSC pending reboot state ([MODULES-2658](https://tickets.puppet.com/browse/MODULES-2658))
 - Pending reboot - Detect CCM pending reboot state ([MODULES-2659](https://tickets.puppet.com/browse/MODULES-2659))
@@ -78,7 +100,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 
 ## [0.1.4] - 2014-02-07
 ### Changed
-- Add a workaround for a ruby bug that can prevent ruby.exe from exiting ([PUP-1578](https://tickets.puppetlabs.com/browse/PUP-1578)) 
+- Add a workaround for a ruby bug that can prevent ruby.exe from exiting ([PUP-1578](https://tickets.puppetlabs.com/browse/PUP-1578))
 
 ## [0.1.2] - 2013-09-27
 ### Changed
