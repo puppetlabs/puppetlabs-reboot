@@ -158,9 +158,9 @@ This can take a single reason or an array of reasons.
 
 See the [Reboot when certain conditions are met](#reboot-when-certain-conditions-are-met) section for reasons why you might reboot.
 
-### Plan: `reboot::wait`
+### Plan: `reboot`
 
-This plan is intended to be used as part of other [plans](https://puppet.com/docs/bolt/latest/writing_plans.html) and allows Bolt to wait for a server to reboot before continuing.
+This plan is intended to be used as part of other [plans](https://puppet.com/docs/bolt/latest/writing_plans.html) and allows Bolt to wait for a server to reboot before continuing. It requires Bolt 1.0+ and/or PE 2019.0+.
 
 Here is an example of using this module to reboot servers, wait for them to come back, then check the status of a service:
 
