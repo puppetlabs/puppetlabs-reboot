@@ -5,6 +5,12 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 
 ## [Unreleased]
 
+
+## [2.1.2] - 2018-12-13
+### Fixed
+- Fix infinite reboot plan wait loop on Windows when reboot takes under a minute ([MODULES-8353](https://tickets.puppetlabs.com/browse/MODULES-8353))
+- Mark last_boot_time task implementations as private so they're not listed by Bolt.
+
 ## [2.1.1] - 2018-12-06
 ### Added
 - Use wait_until_available to reduce task runs ([BOLT-956](https://tickets.puppetlabs.com/browse/BOLT-956))
