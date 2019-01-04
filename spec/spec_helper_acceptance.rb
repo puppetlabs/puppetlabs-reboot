@@ -82,7 +82,8 @@ end
 def retry_shutdown_abort(agent, max_retries = 6)
   sleep 55 if (fact('operatingsystem') =~ %r{Debian} && fact('operatingsystemrelease') =~ %r{^9\.}) ||
               (fact('operatingsystem') =~ %r{Ubuntu} && (fact('operatingsystemrelease') =~ %r{^16\.} ||
-                                                         fact('operatingsystemrelease') =~ %r{^18\.}))
+                fact('operatingsystemrelease') =~ %r{^18\.})) ||
+              (fact('operatingsystem') =~ %r{SLES} && (fact('operatingsystemrelease') =~ %r{^15\.}))
   i = 0
   while i < max_retries
     if windows_agents.include?(agent)
@@ -94,7 +95,8 @@ def retry_shutdown_abort(agent, max_retries = 6)
       rescue Beaker::Host::CommandFailure
         break if (fact('operatingsystem') =~ %r{Debian} && fact('operatingsystemrelease') =~ %r{^9\.}) || # rubocop:disable Metrics/BlockNesting
                  (fact('operatingsystem') =~ %r{Ubuntu} && (fact('operatingsystemrelease') =~ %r{^16\.} ||
-                                                            fact('operatingsystemrelease') =~ %r{^18\.}))
+                   fact('operatingsystemrelease') =~ %r{^18\.})) ||
+                 (fact('operatingsystem') =~ %r{SLES} && (fact('operatingsystemrelease') =~ %r{^15\.}))
         raise
       end
     end
