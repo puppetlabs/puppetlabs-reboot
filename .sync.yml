@@ -14,6 +14,12 @@ Gemfile:
       - gem: master_manipulator
       - gem: puppet-blacksmith
         version: '~> 3.4'
+      - gem: bolt
+        version: '~> 1.3'
+        condition: ENV['GEM_BOLT']
+      - gem: beaker-task_helper
+        version: '~> 1.5'
+        condition: ENV['GEM_BOLT']
 
 appveyor.yml:
   matrix_extras:
