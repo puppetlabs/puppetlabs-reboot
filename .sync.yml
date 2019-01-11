@@ -39,3 +39,7 @@ appveyor.yml:
 
 spec/default_facts.yml:
   unmanaged: true
+
+Rakefile:
+  extras:
+    - 'task :task_acceptance => [:spec_prep, :beaker]'
