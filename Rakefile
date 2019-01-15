@@ -29,8 +29,6 @@ def changelog_future_release
 end
 
 PuppetLint.configuration.send('disable_relative')
-# This must be hand inserted after a PDK sync because plants won't pass lint check.
-PuppetSyntax.exclude_paths << %w[plans/*]
 
 if Bundler.rubygems.find_name('github_changelog_generator').any?
   GitHubChangelogGenerator::RakeTask.new :changelog do |config|

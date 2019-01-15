@@ -3,6 +3,11 @@ require 'rspec-puppet-facts'
 
 require 'spec_helper_local' if File.file?(File.join(File.dirname(__FILE__), 'spec_helper_local.rb'))
 
+if ENV['GEM_BOLT']
+  require 'bolt_spec/plans'
+  BoltSpec::Plans.init
+end
+
 include RspecPuppetFacts
 
 default_facts = {
@@ -32,8 +37,6 @@ RSpec.configure do |c|
     # by default Puppet runs at warning level
     Puppet.settings[:strict] = :warning
   end
-  # Must insert this manually after pdk sync
-  # Skip tasks tests unless Bolt is available
   c.filter_run_excluding(bolt: true) unless ENV['GEM_BOLT']
 end
 
