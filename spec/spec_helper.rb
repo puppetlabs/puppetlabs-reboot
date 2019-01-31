@@ -32,9 +32,9 @@ RSpec.configure do |c|
     # by default Puppet runs at warning level
     Puppet.settings[:strict] = :warning
   end
-  # Must insert this manually after pdk sync
-  # Skip tasks tests unless Bolt is available
   c.filter_run_excluding(bolt: true) unless ENV['GEM_BOLT']
+  c.after(:suite) do
+  end
 end
 
 def ensure_module_defined(module_name)
