@@ -22,7 +22,7 @@ describe 'reboot task', bolt: true do
   let(:tm) { 60 }
 
   it 'reports the last boot time' do
-    results = run_task('reboot::last_boot_time', 'agent', config: config, inventory: inventory)
+    results = run_task('reboot::last_boot_time', 'agent', {}, config: config, inventory: inventory)
     results.each do |res|
       expect(res).to include('status' => 'success')
       expect(res['result']['_output']).to be
