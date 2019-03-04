@@ -1,3 +1,5 @@
+require 'beaker-task_helper/inventory'
+require 'bolt_spec/run'
 require 'beaker-pe'
 require 'beaker-puppet'
 require 'beaker-rspec'
