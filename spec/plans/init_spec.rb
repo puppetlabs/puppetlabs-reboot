@@ -1,15 +1,14 @@
 require 'spec_helper'
 
+def should_run_tests?
+  ENV['GEM_BOLT'] && ENV['PUPPET_GEM_VERSION'] != '~> 5.0'
+end
 # Tests generally use 0 timeouts to skip sleep in plans.
-describe 'reboot plan', bolt: true do
-  if ENV['GEM_BOLT']
+describe 'reboot plan', :if => should_run_tests?, bolt: true do
+  if should_run_tests?
+    require 'bolt_spec/plans'
     include BoltSpec::Plans
-    # Fix wait_until_available, it's broken in Bolt 1.3.0.
-    BoltSpec::Plans::MockExecutor.class_eval do
-      def wait_until_available(targets, _options)
-        Bolt::ResultSet.new(targets.map { |target| Bolt::Result.new(target) })
-      end
-    end
+    BoltSpec::Plans.init
   end
 
   it 'reboots a target' do

@@ -1,6 +1,10 @@
 ---
 Gemfile:
   required:
+    ':development':
+      - gem: bolt
+        version: '~> 1.3'
+        condition: ENV['GEM_BOLT'] and ENV['PUPPET_GEM_VERSION'] != "~> 5.0"
     ':system_tests':
       - gem: 'puppet-module-posix-system-r#{minor_version}'
         platforms: ruby
@@ -14,9 +18,6 @@ Gemfile:
       - gem: master_manipulator
       - gem: puppet-blacksmith
         version: '~> 3.4'
-      - gem: bolt
-        version: '~> 1.3'
-        condition: ENV['GEM_BOLT']
       - gem: beaker-task_helper
         version: '~> 1.5'
         condition: ENV['GEM_BOLT']
@@ -30,9 +31,14 @@ appveyor.yml:
       RUBY_VERSION: 25-x64
       CHECK: parallel_spec
 
+.travis.yml:
+  global_env:
+    - GEM_BOLT=true
+
 # For the moment don't do any rubocop checks.
 .rubocop.yml:
   include_todos: true
+  selected_profile: off
 
 .gitlab-ci.yml:
   delete: true
