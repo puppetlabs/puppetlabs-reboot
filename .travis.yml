@@ -16,6 +16,7 @@ rvm:
 env:
   global:
     - BEAKER_PUPPET_COLLECTION=puppet6 PUPPET_GEM_VERSION="~> 6.0"
+    - GEM_BOLT=true
 matrix:
   fast_finish: true
   include:
