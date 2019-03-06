@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+export PATH=$PATH:/usr/sbin:/sbin
 set -e
 
 if [ -n "$PT_timeout" ]; then
