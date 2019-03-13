@@ -1,6 +1,12 @@
 #!/usr/bin/env bash
 set -e
 
+if [[ $EUID > 0 ]]
+then
+  echo "{\"Error\": \"Run as root or sudo; use the '--user root' option to run it as root user or the '--run-as root --sudo-password' options to run it with sudo in Bolt tasks or plans.\"}"
+  exit 1
+fi
+
 if [ -n "$PT_timeout" ]; then
   timeout=$PT_timeout
 else
