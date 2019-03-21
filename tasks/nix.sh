@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+export PATH=$PATH:/usr/sbin:/sbin
 set -e
 
 if [[ $EUID > 0 ]]
