@@ -90,6 +90,8 @@ def retry_shutdown_abort(agent, max_retries = 6)
   while i < max_retries
     if windows_agents.include?(agent)
       result = on(agent, WINDOWS_SHUTDOWN_ABORT, acceptable_exit_codes: [0, WINDOWS_SHUTDOWN_NOT_IN_PROGRESS].flatten)
+    elsif (fact('operatingsystem') =~ %r{RedHat} && fact('operatingsystemrelease') =~ %r{^8\.})
+      result = on(agent, "shutdown -c", acceptable_exit_codes: [0])
     else
       begin
         pid = shutdown_pid(agent)
