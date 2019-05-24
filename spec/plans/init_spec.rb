@@ -70,4 +70,9 @@ describe 'reboot plan', :if => should_run_tests?, bolt: true do
     result = run_plan('reboot', 'nodes' => 'foo,bar')
     expect(result).not_to be_ok
   end
+
+  it 'does not error when given an empty TargetSpec $nodes' do
+    result = run_plan('reboot', 'nodes' => [])
+    expect(result).to be_ok
+  end
 end
