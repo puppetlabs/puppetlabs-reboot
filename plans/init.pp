@@ -16,6 +16,9 @@ plan reboot (
 ) {
   $targets = get_targets($nodes)
 
+  # Short-circuit the plan if the TargetSpec given was empty
+  if $targets.empty { return ResultSet.new([]) }
+
   # Get last boot time
   $begin_boot_time_results = without_default_logging() || {
     run_task('reboot::last_boot_time', $targets)
