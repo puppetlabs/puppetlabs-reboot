@@ -82,23 +82,21 @@ end
 # If test is run on Debian 9 it does not seem possible to catch the shutdown command.
 # As such code has beem implanted so that the loss of connection is caught instead.
 def retry_shutdown_abort(agent, max_retries = 6)
-  sleep 55 if (fact('operatingsystem') =~ %r{Debian} && fact('operatingsystemrelease') =~ %r{^9\.}) ||
-              (fact('operatingsystem') =~ %r{Ubuntu} && (fact('operatingsystemrelease') =~ %r{^16\.} ||
-                fact('operatingsystemrelease') =~ %r{^18\.})) ||
-              (fact('operatingsystem') =~ %r{SLES} && (fact('operatingsystemrelease') =~ %r{^15\.}))
+  sleep 55 if (fact('operatingsystem') =~ %r{SLES} && (fact('operatingsystemrelease') =~ %r{^15\.}))
   i = 0
   while i < max_retries
     if windows_agents.include?(agent)
       result = on(agent, WINDOWS_SHUTDOWN_ABORT, acceptable_exit_codes: [0, WINDOWS_SHUTDOWN_NOT_IN_PROGRESS].flatten)
+    elsif (fact('operatingsystem') =~ %r{RedHat} && fact('operatingsystemrelease') =~ %r{^8\.}) ||  # rubocop:disable Metrics/BlockNesting
+          (fact('operatingsystem') =~ %r{Debian} && fact('operatingsystemrelease') =~ %r{^9\.}) ||
+          (fact('operatingsystem') =~ %r{Ubuntu} && (fact('operatingsystemrelease') =~ %r{^16\.} || fact('operatingsystemrelease') =~ %r{^18\.}))
+      result = on(agent, "shutdown -c", acceptable_exit_codes: [0])
     else
       begin
         pid = shutdown_pid(agent)
         result = on(agent, "kill #{pid}", acceptable_exit_codes: [0]) if pid
       rescue Beaker::Host::CommandFailure
-        break if (fact('operatingsystem') =~ %r{Debian} && fact('operatingsystemrelease') =~ %r{^9\.}) || # rubocop:disable Metrics/BlockNesting
-                 (fact('operatingsystem') =~ %r{Ubuntu} && (fact('operatingsystemrelease') =~ %r{^16\.} ||
-                   fact('operatingsystemrelease') =~ %r{^18\.})) ||
-                 (fact('operatingsystem') =~ %r{SLES} && (fact('operatingsystemrelease') =~ %r{^15\.}))
+        break if (fact('operatingsystem') =~ %r{SLES} && (fact('operatingsystemrelease') =~ %r{^15\.}))
         raise
       end
     end
