@@ -37,15 +37,15 @@ plan reboot (
   ## Check if we can connect; if we can retrieve last boot time.
   ## Mark finished for targets with a new last boot time.
   ## If we still have targets check for timeout, sleep if not done.
-  $failed = without_default_logging() || {
-    $reconnect_timeout.reduce($targets) |$down, $_| {
-      if $down.empty() {
+  $wait_results = without_default_logging() || {
+    $reconnect_timeout.reduce({'pending' => $targets, 'ok' => []}) |$memo, $_| {
+      if $memo['pending'].empty() {
         break()
       }
 
-      $plural = if $down.size() > 1 { 's' }
-      notice("Waiting: ${$down.size()} target${plural} rebooting")
-      $current_boot_time_results = run_task('reboot::last_boot_time', $down, _catch_errors => true)
+      $plural = if $memo['pending'].size() > 1 { 's' }
+      notice("Waiting: ${$memo['pending'].size()} target${plural} rebooting")
+      $current_boot_time_results = run_task('reboot::last_boot_time', $memo['pending'], _catch_errors => true)
 
       # Compare boot times
       $failed_results = $current_boot_time_results.filter |$current_boot_time_res| {
@@ -66,6 +66,7 @@ plan reboot (
       # $failed_results is an array of results, turn it into a ResultSet so we can
       # extract the targets from it
       $failed_targets = ResultSet($failed_results).targets()
+      $ok_targets = $memo['pending'] - $failed_targets
 
       # Check for timeout if we still have failed targets
       if !$failed_targets.empty() {
@@ -88,17 +89,37 @@ plan reboot (
         wait_until_available($failed_targets, wait_time => $remaining_time, retry_interval => $retry_interval)
       }
 
-      $failed_targets
+      # Build and return the memo for this iteration
+      ({'pending' => $failed_targets, 'ok' => $memo['ok'] + $ok_targets })
     }
   }
 
-  if !$failed.empty() {
-    fail_plan(
-      "Failed to reboot ${failed}",
-      'bolt/reboot-failed',
-      {
-        'failed_targets' => $failed,
-      },
-    )
+  $err = {
+    msg  => 'Target failed to reboot before wait timeout.',
+    kind => 'reboot/error',
+  }
+
+  $error_set = $wait_results['pending'].map |$target| {
+    Result.new($target, {
+      _output => 'failed to reboot',
+      _error  => $err,
+    })
+  }
+  $ok_set = $wait_results['ok'].map |$target| {
+    Result.new($target, {
+      _output => 'rebooted',
+    })
+  }
+
+  $result_set = ResultSet.new($ok_set + $error_set)
+
+  if !$result_set.error_set.empty() {
+    fail_plan('One or more targets failed to reboot', 'reboot/error', {
+      action     => 'plan/reboot',
+      result_set => $result_set,
+    })
+  }
+  else {
+    return($result_set)
   }
 }

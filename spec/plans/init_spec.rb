@@ -20,7 +20,7 @@ describe 'reboot plan', :if => should_run_tests?, bolt: true do
     expect_task('reboot').always_return('status' => 'queued', 'timeout' => 0)
 
     result = run_plan('reboot', 'nodes' => 'foo,bar', 'disconnect_wait' => 0)
-    expect(result.value).to eq(nil)
+    expect(result.value).to be_a(Bolt::ResultSet).and satisfy { |rs| rs.ok }
   end
 
   it 'reboots a target that takes awhile to reboot' do
@@ -34,7 +34,7 @@ describe 'reboot plan', :if => should_run_tests?, bolt: true do
     expect_task('reboot').always_return('status' => 'queued', 'timeout' => 0)
 
     result = run_plan('reboot', 'nodes' => 'foo,bar', 'disconnect_wait' => 0)
-    expect(result.value).to eq(nil)
+    expect(result.value).to be_a(Bolt::ResultSet).and satisfy { |rs| rs.ok }
   end
 
   it 'waits until all targets have rebooted' do
@@ -47,7 +47,7 @@ describe 'reboot plan', :if => should_run_tests?, bolt: true do
     expect_task('reboot').always_return('status' => 'queued', 'timeout' => 0)
 
     result = run_plan('reboot', 'nodes' => 'foo,bar', 'disconnect_wait' => 0)
-    expect(result.value).to eq(nil)
+    expect(result.value).to be_a(Bolt::ResultSet).and satisfy { |rs| rs.ok }
   end
 
   it 'accepts extra arguments' do
@@ -62,7 +62,7 @@ describe 'reboot plan', :if => should_run_tests?, bolt: true do
 
     result = run_plan('reboot', 'nodes' => 'foo,bar', 'reboot_delay' => 5, 'message' => 'restarting',
                                 'disconnect_wait' => 1, 'reconnect_timeout' => 30, 'retry_interval' => 5)
-    expect(result.value).to eq(nil)
+    expect(result.value).to be_a(Bolt::ResultSet).and satisfy { |rs| rs.ok }
   end
 
   it 'errors if last_boot_time is unavailable' do
