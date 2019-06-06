@@ -6,6 +6,7 @@
 # @param disconnect_wait How long (in seconds) to wait before checking whether the server has rebooted. Defaults to 10.
 # @param reconnect_timeout How long (in seconds) to attempt to reconnect before giving up. Defaults to 180.
 # @param retry_interval How long (in seconds) to wait between retries. Defaults to 1.
+# @param fail_plan_on_errors Raise an error if any targets do not successfully reboot. Defaults to true.
 plan reboot (
   TargetSpec $nodes,
   Optional[String] $message = undef,
@@ -13,6 +14,7 @@ plan reboot (
   Integer[0] $disconnect_wait = 10,
   Integer[0] $reconnect_timeout = 180,
   Integer[0] $retry_interval = 1,
+  Boolean    $fail_plan_on_errors = true,
 ) {
   $targets = get_targets($nodes)
 
@@ -113,7 +115,7 @@ plan reboot (
 
   $result_set = ResultSet.new($ok_set + $error_set)
 
-  if !$result_set.error_set.empty() {
+  if ($fail_plan_on_errors and !$result_set.ok) {
     fail_plan('One or more targets failed to reboot', 'reboot/error', {
       action     => 'plan/reboot',
       result_set => $result_set,
