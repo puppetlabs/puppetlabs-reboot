@@ -41,7 +41,7 @@ plan reboot (
   ## If we still have targets check for timeout, sleep if not done.
   $wait_results = without_default_logging() || {
     $reconnect_timeout.reduce({'pending' => $targets, 'ok' => []}) |$memo, $_| {
-      if $memo['pending'].empty() {
+      if ($memo['pending'].empty() or $memo['timed_out']) {
         break()
       }
 
@@ -70,19 +70,11 @@ plan reboot (
       $failed_targets = ResultSet($failed_results).targets()
       $ok_targets = $memo['pending'] - $failed_targets
 
-      # Check for timeout if we still have failed targets
-      if !$failed_targets.empty() {
-        $elapsed_time_sec = Integer(Timestamp() - $start_time)
-        if $elapsed_time_sec >= $reconnect_timeout {
-          fail_plan(
-            "Hosts failed to come up after reboot within ${reconnect_timeout} seconds: ${failed_targets}",
-            'bolt/reboot-timeout',
-            {
-              'failed_targets' => $failed_targets,
-            }
-          )
-        }
+      # Calculate whether or not timeout has been reached
+      $elapsed_time_sec = Integer(Timestamp() - $start_time)
+      $timed_out = $elapsed_time_sec >= $reconnect_timeout
 
+      if !$failed_targets.empty() and !$timed_out {
         # sleep for a small time before trying again
         reboot::sleep($retry_interval)
 
@@ -92,13 +84,17 @@ plan reboot (
       }
 
       # Build and return the memo for this iteration
-      ({'pending' => $failed_targets, 'ok' => $memo['ok'] + $ok_targets })
+      ({
+        'pending'   => $failed_targets,
+        'ok'        => $memo['ok'] + $ok_targets,
+        'timed_out' => $timed_out,
+      })
     }
   }
 
   $err = {
     msg  => 'Target failed to reboot before wait timeout.',
-    kind => 'reboot/error',
+    kind => 'bolt/reboot-timeout',
   }
 
   $error_set = $wait_results['pending'].map |$target| {
@@ -116,9 +112,11 @@ plan reboot (
   $result_set = ResultSet.new($ok_set + $error_set)
 
   if ($fail_plan_on_errors and !$result_set.ok) {
-    fail_plan('One or more targets failed to reboot', 'reboot/error', {
-      action     => 'plan/reboot',
-      result_set => $result_set,
+    fail_plan('One or more targets failed to reboot within the allowed wait time',
+      'bolt/reboot-failed', {
+        action         => 'plan/reboot',
+        result_set     => $result_set,
+        failed_targets => $result_set.error_set.targets, # legacy / deprecated
     })
   }
   else {
