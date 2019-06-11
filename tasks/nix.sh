@@ -30,7 +30,12 @@ else
   timeout_min=$(($timeout/60))
   timeout_sec=$(($timeout%60))
   nohup bash -c "sleep $timeout_sec; shutdown -r +$timeout_min $message" </dev/null >/dev/null 2>&1 &
+  disown
 fi
 
-echo "{\"status\":\"queued\",\"timeout\":$timeout}"
+# There are some weird race conditions that might make detached jobs still die
+# when this shell exits. The sync (which otherwise shouldn't do much) seems to
+# eliminate them.
+sync
 
+echo "{\"status\":\"queued\",\"timeout\":$timeout}"
