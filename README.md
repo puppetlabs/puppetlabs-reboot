@@ -183,6 +183,23 @@ plan myapp::patch (
 }
 ```
 
+#### Return value
+
+The `reboot` plan returns a ResultSet on success. It also returns a ResultSet if `fail_plan_on_errors` is false.
+
+The plan may raise an Error if any targets fail to reboot and `fail_plan_on_errors` is set to true. In that circumstance, the error raised will contain the ResultSet in its details key.
+
+```
+$plan_result = run_plan('reboot', nodes => $targets)
+$results = case $plan_result {
+  Error:   { $plan_result.details['result_set'] }
+  default: { $plan_result }
+}
+
+$results.ok_set.targets    # Targets that successfully rebooted
+$results.error_set.targets # Targets that did not successfully reboot
+```
+
 #### Parameters
 
 ##### `nodes`
@@ -208,6 +225,47 @@ How long (in seconds) to attempt to reconnect before giving up. Defaults to 180.
 ##### `retry_interval`
 
 How long (in seconds) to wait between retries. Defaults to 1.
+
+##### `fail_plan_on_errors`
+
+Whether or not to raise an exception if any targets fail to reboot. Defaults to true.
+
+Setting this value to false allows the return value of a plan to be treated the same way a task return value with `_catch_errors => true` would be treated.
+
+```puppet
+plan myapp::patch (
+  TargetSpec $nodes,
+  String     $version,
+) {
+  $targets = get_targets($nodes)
+
+  # Upgrade the application
+  $step1_results = run_task('myapp::upgrade', $targets,
+    version       => $version,
+    _catch_errors => true,
+  )
+
+  # Reboot the servers. This app is slow to shut down so give them 5 minutes to reboot.
+  $step2_results = run_plan('reboot', nodes => $step1_results.ok_set.targets,
+    reconnect_timeout   => 300
+    fail_plan_on_errors => false,
+  )
+
+  # Check the status of the service
+  $step3_results = run_task('service', $step2_results.ok_set.targets,
+    name          => 'myapp',
+    action        => 'status',
+    _catch_errors => true,
+  )
+
+  return({
+    'errored-at-step1' => $step1_results.error_set.names,
+    'errored-at-step2' => $step2_results.error_set.names,
+    'errored-at-step3' => $step3_results.error_set.names,
+    'succeeded'        => $step3_results.ok_set.names,
+  }.filter |$_, $names| { ! $names.empty })
+}
+```
 
 ## Limitations
 
