@@ -43,6 +43,10 @@ appveyor.yml:
 .gitlab-ci.yml:
   delete: true
 
+.gitignore:
+  required:
+    - ---.project
+
 spec/default_facts.yml:
   unmanaged: true
 
