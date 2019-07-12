@@ -1,5 +1,5 @@
 Puppet::Type.newtype(:reboot) do
-  @doc = <<-'EOT'
+  @doc = _(<<-'EOT'
     Manages system reboots.  The `reboot` type is typically
     used in situations where a resource performs a change, e.g.
     package install, and a reboot is required to complete
@@ -62,11 +62,12 @@ Puppet::Type.newtype(:reboot) do
           onlyif          => 'pending_rename_file_operations',
         }
   EOT
+  )
 
-  feature :manages_reboot_pending, 'The provider can detect if a reboot is pending, and reboot as needed.'
+  feature :manages_reboot_pending, _('The provider can detect if a reboot is pending, and reboot as needed.')
 
   newparam(:name) do
-    desc 'The name of the reboot resource.  Used for uniqueness.'
+    desc _('The name of the reboot resource.  Used for uniqueness.')
     isnamevar
   end
 
@@ -102,7 +103,7 @@ Puppet::Type.newtype(:reboot) do
 
     validate do |values|
       if values == []
-        raise ArgumentError, 'There must be at least one element in the list'
+        raise ArgumentError, _('There must be at least one element in the list')
       end
 
       values = [values] unless values.is_a?(Array)
@@ -111,7 +112,7 @@ Puppet::Type.newtype(:reboot) do
         value = value.to_sym if value.is_a?(String)
 
         unless possible_values.include?(value)
-          raise ArgumentError, "value must be one of #{possible_values.join(', ')}"
+          raise ArgumentError, _("value must be one of %{possible_values.join(', ')}") % { possible_values: 'translateable' }
         end
       end
     end
@@ -134,7 +135,7 @@ Puppet::Type.newtype(:reboot) do
 
     validate do |values|
       if values == []
-        raise ArgumentError, 'There must be at least one element in the list'
+        raise ArgumentError, _('There must be at least one element in the list')
       end
 
       values = [values] unless values.is_a?(Array)
@@ -143,7 +144,7 @@ Puppet::Type.newtype(:reboot) do
         value = value.to_sym if value.is_a?(String)
 
         unless possible_values.include?(value)
-          raise ArgumentError, "value must be one of #{possible_values.join(', ')}"
+          raise ArgumentError, _("value must be one of %{possible_values.join(', ')}") % { possible_values: 'translateable' }
         end
       end
     end
@@ -166,17 +167,17 @@ Puppet::Type.newtype(:reboot) do
   end
 
   newparam(:message) do
-    desc 'The message to log when the reboot is performed.'
+    desc _('The message to log when the reboot is performed.')
 
     validate do |value|
       if value.nil? || value == ''
-        raise ArgumentError, 'A non-empty message must be specified.'
+        raise ArgumentError, _('A non-empty message must be specified.')
       end
 
       # Maximum command line length in Windows is 8191 characters, so this is
       # an approximation based on the other parts of the shutdown command
       if value.length > 8000
-        raise ArgumentError, 'The given message must not exceed 8000 characters.'
+        raise ArgumentError, _('The given message must not exceed 8000 characters.')
       end
     end
 
@@ -191,7 +192,7 @@ Puppet::Type.newtype(:reboot) do
 
     validate do |value|
       if value.to_s !~ %r{^\d+$}
-        raise ArgumentError, 'The timeout must be an integer.'
+        raise ArgumentError, _('The timeout must be an integer.')
       end
     end
 

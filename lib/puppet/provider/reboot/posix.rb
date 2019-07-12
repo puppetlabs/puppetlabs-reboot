@@ -1,8 +1,8 @@
 Puppet::Type.type(:reboot).provide :posix do
-  desc "POSIX provider for the reboot type.
+  desc _("POSIX provider for the reboot type.
 
   This provider handles rebooting for POSIX systems. It does not support
-  HP-UX."
+  HP-UX.")
 
   confine feature: :posix
   confine false: (Facter.value(:kernel) == 'HP-UX')
@@ -41,7 +41,7 @@ Puppet::Type.type(:reboot).provide :posix do
 
     shutdown_path = command(:shutdown)
     unless shutdown_path
-      raise ArgumentError, 'The shutdown command was not found.'
+      raise ArgumentError, _('The shutdown command was not found.')
     end
 
     timeout = @resource[:timeout].to_i

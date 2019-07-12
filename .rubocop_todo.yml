@@ -1,0 +1,6 @@
+GetText/DecorateString:
+  Exclude:
+    - 'spec/**/*'
+GetText/DecorateFunctionMessage:
+  Exclude:
+    - 'spec/**/*'

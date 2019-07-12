@@ -56,7 +56,7 @@ Puppet::Type.type(:reboot).provide :windows do
 
     shutdown_path = command(:shutdown)
     unless shutdown_path
-      raise ArgumentError, 'The shutdown.exe command was not found. On Windows 2003 x64 hotfix 942589 must be installed to access the 64-bit version of shutdown.exe from 32-bit version of ruby.exe.'
+      raise ArgumentError, _('The shutdown.exe command was not found. On Windows 2003 x64 hotfix 942589 must be installed to access the 64-bit version of shutdown.exe from 32-bit version of ruby.exe.')
     end
 
     # Reason code
@@ -89,7 +89,7 @@ Puppet::Type.type(:reboot).provide :windows do
     ]
 
     if @resource[:onlyif] && @resource[:unless]
-      raise ArgumentError, "You can't specify 'onlyif' and 'unless'"
+      raise ArgumentError, _("You can't specify 'onlyif' and 'unless'")
     end
 
     reasons = @resource[:onlyif] if @resource[:onlyif]
