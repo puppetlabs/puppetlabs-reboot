@@ -5,6 +5,11 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 
 ## [Unreleased]
 
+### Fixed
+- Fixed a bug where the reboot message was not displayed on a Linux host if the timeout
+  was less than 60 seconds.
+  
+  Contributed by Nick Maludy (@nmaludy Encore Technologies)
 
 ## [2.1.2] - 2018-12-13
 ### Fixed

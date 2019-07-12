@@ -29,6 +29,12 @@ else
   # Linux only supports timeout in minutes. Handle the remainder with sleep.
   timeout_min=$(($timeout/60))
   timeout_sec=$(($timeout%60))
+  # When doing a shutdown -r +0 , the message is never displayed to the end user.
+  # Instead when timeout_min == 0 and we're using sleep to create our timeout
+  # simply use `wall` to broadcast our message.
+  if [ $timeout_min -lt 1 ]; then
+    nohup bash -c "wall \"$message\"" </dev/null >/dev/null 2>&1 &
+  fi
   nohup bash -c "sleep $timeout_sec; shutdown -r +$timeout_min $message" </dev/null >/dev/null 2>&1 &
   disown
 fi
