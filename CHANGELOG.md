@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org).
 
+### Fixed
+- Fixed a bug where the reboot message was not displayed on a Linux host if the timeout
+  was less than 60 seconds.
+  
+  Contributed by Nick Maludy (@nmaludy Encore Technologies)
+  
 ## [v2.2.0](https://github.com/puppetlabs/puppetlabs-reboot/tree/v2.2.0) (2019-07-17)
 
 [Full Changelog](https://github.com/puppetlabs/puppetlabs-reboot/compare/2.1.2...v2.2.0)
