@@ -53,7 +53,5 @@ Rakefile:
       spec_prep =  Rake::Task['spec_prep']
       beaker_task.enhance(beaker_task.prerequisite_tasks << spec_prep)
     end
-spec/default_facts.yml:
-  unmanaged: true
 spec/spec_helper.rb:
   coverage_report: true
