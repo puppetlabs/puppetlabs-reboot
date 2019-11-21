@@ -58,3 +58,5 @@ Rakefile:
     end
 spec/default_facts.yml:
   unmanaged: true
+spec/spec_helper.rb:
+  coverage_report: true
