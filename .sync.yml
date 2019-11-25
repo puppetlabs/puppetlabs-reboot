@@ -7,6 +7,7 @@
 ".travis.yml":
   global_env:
   - GEM_BOLT=true
+  simplecov: true
 appveyor.yml:
   matrix_extras:
   - PUPPET_GEM_VERSION: "~> 6.0"
