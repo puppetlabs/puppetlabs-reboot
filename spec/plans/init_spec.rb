@@ -19,7 +19,7 @@ describe 'reboot plan', :if => should_run_tests?, bolt: true do
     }.be_called_times(2)
     expect_task('reboot').always_return('status' => 'queued', 'timeout' => 0)
 
-    result = run_plan('reboot', 'nodes' => 'foo,bar', 'disconnect_wait' => 0)
+    result = run_plan('reboot', 'targets' => 'foo,bar', 'disconnect_wait' => 0)
     expect(result.value).to be_ok.and be_a(Bolt::ResultSet)
   end
 
@@ -33,7 +33,7 @@ describe 'reboot plan', :if => should_run_tests?, bolt: true do
     }.be_called_times(3)
     expect_task('reboot').always_return('status' => 'queued', 'timeout' => 0)
 
-    result = run_plan('reboot', 'nodes' => 'foo,bar', 'disconnect_wait' => 0)
+    result = run_plan('reboot', 'targets' => 'foo,bar', 'disconnect_wait' => 0)
     expect(result.value).to be_ok.and be_a(Bolt::ResultSet)
   end
 
@@ -46,7 +46,7 @@ describe 'reboot plan', :if => should_run_tests?, bolt: true do
     }.be_called_times(3)
     expect_task('reboot').always_return('status' => 'queued', 'timeout' => 0)
 
-    result = run_plan('reboot', 'nodes' => 'foo,bar', 'disconnect_wait' => 0)
+    result = run_plan('reboot', 'targets' => 'foo,bar', 'disconnect_wait' => 0)
     expect(result.value).to be_ok.and be_a(Bolt::ResultSet)
       expect(result.value.ok_set.size).to eql(2)
   end
@@ -59,7 +59,7 @@ describe 'reboot plan', :if => should_run_tests?, bolt: true do
       end
       expect_task('reboot').always_return('status' => 'queued', 'timeout' => 0)
 
-      result = run_plan('reboot', 'nodes' => 'foo,bar','disconnect_wait' => 0, 'reconnect_timeout' => 0)
+      result = run_plan('reboot', 'targets' => 'foo,bar','disconnect_wait' => 0, 'reconnect_timeout' => 0)
       expect(result.value).to be_a(Bolt::PlanFailure)
     end
 
@@ -70,7 +70,7 @@ describe 'reboot plan', :if => should_run_tests?, bolt: true do
       end
       expect_task('reboot').always_return('status' => 'queued', 'timeout' => 0)
 
-      result = run_plan('reboot', 'nodes' => 'foo,bar','disconnect_wait' => 0, 'reconnect_timeout' => 0, 'fail_plan_on_errors' => false)
+      result = run_plan('reboot', 'targets' => 'foo,bar','disconnect_wait' => 0, 'reconnect_timeout' => 0, 'fail_plan_on_errors' => false)
       expect(result.value).to be_a(Bolt::ResultSet)
       expect(result.value.error_set.size).to eql(2)
     end
@@ -86,19 +86,19 @@ describe 'reboot plan', :if => should_run_tests?, bolt: true do
       .with_params('timeout' => 5, 'message' => 'restarting')
       .always_return('status' => 'queued', 'timeout' => 0)
 
-    result = run_plan('reboot', 'nodes' => 'foo,bar', 'reboot_delay' => 5, 'message' => 'restarting',
+    result = run_plan('reboot', 'targets' => 'foo,bar', 'reboot_delay' => 5, 'message' => 'restarting',
                                 'disconnect_wait' => 1, 'reconnect_timeout' => 30, 'retry_interval' => 5)
     expect(result.value).to be_ok.and be_a(Bolt::ResultSet)
   end
 
   it 'errors if last_boot_time is unavailable' do
     expect_task('reboot::last_boot_time').error_with('kind' => 'nope', 'msg' => 'could not')
-    result = run_plan('reboot', 'nodes' => 'foo,bar')
+    result = run_plan('reboot', 'targets' => 'foo,bar')
     expect(result).not_to be_ok
   end
 
-  it 'does not error when given an empty TargetSpec $nodes' do
-    result = run_plan('reboot', 'nodes' => [])
+  it 'does not error when given an empty TargetSpec $targets' do
+    result = run_plan('reboot', 'targets' => [])
     expect(result).to be_ok
   end
 end

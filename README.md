@@ -15,21 +15,21 @@
 
 ## Overview
 
-This module adds a type, and both Windows and generic POSIX providers, for managing node reboots.
+This module adds a type, and both Windows and generic POSIX providers, for managing target reboots.
 
 ## Module Description
 
-Some packages require a reboot of the node to complete their installation. Until that reboot is completed, the package might not be fully functional, and other installs might fail. This module provides a resource type to let Puppet perform that reboot, and providers to support Windows and POSIX systems. HP-UX is not supported.
+Some packages require a reboot of the target to complete their installation. Until that reboot is completed, the package might not be fully functional, and other installs might fail. This module provides a resource type to let Puppet perform that reboot, and providers to support Windows and POSIX systems. HP-UX is not supported.
 
-By default, this module only reboots a node in response to another resource being applied --- e.g., after a package install. On Windows nodes, you can also have Puppet check for pending reboots and complete them *before* applying the next resource in the catalog, by specifying `when => pending`.
+By default, this module only reboots a target in response to another resource being applied --- e.g., after a package install. On Windows targets, you can also have Puppet check for pending reboots and complete them *before* applying the next resource in the catalog, by specifying `when => pending`.
 
 ## Setup
 
 ### Setup Requirements
 
-On Windows nodes, the 'shutdown.exe' command must be in the `PATH`.
+On Windows targets, the 'shutdown.exe' command must be in the `PATH`.
 
-On Windows 2003 (non-R2) x64 nodes, [KB942589](http://support.microsoft.com/kb/942589) must be installed.
+On Windows 2003 (non-R2) x64 targets, [KB942589](http://support.microsoft.com/kb/942589) must be installed.
 
 ### Beginning with reboot
 
@@ -114,7 +114,7 @@ The main type of the module, responsible for all its functionality.
 
 #### Features
 
-* `manages_reboot_pending`: Detects whether a reboot is pending due to a prior change. If so, reboot the node. (Available with the `windows` provider.)
+* `manages_reboot_pending`: Detects whether a reboot is pending due to a prior change. If so, reboot the target. (Available with the `windows` provider.)
 
 #### Parameters
 
@@ -140,9 +140,9 @@ The main type of the module, responsible for all its functionality.
 
 ##### `when`
 
-*Optional.* Specifies how reboots are triggered. If set to 'refreshed', the provider only reboots the node in response to a refresh event from another resource, e.g., installing a package. If set to 'pending', Puppet checks for signs of any pending reboots and completes them before applying the next resource in the catalog. Valid options: 'refreshed' and 'pending'. Default value: 'refreshed'.
+*Optional.* Specifies how reboots are triggered. If set to 'refreshed', the provider only reboots the target in response to a refresh event from another resource, e.g., installing a package. If set to 'pending', Puppet checks for signs of any pending reboots and completes them before applying the next resource in the catalog. Valid options: 'refreshed' and 'pending'. Default value: 'refreshed'.
 
-**Note:** For `when => pending` reboots, Puppet can normally detect a pending reboot based on some specific system conditions (such as the existence of the PendingFileRenameOperations registry key). However, if those conditions aren't resolved after the node reboots, Puppet triggers another reboot. This can lead to a reboot loop.
+**Note:** For `when => pending` reboots, Puppet can normally detect a pending reboot based on some specific system conditions (such as the existence of the PendingFileRenameOperations registry key). However, if those conditions aren't resolved after the target reboots, Puppet triggers another reboot. This can lead to a reboot loop.
 
 #### `onlyif`
 
@@ -176,7 +176,7 @@ plan myapp::patch (
   run_plan('reboot', $servers, reconnect_timeout => 300)
 
   # Check the status of the service
-  return run_task('service', $nodes, {
+  return run_task('service', $servers, {
     'name'   => 'myapp',
     'action' => 'status',
   })
@@ -190,7 +190,7 @@ The `reboot` plan returns a ResultSet on success. It also returns a ResultSet if
 The plan may raise an Error if any targets fail to reboot and `fail_plan_on_errors` is set to true. In that circumstance, the error raised will contain the ResultSet in its details key.
 
 ```
-$plan_result = run_plan('reboot', nodes => $targets)
+$plan_result = run_plan('reboot', targets => $targets)
 $results = case $plan_result {
   Error:   { $plan_result.details['result_set'] }
   default: { $plan_result }
@@ -202,9 +202,9 @@ $results.error_set.targets # Targets that did not successfully reboot
 
 #### Parameters
 
-##### `nodes`
+##### `targets`
 
-A `TargetSpec` object containing all nodes to wait for.
+A `TargetSpec` object containing all targets to wait for.
 
 ##### `message`
 
@@ -234,19 +234,19 @@ Setting this value to false allows the return value of a plan to be treated the 
 
 ```puppet
 plan myapp::patch (
-  TargetSpec $nodes,
+  TargetSpec $targets,
   String     $version,
 ) {
-  $targets = get_targets($nodes)
+  $target_objects = get_targets($targets)
 
   # Upgrade the application
-  $step1_results = run_task('myapp::upgrade', $targets,
+  $step1_results = run_task('myapp::upgrade', $target_objects,
     version       => $version,
     _catch_errors => true,
   )
 
   # Reboot the servers. This app is slow to shut down so give them 5 minutes to reboot.
-  $step2_results = run_plan('reboot', nodes => $step1_results.ok_set.targets,
+  $step2_results = run_plan('reboot', targets => $step1_results.ok_set.targets,
     reconnect_timeout   => 300
     fail_plan_on_errors => false,
   )
