@@ -16,6 +16,7 @@ appveyor.yml:
   - PUPPET_GEM_VERSION: "~> 6.0"
     RUBY_VERSION: 25-x64
     CHECK: parallel_spec
+  simplecov: true
 Gemfile:
   required:
     ":development":
