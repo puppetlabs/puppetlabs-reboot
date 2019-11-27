@@ -46,6 +46,8 @@ Gemfile:
       ref: 20ee04ba1234e9e83eb2ffb5056e23d641c7a018
       condition: Gem::Version.new(RUBY_VERSION.dup) >= Gem::Version.new('2.2.2')
 Rakefile:
+  changelog_user: puppetlabs
+  changelog_since_tag: 2.1.2
   extras: |
     # The beaker task requires the test fixtures created by the spec_prep task
     beaker_task_exists = Rake::Task.task_defined?('beaker')
