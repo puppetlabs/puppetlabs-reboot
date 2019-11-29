@@ -1,62 +1,53 @@
 ---
-Gemfile:
-  required:
-    ':development':
-      - gem: bolt
-        version: '~> 1.3'
-        condition: ENV['GEM_BOLT'] and ENV['PUPPET_GEM_VERSION'] != "~> 5.0"
-    ':system_tests':
-      - gem: 'puppet-module-posix-system-r#{minor_version}'
-        platforms: ruby
-      - gem: 'puppet-module-win-system-r#{minor_version}'
-        platforms:
-          - mswin
-          - mingw
-          - x64_mingw
-      - gem: beaker-testmode_switcher
-        version: '~> 0.4'
-      - gem: master_manipulator
-      - gem: puppet-blacksmith
-        version: '~> 3.4'
-      - gem: beaker-task_helper
-        version: '~> 1.5'
-        condition: ENV['GEM_BOLT']
-  optional:
-    ':development':
-      - gem: 'github_changelog_generator'
-        git: 'https://github.com/skywinder/github-changelog-generator'
-        ref: '20ee04ba1234e9e83eb2ffb5056e23d641c7a018'
-        condition: "Gem::Version.new(RUBY_VERSION.dup) >= Gem::Version.new('2.2.2')"
-
+".gitlab-ci.yml":
+  delete: true
+".rubocop.yml":
+  include_todos: true
+  selected_profile: false
+".travis.yml":
+  global_env:
+  - GEM_BOLT=true
+  simplecov: true
 appveyor.yml:
   matrix_extras:
-    - PUPPET_GEM_VERSION: ~> 6.0
-      RUBY_VERSION: 25
-      CHECK: parallel_spec
-    - PUPPET_GEM_VERSION: ~> 6.0
-      RUBY_VERSION: 25-x64
-      CHECK: parallel_spec
-
-.travis.yml:
-  global_env:
-    - GEM_BOLT=true
-
-# For the moment don't do any rubocop checks.
-.rubocop.yml:
-  include_todos: true
-  selected_profile: off
-
-.gitlab-ci.yml:
-  delete: true
-
-.gitignore:
+  - PUPPET_GEM_VERSION: "~> 6.0"
+    RUBY_VERSION: 25
+    CHECK: parallel_spec
+  - PUPPET_GEM_VERSION: "~> 6.0"
+    RUBY_VERSION: 25-x64
+    CHECK: parallel_spec
+  simplecov: true
+Gemfile:
   required:
-    - ---.project
-
-spec/default_facts.yml:
-  unmanaged: true
-
+    ":development":
+    - gem: bolt
+      version: "~> 1.3"
+      condition: ENV['GEM_BOLT'] and ENV['PUPPET_GEM_VERSION'] != "~> 5.0"
+    ":system_tests":
+    - gem: puppet-module-posix-system-r#{minor_version}
+      platforms: ruby
+    - gem: puppet-module-win-system-r#{minor_version}
+      platforms:
+      - mswin
+      - mingw
+      - x64_mingw
+    - gem: beaker-testmode_switcher
+      version: "~> 0.4"
+    - gem: master_manipulator
+    - gem: puppet-blacksmith
+      version: "~> 3.4"
+    - gem: beaker-task_helper
+      version: "~> 1.5"
+      condition: ENV['GEM_BOLT']
+  optional:
+    ":development":
+    - gem: github_changelog_generator
+      git: https://github.com/skywinder/github-changelog-generator
+      ref: 20ee04ba1234e9e83eb2ffb5056e23d641c7a018
+      condition: Gem::Version.new(RUBY_VERSION.dup) >= Gem::Version.new('2.2.2')
 Rakefile:
+  changelog_user: puppetlabs
+  changelog_since_tag: 2.1.2
   extras: |
     # The beaker task requires the test fixtures created by the spec_prep task
     beaker_task_exists = Rake::Task.task_defined?('beaker')
@@ -66,3 +57,5 @@ Rakefile:
       spec_prep =  Rake::Task['spec_prep']
       beaker_task.enhance(beaker_task.prerequisite_tasks << spec_prep)
     end
+spec/spec_helper.rb:
+  coverage_report: true
