@@ -10,6 +10,7 @@ class Reboot # rubocop:disable Style/ClassAndModuleChildren
     def initialize(opts = {})
       @timeout       = opts['timeout'].to_i
       @message       = opts['message']
+      @shutdown_only = opts['shutdown_only'] || false
 
       # Force a minimum timeout of 3 seconds to allow the task response to be delivered.
       @timeout = 3 if @timeout < 3
@@ -67,16 +68,19 @@ class Reboot # rubocop:disable Style/ClassAndModuleChildren
 
     def windows_shutdown_command(params)
       message_params   = ['/c', "\"#{params[:message]}\""] if params[:message]
-      [shutdown_executable_windows, '/r', '/t', params[:timeout], '/d', 'p:4:1', message_params].join(' ')
+      reboot_param     = @shutdown_only ? '/s' : '/r'
+      [shutdown_executable_windows, reboot_param, '/t', params[:timeout], '/d', 'p:4:1', message_params].join(' ')
     end
 
     def unix_shutdown_command(params)
       require 'shellwords'
       escaped_message = Shellwords.escape(params[:message])
       flags = if Facter.value(:kernel) == 'SunOS'
-                ['-y', '-i', '6', '-g', params[:timeout], escaped_message]
+                init_level = @shutdown_only ? '5' : '6'
+                ['-y', '-i', init_level, '-g', params[:timeout], escaped_message]
               else
-                ['-r', params[:timeout], escaped_message]
+                reboot_flag = @shutdown_only ? '-P' : '-r'
+                [reboot_flag, params[:timeout], escaped_message]
               end
       ['shutdown', flags, '</dev/null', '>/dev/null', '2>&1', '&'].flatten
     end

@@ -34,6 +34,17 @@ describe Reboot::Task do # rubocop:disable RSpec/FilePath
         end
       end
     end
+
+    context 'when shutting down' do
+      let(:reboot) { described_class.new('shutdown_only' => true) }
+
+      it 'runs the correct command' do
+        command = 'shutdown.exe /s /t 3 /d p:4:1 '
+        reboot.expects(:shutdown_executable_windows).returns('shutdown.exe')
+        reboot.expects(:async_command).with(command).returns(nil)
+        reboot.execute!
+      end
+    end
   end
 
   context 'on Solaris' do
@@ -59,6 +70,17 @@ describe Reboot::Task do # rubocop:disable RSpec/FilePath
         end
       end
     end
+
+    context 'when shutting down' do
+      let(:reboot) { described_class.new('shutdown_only' => true) }
+
+      it 'runs the correct command' do
+        # Enforces minimum 3s timeout.
+        command = ['shutdown', '-y', '-i', '5', '-g', 3, "''", '</dev/null', '>/dev/null', '2>&1', '&']
+        reboot.expects(:async_command).with(command).returns(nil)
+        reboot.execute!
+      end
+    end
   end
 
   context 'on Linux' do
@@ -69,6 +91,7 @@ describe Reboot::Task do # rubocop:disable RSpec/FilePath
 
       it 'runs the correct command' do
         command = ['shutdown', '-r', 'now', "''", '</dev/null', '>/dev/null', '2>&1', '&']
+        # Enforces minimum 3s timeout.
         reboot.expects(:async_command).with(command, 3).returns(nil)
         reboot.execute!
       end
@@ -91,6 +114,17 @@ describe Reboot::Task do # rubocop:disable RSpec/FilePath
           reboot.expects(:async_command).with(command, 30).returns(nil)
           reboot.execute!
         end
+      end
+    end
+
+    context 'when shutting down' do
+      let(:reboot) { described_class.new('shutdown_only' => true) }
+
+      it 'runs the correct command' do
+        # Enforces minimum 3s timeout.
+        command = ['shutdown', '-P', 'now', "''", '</dev/null', '>/dev/null', '2>&1', '&']
+        reboot.expects(:async_command).with(command, 3).returns(nil)
+        reboot.execute!
       end
     end
   end

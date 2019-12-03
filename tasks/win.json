@@ -10,6 +10,10 @@
     "message": {
       "description": "Shutdown message for systems that support it",
       "type": "Optional[Pattern[/^[^|&]*$/]]"
+    },
+    "shutdown_only": {
+      "description": "Only shut the machine down, do not reboot",
+      "type": "Optional[Boolean]"
     }
   }
 }
