@@ -5,6 +5,8 @@
   include_todos: true
   selected_profile: false
 ".travis.yml":
+  deploy_to_forge:
+    enabled: false
   global_env:
   - GEM_BOLT=true
   simplecov: true
