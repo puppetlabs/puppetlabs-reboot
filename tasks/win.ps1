@@ -1,7 +1,8 @@
 [CmdletBinding()]
 Param(
   [String]$message = "",
-  [Int]$timeout = 3
+  [Int]$timeout = 3,
+  [Boolean]$shutdown_only = $false
 )
 # If an error is encountered, the script will stop instead of the default of "Continue"
 $ErrorActionPreference = "Stop"
@@ -21,13 +22,16 @@ If ($timeout -lt 3) {
   $timeout = 3
 }
 
+$reboot_param = "/r"
+If ($shutdown_only) {
+  $reboot_param = "/s"
+}
+
 If ($message -ne "") {
-  & $executable /r /t $timeout /d p:4:1 /c $message
+  & $executable $reboot_param /t $timeout /d p:4:1 /c $message
 }
 Else {
-  & $executable /r /t $timeout /d p:4:1
+  & $executable $reboot_param /t $timeout /d p:4:1
 }
 
-
 Write-Output "{""status"":""queued"",""timeout"":${timeout}}"
-
