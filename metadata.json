@@ -96,7 +96,7 @@
     }
   ],
   "description": "This module provides a facility for managing reboots across nodes.",
-  "pdk-version": "1.14.1",
+  "pdk-version": "1.15.0",
   "template-url": "https://github.com/puppetlabs/pdk-templates#master",
-  "template-ref": "heads/master-0-g643529a"
+  "template-ref": "heads/master-0-gcaed9d7"
 }
