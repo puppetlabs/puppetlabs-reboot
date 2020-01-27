@@ -98,7 +98,7 @@ Puppet::Type.newtype(:reboot) do
     possible_values = [
       :reboot_required, :component_based_servicing, :windows_auto_update,
       :pending_file_rename_operations, :package_installer,
-      :pending_computer_rename, :pending_dsc_reboot, :pending_ccm_reboot
+      :pending_computer_rename, :pending_dsc_reboot, :pending_ccm_reboot, :pending_domain_join
     ]
 
     validate do |values|
@@ -130,7 +130,7 @@ Puppet::Type.newtype(:reboot) do
     possible_values = [
       :reboot_required, :component_based_servicing, :windows_auto_update,
       :pending_file_rename_operations, :package_installer,
-      :pending_computer_rename, :pending_dsc_reboot, :pending_ccm_reboot
+      :pending_computer_rename, :pending_dsc_reboot, :pending_ccm_reboot, :pending_domain_join
     ]
 
     validate do |values|
