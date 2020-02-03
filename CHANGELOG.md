@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org).
 
+## [v2.4.0](https://github.com/puppetlabs/puppetlabs-reboot/tree/v2.4.0) (2020-02-03)
+
+[Full Changelog](https://github.com/puppetlabs/puppetlabs-reboot/compare/v2.3.0...v2.4.0)
+
+### Added
+
+- Add `shutdown\_only` parameter to tasks [\#224](https://github.com/puppetlabs/puppetlabs-reboot/pull/224) ([MikaelSmith](https://github.com/MikaelSmith))
+- \(MODULES-8201\) Add pending reboot due to domain join for windows. [\#179](https://github.com/puppetlabs/puppetlabs-reboot/pull/179) ([razorbladex401](https://github.com/razorbladex401))
+
 ## [v2.3.0](https://github.com/puppetlabs/puppetlabs-reboot/tree/v2.3.0) (2019-12-06)
 
 [Full Changelog](https://github.com/puppetlabs/puppetlabs-reboot/compare/2.2.0...v2.3.0)
@@ -10,11 +19,11 @@ All notable changes to this project will be documented in this file. The format 
 
 - \(FM-8700\) - Addition of Support for CentOs 8 [\#221](https://github.com/puppetlabs/puppetlabs-reboot/pull/221) ([david22swan](https://github.com/david22swan))
 - pdksync - Add support on Debian10 [\#218](https://github.com/puppetlabs/puppetlabs-reboot/pull/218) ([lionce](https://github.com/lionce))
-- Fix plan return value [\#209](https://github.com/puppetlabs/puppetlabs-reboot/pull/209) ([reidmv](https://github.com/reidmv))
 
 ### Fixed
 
 - Fix reboot message for linux hosts [\#213](https://github.com/puppetlabs/puppetlabs-reboot/pull/213) ([nmaludy](https://github.com/nmaludy))
+- \[MODULES-8718\] Check for root or sudo in the reboot task nix.sh script [\#203](https://github.com/puppetlabs/puppetlabs-reboot/pull/203) ([thilinapiy](https://github.com/thilinapiy))
 
 ## [2.2.0](https://github.com/puppetlabs/puppetlabs-reboot/tree/2.2.0) (2019-07-24)
 
@@ -26,6 +35,7 @@ All notable changes to this project will be documented in this file. The format 
 
 ### Added
 
+- Fix plan return value [\#209](https://github.com/puppetlabs/puppetlabs-reboot/pull/209) ([reidmv](https://github.com/reidmv))
 - \(FM-8051\) Add RedHat 8 support [\#207](https://github.com/puppetlabs/puppetlabs-reboot/pull/207) ([eimlav](https://github.com/eimlav))
 - MODULES-8726: Ensure sbin is in the path [\#205](https://github.com/puppetlabs/puppetlabs-reboot/pull/205) ([xalimar](https://github.com/xalimar))
 - \(MODULES-8148\) - Add SLES 15 support [\#191](https://github.com/puppetlabs/puppetlabs-reboot/pull/191) ([eimlav](https://github.com/eimlav))
@@ -33,7 +43,6 @@ All notable changes to this project will be documented in this file. The format 
 ### Fixed
 
 - Add additional guards for nix process detach [\#210](https://github.com/puppetlabs/puppetlabs-reboot/pull/210) ([reidmv](https://github.com/reidmv))
-- \[MODULES-8718\] Check for root or sudo in the reboot task nix.sh script [\#203](https://github.com/puppetlabs/puppetlabs-reboot/pull/203) ([thilinapiy](https://github.com/thilinapiy))
 - \(MODULES-8717\) Fix dependency issue on boltspec [\#202](https://github.com/puppetlabs/puppetlabs-reboot/pull/202) ([HelenCampbell](https://github.com/HelenCampbell))
 
 # Changelog
