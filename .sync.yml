@@ -9,11 +9,15 @@
     enabled: false
   global_env:
   - GEM_BOLT=true
+  - HONEYCOMB_WRITEKEY="7f3c63a70eecc61d635917de46bea4e6",HONEYCOMB_DATASET="litmus tests"
   simplecov: true
   notifications:
     slack:
       secure: OviSgQ0iGIHgjC8eiiRrqDV958sNSE0te+Q8IdPgxJZwMYYeP3hCW6e8ngl5op1GTIUoiMZwMfcXTHJmq71BkBUkRQlfmFw5onTlqs2xitCA8nQvo0PKLWcgr9X9R6A1NZCiPg0BTy6JDApIYq1WfVCWLuoRQyJCT07V6mpYjCI=
 appveyor.yml:
+  environment:
+    HONEYCOMB_WRITEKEY: 7f3c63a70eecc61d635917de46bea4e6
+    HONEYCOMB_DATASET: litmus tests
   matrix_extras:
   - PUPPET_GEM_VERSION: "~> 6.0"
     RUBY_VERSION: 25
