@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org).
 
+## [v3.0.0](https://github.com/puppetlabs/puppetlabs-reboot/tree/v3.0.0) (2020-02-25)
+
+[Full Changelog](https://github.com/puppetlabs/puppetlabs-reboot/compare/v2.4.0...v3.0.0)
+
+### Changed
+
+- \(GH-1376\) Change `$nodes` parameter for `reboot` plan to `$targets` [\#223](https://github.com/puppetlabs/puppetlabs-reboot/pull/223) ([beechtom](https://github.com/beechtom))
+
 ## [v2.4.0](https://github.com/puppetlabs/puppetlabs-reboot/tree/v2.4.0) (2020-02-03)
 
 [Full Changelog](https://github.com/puppetlabs/puppetlabs-reboot/compare/v2.3.0...v2.4.0)
