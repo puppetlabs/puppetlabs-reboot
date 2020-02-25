@@ -46,7 +46,7 @@ plan reboot (
       }
 
       $plural = if $memo['pending'].size() > 1 { 's' }
-      notice("Waiting: ${$memo['pending'].size()} target${plural} rebooting")
+      out::message("Waiting: ${$memo['pending'].size()} target${plural} rebooting")
       $current_boot_time_results = run_task('reboot::last_boot_time', $memo['pending'], _catch_errors => true)
 
       # Compare boot times

@@ -18,6 +18,7 @@ describe 'reboot plan', :if => should_run_tests?, bolt: true do
       Bolt::ResultSet.new(targets.map { |target| Bolt::Result.new(target, message: next_time.to_s) })
     }.be_called_times(2)
     expect_task('reboot').always_return('status' => 'queued', 'timeout' => 0)
+    allow_any_out_message
 
     result = run_plan('reboot', 'targets' => 'foo,bar', 'disconnect_wait' => 0)
     expect(result.value).to be_ok.and be_a(Bolt::ResultSet)
@@ -32,6 +33,7 @@ describe 'reboot plan', :if => should_run_tests?, bolt: true do
       Bolt::ResultSet.new(targets.map { |target| Bolt::Result.new(target, message: next_time.to_s) })
     }.be_called_times(3)
     expect_task('reboot').always_return('status' => 'queued', 'timeout' => 0)
+    allow_any_out_message
 
     result = run_plan('reboot', 'targets' => 'foo,bar', 'disconnect_wait' => 0)
     expect(result.value).to be_ok.and be_a(Bolt::ResultSet)
@@ -45,6 +47,7 @@ describe 'reboot plan', :if => should_run_tests?, bolt: true do
       Bolt::ResultSet.new(targets.zip(time_seq.shift).map { |targ, time| Bolt::Result.new(targ, message: time.to_s) })
     }.be_called_times(3)
     expect_task('reboot').always_return('status' => 'queued', 'timeout' => 0)
+    allow_any_out_message
 
     result = run_plan('reboot', 'targets' => 'foo,bar', 'disconnect_wait' => 0)
     expect(result.value).to be_ok.and be_a(Bolt::ResultSet)
@@ -85,6 +88,7 @@ describe 'reboot plan', :if => should_run_tests?, bolt: true do
     expect_task('reboot')
       .with_params('timeout' => 5, 'message' => 'restarting')
       .always_return('status' => 'queued', 'timeout' => 0)
+    allow_any_out_message
 
     result = run_plan('reboot', 'targets' => 'foo,bar', 'reboot_delay' => 5, 'message' => 'restarting',
                                 'disconnect_wait' => 1, 'reconnect_timeout' => 30, 'retry_interval' => 5)
