@@ -182,6 +182,7 @@ plan myapp::patch (
   })
 }
 ```
+*Note.* In Bolt `--nodes` parameter is deprecated in favour of `--targets`. It is not compatible if you explicitly pass the parameter `nodes`. Please be aware that if you are calling the plan using the positional target arguments (`-n` and/or `-t`) it will still function as intended.
 
 #### Return value
 
