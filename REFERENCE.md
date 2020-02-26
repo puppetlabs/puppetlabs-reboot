@@ -134,6 +134,12 @@ Data type: `Optional[Pattern[/^[^|&]*$/]]`
 
 Shutdown message for systems that support it
 
+##### `shutdown_only`
+
+Data type: `Optional[Boolean]`
+
+Only shut the machine down, do not reboot
+
 ### last_boot_time
 
 Gets the last boot time of a Linux or Windows system
@@ -172,6 +178,12 @@ Data type: `Optional[Pattern[/^[^|&]*$/]]`
 
 Shutdown message for systems that support it
 
+##### `shutdown_only`
+
+Data type: `Optional[Boolean]`
+
+Only shut the machine down, do not reboot
+
 ### win
 
 Reboots a machine
@@ -191,6 +203,12 @@ Timeout before shutdown (seconds)
 Data type: `Optional[Pattern[/^[^|&]*$/]]`
 
 Shutdown message for systems that support it
+
+##### `shutdown_only`
+
+Data type: `Optional[Boolean]`
+
+Only shut the machine down, do not reboot
 
 ## Plans
 
