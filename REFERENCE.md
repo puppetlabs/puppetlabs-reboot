@@ -220,7 +220,7 @@ Reboots targets and waits for them to be available again.
 
 The following parameters are available in the `reboot` plan.
 
-##### `nodes`
+##### `targets`
 
 Data type: `TargetSpec`
 
