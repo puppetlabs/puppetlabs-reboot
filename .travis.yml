@@ -1,4 +1,5 @@
 ---
+os: linux
 dist: xenial
 language: ruby
 cache: bundler
@@ -15,7 +16,7 @@ script:
   - 'SIMPLECOV=yes bundle exec rake $CHECK'
 bundler_args: --without system_tests
 rvm:
-  - 2.5.3
+  - 2.5.7
 env:
   global:
     - GEM_BOLT=true
@@ -24,7 +25,7 @@ stages:
   - static
   - spec
   - acceptance
-matrix:
+jobs:
   fast_finish: true
   include:
     -
@@ -36,7 +37,7 @@ matrix:
       stage: spec
     -
       env: PUPPET_GEM_VERSION="~> 6.0" CHECK=parallel_spec
-      rvm: 2.5.3
+      rvm: 2.5.7
       stage: spec
 branches:
   only:
