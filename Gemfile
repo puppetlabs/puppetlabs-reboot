@@ -31,14 +31,6 @@ group :development do
   gem "bolt", '~> 1.3',                                          require: false if ENV['GEM_BOLT'] and ENV['PUPPET_GEM_VERSION'] != "~> 5.0"
   gem "github_changelog_generator",                              require: false, git: 'https://github.com/skywinder/github-changelog-generator', ref: '20ee04ba1234e9e83eb2ffb5056e23d641c7a018' if Gem::Version.new(RUBY_VERSION.dup) >= Gem::Version.new('2.2.2')
 end
-group :system_tests do
-  gem "puppet-module-posix-system-r#{minor_version}", require: false, platforms: [:ruby]
-  gem "puppet-module-win-system-r#{minor_version}",   require: false, platforms: [:mswin, :mingw, :x64_mingw]
-  gem "beaker-testmode_switcher", '~> 0.4',           require: false
-  gem "master_manipulator",                           require: false
-  gem "puppet-blacksmith", '~> 3.4',                  require: false
-  gem "beaker-task_helper", '~> 1.5',                 require: false if ENV['GEM_BOLT']
-end
 
 puppet_version = ENV['PUPPET_GEM_VERSION']
 facter_version = ENV['FACTER_GEM_VERSION']

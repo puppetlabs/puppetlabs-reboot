@@ -87,12 +87,3 @@ EOM
   end
 end
 
-# The beaker task requires the test fixtures created by the spec_prep task
-beaker_task_exists = Rake::Task.task_defined?('beaker')
-spec_prep_task_exists = Rake::Task.task_defined?('spec_prep')
-if beaker_task_exists && spec_prep_task_exists
-  beaker_task = Rake::Task['beaker']
-  spec_prep =  Rake::Task['spec_prep']
-  beaker_task.enhance(beaker_task.prerequisite_tasks << spec_prep)
-end
-
