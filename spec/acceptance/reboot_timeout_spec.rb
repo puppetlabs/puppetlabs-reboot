@@ -13,35 +13,14 @@ describe 'Custom Timeout' do
     MANIFEST
   end
 
-  posix_agents.each do |agent|
-    context "on #{agent}" do
-      it 'Reboot Immediately with a Custom Timeout' do
-        execute_manifest_on(agent, reboot_manifest, debug: true) do |result|
-          expected_command = if fact_on(agent, 'kernel') == 'SunOS'
-                               %r{shutdown -y -i 6 -g 120}
-                             else
-                               %r{shutdown -r \+2}
-                             end
-
-          assert_match expected_command,
-                       result.stdout, 'Expected reboot timeout is incorrect'
-        end
-        sleep 61
-        retry_shutdown_abort(agent)
+  it 'Reboot Immediately with a Custom Timeout' do
+    apply_manifest(reboot_manifest, debug: true) do |result|
+      if os[:family] == 'windows'
+        expect(result.stdout).to match(%r{shutdown\.exe \/r \/t 120 \/d p:4:1})
+      else
+        expect(result.stdout).to match(%r{shutdown -r \+2})
       end
-    end
-  end
-
-  windows_agents.each do |agent|
-    context "on #{agent}" do
-      it 'Reboot Immediately with a Custom Timeout' do
-        execute_manifest_on(agent, reboot_manifest, debug: true) do |result|
-          assert_match %r{shutdown\.exe \/r \/t 120 \/d p:4:1},
-                       result.stdout, 'Expected reboot timeout is incorrect'
-        end
-        sleep 61
-        retry_shutdown_abort(agent)
-      end
+      expect(reboot_issued_or_cancelled(['-r', '+2', 'Puppet', 'is', 'rebooting', 'the', 'computer'])).to be (true)
     end
   end
 end

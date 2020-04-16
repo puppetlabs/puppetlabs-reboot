@@ -1,12 +1,11 @@
 require 'spec_helper_acceptance'
 
 describe 'Reboot Skip' do
-  def apply_reboot_manifest(agent, reboot_manifest)
-    execute_manifest_on(agent, reboot_manifest, debug: true) do |result|
-      assert_match %r{Transaction canceled, skipping},
-                   result.stdout, 'Expected resource was not skipped'
+  def apply_reboot_manifest(reboot_manifest)
+    apply_manifest(reboot_manifest, debug: true, catch_failures: true) do |result|
+      expect(result.stdout).to match(%r{Transaction canceled, skipping})
     end
-    retry_shutdown_abort(agent)
+    expect(reboot_issued_or_cancelled).to be(true)
   end
 
   let(:reboot_manifest) do
@@ -20,19 +19,7 @@ describe 'Reboot Skip' do
     MANIFEST
   end
 
-  posix_agents.each do |agent|
-    context "on #{agent}" do
-      it 'Reboot Immediately with Skipping Other Resources' do
-        apply_reboot_manifest(agent, reboot_manifest)
-      end
-    end
-  end
-
-  windows_agents.each do |agent|
-    context "on #{agent}" do
-      it 'Reboot Immediately with Skipping Other Resources' do
-        apply_reboot_manifest(agent, reboot_manifest)
-      end
-    end
+  it 'Reboot Immediately with Skipping Other Resources' do
+    apply_reboot_manifest(reboot_manifest)
   end
 end
