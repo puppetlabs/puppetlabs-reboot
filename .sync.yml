@@ -35,7 +35,7 @@ Gemfile:
   optional:
     ":development":
       - gem: bolt
-        version: "~> 1.3"
+        version: ">= 1.3"
         condition: ENV['GEM_BOLT'] and ENV['PUPPET_GEM_VERSION'] != "~> 5.0"
       - gem: github_changelog_generator
         git: https://github.com/skywinder/github-changelog-generator

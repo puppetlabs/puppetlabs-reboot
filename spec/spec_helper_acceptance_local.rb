@@ -41,7 +41,7 @@ RSpec.configure do |c|
   end
 
   c.after :suite do
-    Helper.instance.run_shell("mv #{SHUTDOWN_TEMP_LOC} #{$shutdown_path}") unless os[:family] == 'windows'
+    Helper.instance.run_shell("mv #{SHUTDOWN_TEMP_LOC} #{$shutdown_path}") unless os[:family] == 'windows' or $shutdown_path.nil?
   end
 end
 
@@ -64,4 +64,10 @@ def reboot_issued_or_cancelled(expected_args=['-r', '+1', 'Puppet', 'is', 'reboo
     return result.stdout.chomp.split(' ') == expected_args if result.exit_code == 0
   end
   false
+end
+
+def bolt_result_as_hash(result)
+  return {} unless result.result
+  return result.result if result.result.is_a? Hash
+  JSON.parse(result.result.gsub('=>', ':'))
 end

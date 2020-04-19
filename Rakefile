@@ -87,3 +87,9 @@ EOM
   end
 end
 
+if Rake::Task.task_defined?('spec_prep')
+  Rake::Task.tasks.each do |task|
+    next unless task.name.start_with? 'litmus:acceptance'
+    task.enhance([Rake::Task['spec_prep']])
+  end
+end
