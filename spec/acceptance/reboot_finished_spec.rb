@@ -14,9 +14,8 @@ describe 'Reboot when Finished' do
   end
 
   it 'Reboot After Finishing Complete Catalog' do
-    apply_manifest(reboot_manifest, catch_failures: true) do |result|
-      expect(result.stdout).to match(%r{defined 'message' as 'step_2'})
-    end
+    result = apply_manifest(reboot_manifest, catch_failures: true)
+    expect(result.stdout).to match(%r{defined 'message' as 'step_2'})
     expect(reboot_issued_or_cancelled).to be(true)
   end
 end
