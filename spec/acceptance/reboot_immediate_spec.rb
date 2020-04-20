@@ -22,13 +22,17 @@ describe 'Reboot Immediately and Explicit Immediately' do
     MANIFEST
   end
 
+  let(:skip_msg_pattern) { %r{Transaction canceled, skipping} }
+
   it 'Reboot Immediately with Refresh' do
-    apply_manifest(reboot_manifest, catch_failures: true)
+    result = apply_manifest(reboot_manifest, debug: true, catch_failures: true)
+    expect(result.stdout).to match(skip_msg_pattern)
     expect(reboot_issued_or_cancelled).to eq(true)
   end
 
   it 'Reboot Immediately explicit with Refresh' do
-    apply_manifest(reboot_immediate_manifest, catch_failures: true)
+    result = apply_manifest(reboot_immediate_manifest, debug: true, catch_failures: true)
+    expect(result.stdout).to match(skip_msg_pattern)
     expect(reboot_issued_or_cancelled).to eq(true)
   end
 end
