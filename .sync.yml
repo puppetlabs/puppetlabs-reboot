@@ -32,6 +32,9 @@ appveyor.yml:
     CHECK: parallel_spec
   simplecov: true
 Gemfile:
+  required:
+    ":system_tests":
+      - gem: ed25519
   optional:
     ":development":
       - gem: bolt
@@ -44,5 +47,12 @@ Gemfile:
 Rakefile:
   changelog_user: puppetlabs
   changelog_since_tag: 2.1.2
+  extras: |
+    if Rake::Task.task_defined?('spec_prep')
+      Rake::Task.tasks.each do |task|
+        next unless task.name.start_with? 'litmus:acceptance'
+        task.enhance([Rake::Task['spec_prep']])
+      end
+    end
 spec/spec_helper.rb:
   coverage_report: true
