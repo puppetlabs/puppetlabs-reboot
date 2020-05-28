@@ -14,14 +14,14 @@ describe 'reboot task', bolt: true do
   end
 
   it 'reboots a target' do
-    result = run_bolt_task('reboot', { 'timeout' => tm })
+    result = run_bolt_task('reboot', 'timeout' => tm)
     expect(bolt_result_as_hash(result)['status']).to eq('queued')
     expect(bolt_result_as_hash(result)['timeout']).to eq(tm)
     expect(reboot_issued_or_cancelled(bolt_default_reboot_args)).to be(true)
   end
 
   it 'accepts a message' do
-    result = run_bolt_task('reboot', { 'timeout' => tm, 'message' => 'Bolt is rebooting the computer' })
+    result = run_bolt_task('reboot', 'timeout' => tm, 'message' => 'Bolt is rebooting the computer')
     expect(bolt_result_as_hash(result)['status']).to eq('queued')
     expect(bolt_result_as_hash(result)['timeout']).to eq(tm)
     expect(reboot_issued_or_cancelled(bolt_reboot_args_with_msg)).to be(true)
