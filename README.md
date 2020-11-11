@@ -1,5 +1,5 @@
 # reboot
-[![Build Status](https://travis-ci.org/puppetlabs/puppetlabs-reboot.png?branch=master)](https://travis-ci.org/puppetlabs/puppetlabs-reboot)
+[![Build Status](https://travis-ci.org/puppetlabs/puppetlabs-reboot.png?branch=main)](https://travis-ci.org/puppetlabs/puppetlabs-reboot)
 
 #### Table of Contents
 
@@ -273,7 +273,7 @@ plan myapp::patch (
 
 ## Limitations
 
-For an extensive list of supported operating systems, see [metadata.json](https://github.com/puppetlabs/puppetlabs-reboot/blob/master/metadata.json)
+For an extensive list of supported operating systems, see [metadata.json](https://github.com/puppetlabs/puppetlabs-reboot/blob/main/metadata.json)
 
 ## Development
 
