@@ -2,7 +2,15 @@
 
 All notable changes to this project will be documented in this file. The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org).
 
-## [v3.0.0](https://github.com/puppetlabs/puppetlabs-reboot/tree/v3.0.0) (2020-02-25)
+## [v3.1.0](https://github.com/puppetlabs/puppetlabs-reboot/tree/v3.1.0) (2020-11-17)
+
+[Full Changelog](https://github.com/puppetlabs/puppetlabs-reboot/compare/v3.0.0...v3.1.0)
+
+### Added
+
+- pdksync - \(IAC-973\) - Update travis/appveyor to run on new default branch `main` [\#253](https://github.com/puppetlabs/puppetlabs-reboot/pull/253) ([david22swan](https://github.com/david22swan))
+
+## [v3.0.0](https://github.com/puppetlabs/puppetlabs-reboot/tree/v3.0.0) (2020-02-27)
 
 [Full Changelog](https://github.com/puppetlabs/puppetlabs-reboot/compare/v2.4.0...v3.0.0)
 
@@ -31,7 +39,6 @@ All notable changes to this project will be documented in this file. The format 
 ### Fixed
 
 - Fix reboot message for linux hosts [\#213](https://github.com/puppetlabs/puppetlabs-reboot/pull/213) ([nmaludy](https://github.com/nmaludy))
-- \[MODULES-8718\] Check for root or sudo in the reboot task nix.sh script [\#203](https://github.com/puppetlabs/puppetlabs-reboot/pull/203) ([thilinapiy](https://github.com/thilinapiy))
 
 ## [2.2.0](https://github.com/puppetlabs/puppetlabs-reboot/tree/2.2.0) (2019-07-24)
 
@@ -51,6 +58,7 @@ All notable changes to this project will be documented in this file. The format 
 ### Fixed
 
 - Add additional guards for nix process detach [\#210](https://github.com/puppetlabs/puppetlabs-reboot/pull/210) ([reidmv](https://github.com/reidmv))
+- \[MODULES-8718\] Check for root or sudo in the reboot task nix.sh script [\#203](https://github.com/puppetlabs/puppetlabs-reboot/pull/203) ([thilinapiy](https://github.com/thilinapiy))
 - \(MODULES-8717\) Fix dependency issue on boltspec [\#202](https://github.com/puppetlabs/puppetlabs-reboot/pull/202) ([HelenCampbell](https://github.com/HelenCampbell))
 
 # Changelog
