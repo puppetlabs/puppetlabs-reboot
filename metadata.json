@@ -1,6 +1,6 @@
 {
   "name": "puppetlabs-reboot",
-  "version": "3.0.0",
+  "version": "3.1.0",
   "author": "puppetlabs",
   "summary": "Adds a type and provider for managing system reboots.",
   "license": "Apache-2.0",
