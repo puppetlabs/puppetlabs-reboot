@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Puppet::Type.newtype(:reboot) do
   @doc = _(<<-'EOT'
     Manages system reboots.  The `reboot` type is typically

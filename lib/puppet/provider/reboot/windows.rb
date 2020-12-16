@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Puppet::Type.type(:reboot).provide :windows do
   confine operatingsystem: :windows
   defaultfor operatingsystem: :windows

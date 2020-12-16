@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Sleeps for specified number of seconds.
 Puppet::Functions.create_function(:'reboot::sleep') do
   # @param period Time to sleep (in seconds)

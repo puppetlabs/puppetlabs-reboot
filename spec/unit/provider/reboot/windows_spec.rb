@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 require 'puppet/type'
 require 'puppet/provider/reboot/windows'
@@ -7,7 +9,7 @@ describe Puppet::Type.type(:reboot).provider(:windows) do
   let(:provider) { resource.provider }
   let(:native_path)     { "#{ENV['SYSTEMROOT']}\\sysnative\\shutdown.exe" }
   let(:redirected_path) { "#{ENV['SYSTEMROOT']}\\system32\\shutdown.exe" }
-  let(:shutdown_not_found_error) { 'The shutdown.exe command was not found. On Windows 2003 x64 hotfix 942589 must be installed to access the 64-bit version of shutdown.exe from 32-bit version of ruby.exe.' } # rubocop:disable Metrics/LineLength
+  let(:shutdown_not_found_error) { 'The shutdown.exe command was not found. On Windows 2003 x64 hotfix 942589 must be installed to access the 64-bit version of shutdown.exe from 32-bit version of ruby.exe.' } # rubocop:disable Layout/LineLength
 
   before :each do
     skip('Not on Windows platform') unless Puppet.features.microsoft_windows?
