@@ -22,7 +22,7 @@ describe 'Custom Timeout' do
       else
         expect(result.stdout).to match(%r{shutdown -r \+2})
       end
-      expect(reboot_issued_or_cancelled(['-r', '+2', 'Puppet', 'is', 'rebooting', 'the', 'computer'])).to be (true)
+      expect(reboot_issued_or_cancelled(['-r', '+2', 'Puppet', 'is', 'rebooting', 'the', 'computer'])).to be(true)
     end
   end
 end

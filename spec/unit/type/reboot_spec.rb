@@ -112,7 +112,7 @@ describe Puppet::Type.type(:reboot) do
     end
 
     ['later', :later, {}, [], true].each do |timeout|
-      it "should reject a non-integer (#{timeout.class}) value" do
+      it "rejects a non-integer (#{timeout.class}) value" do
         expect {
           resource[:timeout] = timeout
         }.to raise_error(Puppet::ResourceError, %r{The timeout must be an integer})
@@ -143,7 +143,7 @@ describe Puppet::Type.type(:reboot) do
     end
 
     ['pks_install', :pkg_install, {}, true].each do |reason|
-      it "should reject invalid reasons (#{reason})" do
+      it "rejects invalid reasons (#{reason})" do
         expect {
           resource.provider.class.expects(:satisfies?).with(:manages_reboot_pending).returns(true)
           resource[:onlyif] = reason
@@ -175,7 +175,7 @@ describe Puppet::Type.type(:reboot) do
     end
 
     ['pks_install', :pkg_install, {}, true].each do |reason|
-      it "should reject invalid reasons (#{reason})" do
+      it "rejects invalid reasons (#{reason})" do
         expect {
           resource.provider.class.expects(:satisfies?).with(:manages_reboot_pending).returns(true)
           resource[:unless] = reason

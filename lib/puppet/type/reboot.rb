@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 Puppet::Type.newtype(:reboot) do
-  @doc = _(<<-'EOT'
+  @doc = _(<<-'EOT',
     Manages system reboots.  The `reboot` type is typically
     used in situations where a resource performs a change, e.g.
     package install, and a reboot is required to complete
@@ -64,7 +64,7 @@ Puppet::Type.newtype(:reboot) do
           onlyif          => 'pending_rename_file_operations',
         }
   EOT
-  )
+          )
 
   feature :manages_reboot_pending, _('The provider can detect if a reboot is pending, and reboot as needed.')
 
@@ -193,7 +193,7 @@ Puppet::Type.newtype(:reboot) do
       current run."
 
     validate do |value|
-      if value.to_s !~ %r{^\d+$}
+      unless %r{^\d+$}.match?(value.to_s)
         raise ArgumentError, _('The timeout must be an integer.')
       end
     end

@@ -53,7 +53,7 @@ describe 'Windows Provider - Pending Reboot', if: os[:family] == 'windows' do
 
     it 'Reboot if Pending Reboot Required' do
       apply_manifest(reboot_manifest, catch_failures: true)
-      expect(reboot_issued_or_cancelled).to be (true)
+      expect(reboot_issued_or_cancelled).to be(true)
     end
   end
 end
