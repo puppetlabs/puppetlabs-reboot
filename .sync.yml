@@ -1,6 +1,13 @@
 ---
 ".gitlab-ci.yml":
   delete: true
+".rubocop.yml":
+  profiles:
+    strict:
+      configs:
+        Style/GlobalVars:
+          Exclude:
+          - spec/**/*
 ".travis.yml":
   stages:
     - static
