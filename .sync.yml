@@ -2,8 +2,12 @@
 ".gitlab-ci.yml":
   delete: true
 ".rubocop.yml":
-  include_todos: true
-  selected_profile: false
+  profiles:
+    strict:
+      configs:
+        Style/GlobalVars:
+          Exclude:
+          - spec/**/*
 ".travis.yml":
   stages:
     - static
@@ -11,7 +15,6 @@
   deploy_to_forge:
     enabled: false
   global_env:
-  - GEM_BOLT=true
   - HONEYCOMB_WRITEKEY="7f3c63a70eecc61d635917de46bea4e6",HONEYCOMB_DATASET="litmus tests"
   simplecov: true
   notifications:
@@ -32,18 +35,9 @@ appveyor.yml:
     CHECK: parallel_spec
   simplecov: true
 Gemfile:
-  required:
-    ":system_tests":
-      - gem: ed25519
   optional:
     ":development":
-      - gem: bolt
-        version: ">= 1.3"
-        condition: ENV['GEM_BOLT'] and ENV['PUPPET_GEM_VERSION'] != "~> 5.0"
       - gem: github_changelog_generator
-        git: https://github.com/skywinder/github-changelog-generator
-        ref: 20ee04ba1234e9e83eb2ffb5056e23d641c7a018
-        condition: Gem::Version.new(RUBY_VERSION.dup) >= Gem::Version.new('2.2.2')
 Rakefile:
   changelog_user: puppetlabs
   changelog_since_tag: 2.1.2

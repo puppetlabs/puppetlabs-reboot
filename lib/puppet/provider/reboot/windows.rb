@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Puppet::Type.type(:reboot).provide :windows do
   confine operatingsystem: :windows
   defaultfor operatingsystem: :windows
@@ -56,7 +58,8 @@ Puppet::Type.type(:reboot).provide :windows do
 
     shutdown_path = command(:shutdown)
     unless shutdown_path
-      raise ArgumentError, _('The shutdown.exe command was not found. On Windows 2003 x64 hotfix 942589 must be installed to access the 64-bit version of shutdown.exe from 32-bit version of ruby.exe.')
+      raise ArgumentError,
+_('The shutdown.exe command was not found. On Windows 2003 x64 hotfix 942589 must be installed to access the 64-bit version of shutdown.exe from 32-bit version of ruby.exe.')
     end
 
     # Reason code
@@ -192,7 +195,7 @@ Puppet::Type.type(:reboot).provide :windows do
 
       config = lcm.ExecMethod_('GetMetaConfiguration')
       reboot = config.MetaConfiguration.LCMState == 'PendingReboot'
-    rescue # rubocop:disable Lint/HandleExceptions
+    rescue
       # WIN32OLE errors are very bad to diagnose.  In this case any errors are ignored.
     end
 
@@ -212,7 +215,7 @@ Puppet::Type.type(:reboot).provide :windows do
 
       pending = ccm_client_utils.ExecMethod_('DetermineIfRebootPending')
       reboot = pending.ReturnValue.zero? && (pending.IsHardRebootPending || pending.RebootPending)
-    rescue # rubocop:disable Lint/HandleExceptions
+    rescue
       # WIN32OLE errors are very bad to diagnose.  In this case any errors are ignored.
     end
 

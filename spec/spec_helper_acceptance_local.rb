@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'puppet_litmus'
 require 'puppet_litmus/util'
 require 'singleton'
@@ -8,10 +10,10 @@ end
 
 class CommandFailure < StandardError; end
 
-SHUTDOWN_LOG_LOCATION         = '/tmp/shutdown.log'.freeze
-SHUTDOWN_TEMP_LOC             = 'shutdown.original'.freeze
+SHUTDOWN_LOG_LOCATION         = '/tmp/shutdown.log'
+SHUTDOWN_TEMP_LOC             = 'shutdown.original'
 LINUX_SHUTDOWN_SCRIPT         = ['#!/bin/sh', "echo ${@} > #{SHUTDOWN_LOG_LOCATION}"].freeze
-SHUTDOWN_SCRIPT_EXPECTED_SHA1 = 'fb5cbae00d9ba7bc7433b46d890c8397f3f23462'.freeze
+SHUTDOWN_SCRIPT_EXPECTED_SHA1 = 'fb5cbae00d9ba7bc7433b46d890c8397f3f23462'
 
 # On Linux systems, we cannot reliably or consistently cancel the shutdown command. Instead, we will replace the
 # shutdown command on $PATH with the script defined in LINUX_SHUTDOWN_SCRIPT, which will output the args passed to it
@@ -41,11 +43,11 @@ RSpec.configure do |c|
   end
 
   c.after :suite do
-    Helper.instance.run_shell("mv #{SHUTDOWN_TEMP_LOC} #{$shutdown_path}") unless os[:family] == 'windows' or $shutdown_path.nil?
+    Helper.instance.run_shell("mv #{SHUTDOWN_TEMP_LOC} #{$shutdown_path}") unless (os[:family] == 'windows') || $shutdown_path.nil?
   end
 end
 
-WINDOWS_SHUTDOWN_ABORT = 'cmd /c shutdown /a'.freeze
+WINDOWS_SHUTDOWN_ABORT = 'cmd /c shutdown /a'
 # Some versions of ruby and puppet improperly report exit codes
 # due to a ruby bug the correct error code 1116, is returned modulo 256 = 92
 WINDOWS_SHUTDOWN_NOT_IN_PROGRESS = [1116, 1116 % 256].freeze
@@ -54,7 +56,7 @@ WINDOWS_SHUTDOWN_NOT_IN_PROGRESS = [1116, 1116 % 256].freeze
 # On Linux, we will verify the expected args passed to the dummy shutdown script we put in-line.
 # TODO: Could capture the time before puppet_apply(manifest) and get the script to output the current time at invocation
 # TODO: ...and compare the times. Pass/fail based on an acceptable level of drift not being exceeded.
-def reboot_issued_or_cancelled(expected_args=['-r', '+1', 'Puppet', 'is', 'rebooting', 'the', 'computer'])
+def reboot_issued_or_cancelled(expected_args = ['-r', '+1', 'Puppet', 'is', 'rebooting', 'the', 'computer'])
   if os[:family] == 'windows'
     result = run_shell(WINDOWS_SHUTDOWN_ABORT, expect_failures: true)
     return [0, WINDOWS_SHUTDOWN_NOT_IN_PROGRESS].flatten.include? result.exit_code

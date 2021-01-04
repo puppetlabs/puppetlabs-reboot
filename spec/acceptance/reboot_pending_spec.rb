@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper_acceptance'
 
 describe 'Windows Provider - Pending Reboot', if: os[:family] == 'windows' do
@@ -39,19 +41,22 @@ describe 'Windows Provider - Pending Reboot', if: os[:family] == 'windows' do
   end
 
   context 'When temporarily renaming the hostname' do
+    def original_name
+      @original_name ||= run_shell('cmd /c hostname').stdout.chomp
+    end
+
     before(:context) do
-      @original_name = run_shell('cmd /c hostname').stdout.chomp
       new_name = ('a'..'z').to_a.sample(12).join
       run_shell(PuppetLitmus::Util.interpolate_powershell("\"& { (Get-WmiObject -Class Win32_ComputerSystem).Rename('#{new_name}') }\""))
     end
 
     after(:context) do
-      run_shell(PuppetLitmus::Util.interpolate_powershell("\"& { (Get-WmiObject win32_computersystem).Rename('#{@original_name}') }\""))
+      run_shell(PuppetLitmus::Util.interpolate_powershell("\"& { (Get-WmiObject win32_computersystem).Rename('#{original_name}') }\""))
     end
 
     it 'Reboot if Pending Reboot Required' do
       apply_manifest(reboot_manifest, catch_failures: true)
-      expect(reboot_issued_or_cancelled).to be (true)
+      expect(reboot_issued_or_cancelled).to be(true)
     end
   end
 end

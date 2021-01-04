@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'pathname'
 require Pathname.new(__FILE__).dirname + '../../../' + 'puppet/provider/reboot/posix'
 

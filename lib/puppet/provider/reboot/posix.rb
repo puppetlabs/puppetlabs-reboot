@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Puppet::Type.type(:reboot).provide :posix do
   desc _("POSIX provider for the reboot type.
 

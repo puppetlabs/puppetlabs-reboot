@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 def should_run_tests?
   ENV['GEM_BOLT'] && ENV['PUPPET_GEM_VERSION'] != '~> 5.0'
 end
 # Tests generally use 0 timeouts to skip sleep in plans.
-describe 'reboot plan', :if => should_run_tests?, bolt: true do
+describe 'reboot plan', if: should_run_tests?, bolt: true do
   if should_run_tests?
     require 'bolt_spec/plans'
     include BoltSpec::Plans
@@ -51,7 +53,7 @@ describe 'reboot plan', :if => should_run_tests?, bolt: true do
 
     result = run_plan('reboot', 'targets' => 'foo,bar', 'disconnect_wait' => 0)
     expect(result.value).to be_ok.and be_a(Bolt::ResultSet)
-      expect(result.value.ok_set.size).to eql(2)
+    expect(result.value.ok_set.size).to be(2)
   end
 
   context 'when reconnect_timeout is exceeded' do
@@ -62,7 +64,7 @@ describe 'reboot plan', :if => should_run_tests?, bolt: true do
       end
       expect_task('reboot').always_return('status' => 'queued', 'timeout' => 0)
 
-      result = run_plan('reboot', 'targets' => 'foo,bar','disconnect_wait' => 0, 'reconnect_timeout' => 0)
+      result = run_plan('reboot', 'targets' => 'foo,bar', 'disconnect_wait' => 0, 'reconnect_timeout' => 0)
       expect(result.value).to be_a(Bolt::PlanFailure)
     end
 
@@ -73,9 +75,9 @@ describe 'reboot plan', :if => should_run_tests?, bolt: true do
       end
       expect_task('reboot').always_return('status' => 'queued', 'timeout' => 0)
 
-      result = run_plan('reboot', 'targets' => 'foo,bar','disconnect_wait' => 0, 'reconnect_timeout' => 0, 'fail_plan_on_errors' => false)
+      result = run_plan('reboot', 'targets' => 'foo,bar', 'disconnect_wait' => 0, 'reconnect_timeout' => 0, 'fail_plan_on_errors' => false)
       expect(result.value).to be_a(Bolt::ResultSet)
-      expect(result.value.error_set.size).to eql(2)
+      expect(result.value.error_set.size).to be(2)
     end
   end
 

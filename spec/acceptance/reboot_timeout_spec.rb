@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper_acceptance'
 
 describe 'Custom Timeout' do
@@ -20,7 +22,7 @@ describe 'Custom Timeout' do
       else
         expect(result.stdout).to match(%r{shutdown -r \+2})
       end
-      expect(reboot_issued_or_cancelled(['-r', '+2', 'Puppet', 'is', 'rebooting', 'the', 'computer'])).to be (true)
+      expect(reboot_issued_or_cancelled(['-r', '+2', 'Puppet', 'is', 'rebooting', 'the', 'computer'])).to be(true)
     end
   end
 end
