@@ -19,7 +19,6 @@ rvm:
   - 2.5.7
 env:
   global:
-    - GEM_BOLT=true
     - HONEYCOMB_WRITEKEY="7f3c63a70eecc61d635917de46bea4e6",HONEYCOMB_DATASET="litmus tests"
 stages:
   - static

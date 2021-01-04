@@ -15,7 +15,6 @@
   deploy_to_forge:
     enabled: false
   global_env:
-  - GEM_BOLT=true
   - HONEYCOMB_WRITEKEY="7f3c63a70eecc61d635917de46bea4e6",HONEYCOMB_DATASET="litmus tests"
   simplecov: true
   notifications:
