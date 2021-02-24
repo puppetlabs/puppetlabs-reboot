@@ -27,11 +27,10 @@ plan reboot (
   }
 
   # Reboot; catch errors here because the connection may get cut out from underneath
-  $reboot_result = run_task('reboot', $targets, timeout => $reboot_delay, message => $message)
+  run_task('reboot', $targets, timeout => $reboot_delay, message => $message)
 
-  # Wait long enough for all targets to trigger reboot, plus disconnect_wait to allow for shutdown time.
-  $timeouts = $reboot_result.map |$result| { $result['timeout'] }
-  $wait = max($timeouts)
+  # Use $reboot_delay as wait time, but at least 3s
+  $wait = max(3, $reboot_delay)
   reboot::sleep($wait+$disconnect_wait)
 
   $start_time = Timestamp()
