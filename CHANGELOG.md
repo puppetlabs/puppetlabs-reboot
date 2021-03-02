@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org).
 
+## [v4.0.0](https://github.com/puppetlabs/puppetlabs-reboot/tree/v4.0.0) (2021-02-27)
+
+[Full Changelog](https://github.com/puppetlabs/puppetlabs-reboot/compare/v3.2.0...v4.0.0)
+
+### Changed
+
+- pdksync - Remove Puppet 5 from testing and bump minimal version to 6.0.0 [\#275](https://github.com/puppetlabs/puppetlabs-reboot/pull/275) ([carabasdaniel](https://github.com/carabasdaniel))
+
 ## [v3.2.0](https://github.com/puppetlabs/puppetlabs-reboot/tree/v3.2.0) (2021-01-19)
 
 [Full Changelog](https://github.com/puppetlabs/puppetlabs-reboot/compare/v3.1.0...v3.2.0)
@@ -33,7 +41,6 @@ All notable changes to this project will be documented in this file. The format 
 ### Added
 
 - Add `shutdown\_only` parameter to tasks [\#224](https://github.com/puppetlabs/puppetlabs-reboot/pull/224) ([MikaelSmith](https://github.com/MikaelSmith))
-- \(MODULES-8201\) Add pending reboot due to domain join for windows. [\#179](https://github.com/puppetlabs/puppetlabs-reboot/pull/179) ([razorbladex401](https://github.com/razorbladex401))
 
 ## [v2.3.0](https://github.com/puppetlabs/puppetlabs-reboot/tree/v2.3.0) (2019-12-06)
 
