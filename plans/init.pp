@@ -31,7 +31,7 @@ plan reboot (
 
   # Use $reboot_delay as wait time, but at least 3s
   $wait = max(3, $reboot_delay)
-  reboot::sleep($wait+$disconnect_wait)
+  ctrl::sleep($wait+$disconnect_wait)
 
   $start_time = Timestamp()
   # Wait for reboot in a loop
@@ -75,7 +75,7 @@ plan reboot (
 
       if !$failed_targets.empty() and !$timed_out {
         # sleep for a small time before trying again
-        reboot::sleep($retry_interval)
+        ctrl::sleep($retry_interval)
 
         # wait for all targets to be available again
         $remaining_time = $reconnect_timeout - $elapsed_time_sec
