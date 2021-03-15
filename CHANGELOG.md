@@ -2,12 +2,23 @@
 
 All notable changes to this project will be documented in this file. The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org).
 
+## [v4.0.1](https://github.com/puppetlabs/puppetlabs-reboot/tree/v4.0.1) (2021-03-15)
+
+[Full Changelog](https://github.com/puppetlabs/puppetlabs-reboot/compare/v4.0.0...v4.0.1)
+
+### Fixed
+
+- Cleanup: Changed to ctrl::sleep\(\) and removed redundant reboot::sleep\(\) function [\#284](https://github.com/puppetlabs/puppetlabs-reboot/pull/284) ([fetzerms](https://github.com/fetzerms))
+- \(MODULES-10955\) More robust handling of reboot-task output [\#280](https://github.com/puppetlabs/puppetlabs-reboot/pull/280) ([fetzerms](https://github.com/fetzerms))
+
 ## [v4.0.0](https://github.com/puppetlabs/puppetlabs-reboot/tree/v4.0.0) (2021-02-27)
 
 [Full Changelog](https://github.com/puppetlabs/puppetlabs-reboot/compare/v3.2.0...v4.0.0)
 
 ### Changed
 
+- pdksync - \(MAINT\) Remove SLES 11 support [\#279](https://github.com/puppetlabs/puppetlabs-reboot/pull/279) ([sanfrancrisko](https://github.com/sanfrancrisko))
+- pdksync - \(MAINT\) Remove RHEL 5 family support [\#278](https://github.com/puppetlabs/puppetlabs-reboot/pull/278) ([sanfrancrisko](https://github.com/sanfrancrisko))
 - pdksync - Remove Puppet 5 from testing and bump minimal version to 6.0.0 [\#275](https://github.com/puppetlabs/puppetlabs-reboot/pull/275) ([carabasdaniel](https://github.com/carabasdaniel))
 
 ## [v3.2.0](https://github.com/puppetlabs/puppetlabs-reboot/tree/v3.2.0) (2021-01-19)
@@ -41,6 +52,7 @@ All notable changes to this project will be documented in this file. The format 
 ### Added
 
 - Add `shutdown\_only` parameter to tasks [\#224](https://github.com/puppetlabs/puppetlabs-reboot/pull/224) ([MikaelSmith](https://github.com/MikaelSmith))
+- \(MODULES-8201\) Add pending reboot due to domain join for windows. [\#179](https://github.com/puppetlabs/puppetlabs-reboot/pull/179) ([razorbladex401](https://github.com/razorbladex401))
 
 ## [v2.3.0](https://github.com/puppetlabs/puppetlabs-reboot/tree/v2.3.0) (2019-12-06)
 
