@@ -8,10 +8,6 @@
 
 * [`reboot`](#reboot)
 
-### Functions
-
-* [`reboot::sleep`](#rebootsleep): Sleeps for specified number of seconds.
-
 ### Tasks
 
 * [`init`](#init): Reboots a machine
@@ -103,26 +99,6 @@ Default value: `60`
 ##### <a name="unless"></a>`unless`
 
 For pending reboots, ignore the supplied reasons when checking pennding reboot
-
-## Functions
-
-### <a name="rebootsleep"></a>`reboot::sleep`
-
-Type: Ruby 4.x API
-
-Sleeps for specified number of seconds.
-
-#### `reboot::sleep(Integer $period)`
-
-Sleeps for specified number of seconds.
-
-Returns: `Any`
-
-##### `period`
-
-Data type: `Integer`
-
-Time to sleep (in seconds)
 
 ## Tasks
 
