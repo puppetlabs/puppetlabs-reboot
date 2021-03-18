@@ -39,7 +39,12 @@ class Reboot # rubocop:disable Style/ClassAndModuleChildren
       when 'windows'
         # This appears to be the only way to get the processes to properly detach
         # themselves, it was a HUGE PAIN to fugure out
-        require 'win32/process'
+        # win32/process is needed on Puppet < 7
+        # Puppet 7 monkey patches Ruby's Process Module
+        # and Process.create will be available
+        require 'puppet'
+        require 'win32/process' if Puppet::Util::Package.versioncmp(Puppet.version, '7.0.0') < 0
+
         Process.create(
           command_line: "cmd /c start #{cmd}",
           creation_flags: Process::DETACHED_PROCESS,
