@@ -91,12 +91,19 @@ end
 
 # Actually run the reboot if we got piped input
 unless STDIN.tty?
-  reboot = Reboot::Task.new(JSON.parse(STDIN.read))
-  reboot.execute!
+  begin
+    reboot = Reboot::Task.new(JSON.parse(STDIN.read))
+    reboot.execute!
 
-  result = {
-    'status' => 'queued',
-    'timeout' => reboot.timeout,
-  }
+    result = {
+      'status' => 'queued',
+      'timeout' => reboot.timeout,
+    }
+  rescue JSON::ParserError
+    result = {
+      'status' => 'failed',
+      'message' => 'STDIN is not valid JSON'
+    }
+  end
   JSON.dump(result, STDOUT)
 end

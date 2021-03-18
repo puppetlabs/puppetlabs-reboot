@@ -19,6 +19,8 @@ SHUTDOWN_SCRIPT_EXPECTED_SHA1 = 'fb5cbae00d9ba7bc7433b46d890c8397f3f23462'
 # shutdown command on $PATH with the script defined in LINUX_SHUTDOWN_SCRIPT, which will output the args passed to it
 # from the Agent. We will then verify that these args are what we expect.
 def substitute_shutdown_on_path
+  Helper.instance.run_shell('puppet resource package which ensure=latest')
+  Helper.instance.run_shell('puppet resource package systemd-sysv ensure=latest') if os[:family] == 'debian' && os[:release].to_i == 9
   $shutdown_path = Helper.instance.run_shell('which shutdown').stdout.chomp
   if Helper.instance.run_shell("test -f #{SHUTDOWN_TEMP_LOC}", expect_failures: true).exit_code == 0
     return if Helper.instance.run_shell("sha1sum #{$shutdown_path} | cut -d ' ' -f 1").stdout.chomp == SHUTDOWN_SCRIPT_EXPECTED_SHA1
