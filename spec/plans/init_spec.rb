@@ -2,16 +2,11 @@
 
 require 'spec_helper'
 
-def should_run_tests?
-  ENV['GEM_BOLT'] && ENV['PUPPET_GEM_VERSION'] != '~> 5.0'
-end
 # Tests generally use 0 timeouts to skip sleep in plans.
-describe 'reboot plan', if: should_run_tests?, bolt: true do
-  if should_run_tests?
-    require 'bolt_spec/plans'
-    include BoltSpec::Plans
-    BoltSpec::Plans.init
-  end
+describe 'reboot plan' do
+  require 'bolt_spec/plans'
+  include BoltSpec::Plans
+  BoltSpec::Plans.init
 
   it 'reboots a target' do
     time_seq = [Time.now - 1, Time.now]
