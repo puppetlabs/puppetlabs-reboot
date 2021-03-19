@@ -33,8 +33,6 @@ def substitute_shutdown_on_path
 end
 
 RSpec.configure do |c|
-  # Skip tasks tests unless Bolt is available
-  c.filter_run_excluding(bolt: true) unless ENV['GEM_BOLT']
   c.include PuppetLitmus::Util
   c.extend PuppetLitmus::Util
 
