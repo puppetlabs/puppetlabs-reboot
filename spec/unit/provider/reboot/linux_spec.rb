@@ -19,7 +19,7 @@ describe Puppet::Type.type(:reboot).provider(:linux) do
 
   context '#initialize' do
     it 'issues a deprecation warning' do
-      Puppet.expects(:deprecation_warning).with("The 'linux' reboot provider is deprecated and will be removed; use 'posix' instead.")
+      expect(Puppet).to receive(:deprecation_warning).with("The 'linux' reboot provider is deprecated and will be removed; use 'posix' instead.")
 
       Puppet::Type.type(:reboot).new(provider: :linux, name: 'linux_reboot')
     end
@@ -37,7 +37,7 @@ describe Puppet::Type.type(:reboot).provider(:linux) do
     end
 
     it 'does not reboot when setting the `when` property to refreshed' do
-      provider.expects(:reboot).never
+      expect(provider).to receive(:reboot).never
 
       provider.when = :refreshed
     end
@@ -45,47 +45,47 @@ describe Puppet::Type.type(:reboot).provider(:linux) do
 
   context 'when a reboot is triggered', if: Puppet::Util.which('shutdown') do
     before :each do
-      provider.expects(:async_shutdown).with(includes('shutdown')).at_most_once
-      Facter.stubs(:value).with(:kernel).returns('Linux')
+      expect(provider).to receive(:async_shutdown).with(include('shutdown')).at_most(:once)
+      allow(Facter).to receive(:value).with(:kernel).and_return('Linux')
     end
 
     it 'stops the application by default' do
-      Puppet::Application.expects(:stop!)
+      expect(Puppet::Application).to receive(:stop!)
       provider.reboot
     end
 
     it 'cancels the rest of the catalog transaction if apply is set to immediately' do
       resource[:apply] = :immediately
-      Puppet::Application.expects(:stop!)
+      expect(Puppet::Application).to receive(:stop!)
       provider.reboot
     end
 
     it "doesn't stop the rest of the catalog transaction if apply is set to finished" do
       resource[:apply] = :finished
-      Puppet::Application.expects(:stop!).never
+      expect(Puppet::Application).to receive(:stop!).never
       provider.reboot
     end
 
     it 'includes the restart flag' do
-      provider.expects(:async_shutdown).with(includes('-r'))
+      expect(provider).to receive(:async_shutdown).with(include('-r')).at_most(:once)
       provider.reboot
     end
 
     it 'includes a timeout in the future' do
-      provider.expects(:async_shutdown).with(includes("+#{(resource[:timeout].to_i / 60.0).ceil}"))
+      expect(provider).to receive(:async_shutdown).with(include("+#{(resource[:timeout].to_i / 60.0).ceil}")).at_most(:once)
       provider.reboot
     end
 
     it 'rounds up and provides a warning if the timeout is not a multiple of 60' do
       resource[:timeout] = 61
-      Puppet.expects(:warning).with(includes('rounding'))
-      provider.expects(:async_shutdown).with(includes("+#{(resource[:timeout].to_i / 60.0).ceil}"))
+      expect(Puppet).to receive(:warning).with(include('rounding')).at_most(:once)
+      expect(provider).to receive(:async_shutdown).with(include("+#{(resource[:timeout].to_i / 60.0).ceil}")).at_most(:once)
       provider.reboot
     end
 
     it 'includes the quoted reboot message' do
       resource[:message] = 'triggering a reboot'
-      provider.expects(:async_shutdown).with(includes('"triggering a reboot"'))
+      expect(provider).to receive(:async_shutdown).with(include('"triggering a reboot"')).at_most(:once)
       provider.reboot
     end
   end

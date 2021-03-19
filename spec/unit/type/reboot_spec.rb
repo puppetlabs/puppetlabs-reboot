@@ -20,14 +20,14 @@ describe Puppet::Type.type(:reboot) do
   context 'when refreshed' do
     it 'onlies reboot if the `when` parameter is `refreshed`' do
       resource[:when] = :refreshed
-      resource.provider.expects(:reboot)
+      expect(resource.provider).to receive(:reboot)
 
       resource.refresh
     end
 
     it 'does not reboot if the `when` parameter is `pending`' do
-      resource.provider.expects(:satisfies?).with([:manages_reboot_pending]).returns(true)
-      resource.provider.expects(:reboot).never
+      expect(resource.provider).to receive(:satisfies?).with([:manages_reboot_pending]).and_return(true)
+      expect(resource.provider).to receive(:reboot).never
       resource[:when] = :pending
 
       resource.refresh
@@ -40,7 +40,7 @@ describe Puppet::Type.type(:reboot) do
     end
 
     it 'accepts :pending' do
-      resource.provider.expects(:satisfies?).with([:manages_reboot_pending]).returns(true)
+      expect(resource.provider).to receive(:satisfies?).with([:manages_reboot_pending]).and_return(true)
 
       resource[:when] = :pending
     end
@@ -96,8 +96,8 @@ describe Puppet::Type.type(:reboot) do
     it 'is logged on reboot' do
       resource[:message] = 'Custom message'
       logmessage = 'Scheduling system reboot with message: "Custom message"'
-      Puppet.expects(:notice).with(logmessage)
-      resource.provider.expects(:reboot)
+      expect(Puppet).to receive(:notice).with(logmessage)
+      expect(resource.provider).to receive(:reboot)
       resource.refresh
     end
   end
@@ -126,18 +126,18 @@ describe Puppet::Type.type(:reboot) do
     end
 
     it 'accepts package_installer reason array' do
-      resource.provider.class.expects(:satisfies?).with(:manages_reboot_pending).returns(true)
+      expect(resource.provider.class).to receive(:satisfies?).with(:manages_reboot_pending).and_return(true)
       resource[:onlyif] = [:package_installer]
     end
 
     it 'accepts package_installer reason' do
-      resource.provider.class.expects(:satisfies?).with(:manages_reboot_pending).returns(true)
+      expect(resource.provider.class).to receive(:satisfies?).with(:manages_reboot_pending).and_return(true)
       resource[:onlyif] = :package_installer
     end
 
     it 'does not accept an empty list' do
       expect {
-        resource.provider.class.expects(:satisfies?).with(:manages_reboot_pending).returns(true)
+        allow(resource.provider.class).to receive(:satisfies?).with(:manages_reboot_pending).and_return(true)
         resource[:onlyif] = []
       }.to raise_error(Puppet::ResourceError, %r{There must be at least one element in the list})
     end
@@ -145,7 +145,7 @@ describe Puppet::Type.type(:reboot) do
     ['pks_install', :pkg_install, {}, true].each do |reason|
       it "rejects invalid reasons (#{reason})" do
         expect {
-          resource.provider.class.expects(:satisfies?).with(:manages_reboot_pending).returns(true)
+          allow(resource.provider.class).to receive(:satisfies?).with(:manages_reboot_pending).and_return(true)
           resource[:onlyif] = reason
         }.to raise_error(Puppet::ResourceError, %r{value must be one of})
       end
@@ -158,18 +158,18 @@ describe Puppet::Type.type(:reboot) do
     end
 
     it 'accepts package_installer reason array' do
-      resource.provider.class.expects(:satisfies?).with(:manages_reboot_pending).returns(true)
+      expect(resource.provider.class).to receive(:satisfies?).with(:manages_reboot_pending).and_return(true)
       resource[:unless] = [:package_installer]
     end
 
     it 'accepts package_installer reason' do
-      resource.provider.class.expects(:satisfies?).with(:manages_reboot_pending).returns(true)
+      expect(resource.provider.class).to receive(:satisfies?).with(:manages_reboot_pending).and_return(true)
       resource[:unless] = :package_installer
     end
 
     it 'does not accept an empty list' do
       expect {
-        resource.provider.class.expects(:satisfies?).with(:manages_reboot_pending).returns(true)
+        allow(resource.provider.class).to receive(:satisfies?).with(:manages_reboot_pending).and_return(true)
         resource[:unless] = []
       }.to raise_error(Puppet::ResourceError, %r{There must be at least one element in the list})
     end
@@ -177,7 +177,7 @@ describe Puppet::Type.type(:reboot) do
     ['pks_install', :pkg_install, {}, true].each do |reason|
       it "rejects invalid reasons (#{reason})" do
         expect {
-          resource.provider.class.expects(:satisfies?).with(:manages_reboot_pending).returns(true)
+          allow(resource.provider.class).to receive(:satisfies?).with(:manages_reboot_pending).and_return(true)
           resource[:unless] = reason
         }.to raise_error(Puppet::ResourceError, %r{value must be one of})
       end
@@ -195,13 +195,13 @@ describe Puppet::Type.type(:reboot) do
     it 'onlies reboot once even if more than one triggers' do
       resource[:apply] = :finished
       resource[:when] = :refreshed
-      resource.provider.expects(:reboot)
+      expect(resource.provider).to receive(:reboot)
       resource.refresh
 
       resource2[:apply] = :finished
       resource2[:when] = :refreshed
-      resource2.provider.expects(:reboot).never
-      Puppet.expects(:debug).with(includes('already scheduled'))
+      expect(resource2.provider).to receive(:reboot).never
+      expect(Puppet).to receive(:debug).with(include('already scheduled')).at_most(:once)
       resource2.refresh
     end
   end
