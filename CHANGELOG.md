@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org).
 
+## [v4.1.0](https://github.com/puppetlabs/puppetlabs-reboot/tree/v4.1.0) (2021-08-23)
+
+[Full Changelog](https://github.com/puppetlabs/puppetlabs-reboot/compare/v4.0.2...v4.1.0)
+
+### Added
+
+- pdksync - \(IAC-1709\) - Add Support for Debian 11 [\#304](https://github.com/puppetlabs/puppetlabs-reboot/pull/304) ([david22swan](https://github.com/david22swan))
+
+### Fixed
+
+- \(MODULES-11149\) Modify result of 'last' to remove current time [\#305](https://github.com/puppetlabs/puppetlabs-reboot/pull/305) ([nmburgan](https://github.com/nmburgan))
+
 ## [v4.0.2](https://github.com/puppetlabs/puppetlabs-reboot/tree/v4.0.2) (2021-03-19)
 
 [Full Changelog](https://github.com/puppetlabs/puppetlabs-reboot/compare/v4.0.1...v4.0.2)
@@ -41,6 +53,10 @@ All notable changes to this project will be documented in this file. The format 
 
 [Full Changelog](https://github.com/puppetlabs/puppetlabs-reboot/compare/v3.0.0...v3.1.0)
 
+### Added
+
+- pdksync - \(IAC-973\) - Update travis/appveyor to run on new default branch `main` [\#253](https://github.com/puppetlabs/puppetlabs-reboot/pull/253) ([david22swan](https://github.com/david22swan))
+
 ## [v3.0.0](https://github.com/puppetlabs/puppetlabs-reboot/tree/v3.0.0) (2020-02-27)
 
 [Full Changelog](https://github.com/puppetlabs/puppetlabs-reboot/compare/v2.4.0...v3.0.0)
@@ -55,8 +71,7 @@ All notable changes to this project will be documented in this file. The format 
 
 ### Added
 
-- pdksync - \(IAC-973\) - Update travis/appveyor to run on new default branch `main` [\#253](https://github.com/puppetlabs/puppetlabs-reboot/pull/253) ([david22swan](https://github.com/david22swan))
-- Add `shutdown\_only` parameter to tasks [\#224](https://github.com/puppetlabs/puppetlabs-reboot/pull/224) ([MikaelSmith](https://github.com/MikaelSmith))
+- Add `shutdown_only` parameter to tasks [\#224](https://github.com/puppetlabs/puppetlabs-reboot/pull/224) ([MikaelSmith](https://github.com/MikaelSmith))
 - \(MODULES-8201\) Add pending reboot due to domain join for windows. [\#179](https://github.com/puppetlabs/puppetlabs-reboot/pull/179) ([razorbladex401](https://github.com/razorbladex401))
 
 ## [v2.3.0](https://github.com/puppetlabs/puppetlabs-reboot/tree/v2.3.0) (2019-12-06)
