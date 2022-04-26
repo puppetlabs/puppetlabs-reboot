@@ -39,7 +39,7 @@ plan reboot (
   ## Mark finished for targets with a new last boot time.
   ## If we still have targets check for timeout, sleep if not done.
   $wait_results = without_default_logging() || {
-    $reconnect_timeout.reduce({'pending' => $target_objects, 'ok' => []}) |$memo, $_| {
+    $reconnect_timeout.reduce( { 'pending' => $target_objects, 'ok' => [] }) |$memo, $_| {
       if ($memo['pending'].empty() or $memo['timed_out']) {
         break()
       }
@@ -83,10 +83,10 @@ plan reboot (
       }
 
       # Build and return the memo for this iteration
-      ({
-        'pending'   => $failed_targets,
-        'ok'        => $memo['ok'] + $ok_targets,
-        'timed_out' => $timed_out,
+      ( {
+          'pending'   => $failed_targets,
+          'ok'        => $memo['ok'] + $ok_targets,
+          'timed_out' => $timed_out,
       })
     }
   }
@@ -98,13 +98,13 @@ plan reboot (
 
   $error_set = $wait_results['pending'].map |$target| {
     Result.new($target, {
-      _output => 'failed to reboot',
-      _error  => $err,
+        _output => 'failed to reboot',
+        _error  => $err,
     })
   }
   $ok_set = $wait_results['ok'].map |$target| {
     Result.new($target, {
-      _output => 'rebooted',
+        _output => 'rebooted',
     })
   }
 
