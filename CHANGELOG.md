@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org).
 
+## [v4.2.0](https://github.com/puppetlabs/puppetlabs-reboot/tree/v4.2.0) (2022-06-06)
+
+[Full Changelog](https://github.com/puppetlabs/puppetlabs-reboot/compare/v4.1.0...v4.2.0)
+
+### Added
+
+- pdksync - \(GH-cat-12\) Add Support for Redhat 9 [\#324](https://github.com/puppetlabs/puppetlabs-reboot/pull/324) ([david22swan](https://github.com/david22swan))
+- pdksync - \(FM-8922\) - Add Support for Windows 2022 [\#314](https://github.com/puppetlabs/puppetlabs-reboot/pull/314) ([david22swan](https://github.com/david22swan))
+- pdksync - \(IAC-1753\) - Add Support for AlmaLinux 8 [\#309](https://github.com/puppetlabs/puppetlabs-reboot/pull/309) ([david22swan](https://github.com/david22swan))
+- pdksync - \(IAC-1751\) - Add Support for Rocky 8 [\#308](https://github.com/puppetlabs/puppetlabs-reboot/pull/308) ([david22swan](https://github.com/david22swan))
+
+### Fixed
+
+- pdksync - \(GH-iac-334\) Remove Support for Ubuntu 14.04/16.04 [\#316](https://github.com/puppetlabs/puppetlabs-reboot/pull/316) ([david22swan](https://github.com/david22swan))
+- pdksync - \(IAC-1787\) Remove Support for CentOS 6 [\#312](https://github.com/puppetlabs/puppetlabs-reboot/pull/312) ([david22swan](https://github.com/david22swan))
+- pdksync - \(IAC-1598\) - Remove Support for Debian 8 [\#307](https://github.com/puppetlabs/puppetlabs-reboot/pull/307) ([david22swan](https://github.com/david22swan))
+
 ## [v4.1.0](https://github.com/puppetlabs/puppetlabs-reboot/tree/v4.1.0) (2021-08-23)
 
 [Full Changelog](https://github.com/puppetlabs/puppetlabs-reboot/compare/v4.0.2...v4.1.0)
@@ -72,6 +89,9 @@ All notable changes to this project will be documented in this file. The format 
 ### Added
 
 - Add `shutdown_only` parameter to tasks [\#224](https://github.com/puppetlabs/puppetlabs-reboot/pull/224) ([MikaelSmith](https://github.com/MikaelSmith))
+
+### UNCATEGORIZED PRS; LABEL THEM ON GITHUB
+
 - \(MODULES-8201\) Add pending reboot due to domain join for windows. [\#179](https://github.com/puppetlabs/puppetlabs-reboot/pull/179) ([razorbladex401](https://github.com/razorbladex401))
 
 ## [v2.3.0](https://github.com/puppetlabs/puppetlabs-reboot/tree/v2.3.0) (2019-12-06)
@@ -97,9 +117,7 @@ All notable changes to this project will be documented in this file. The format 
 
 ### Added
 
-- Fix plan return value [\#209](https://github.com/puppetlabs/puppetlabs-reboot/pull/209) ([reidmv](https://github.com/reidmv))
 - \(FM-8051\) Add RedHat 8 support [\#207](https://github.com/puppetlabs/puppetlabs-reboot/pull/207) ([eimlav](https://github.com/eimlav))
-- MODULES-8726: Ensure sbin is in the path [\#205](https://github.com/puppetlabs/puppetlabs-reboot/pull/205) ([xalimar](https://github.com/xalimar))
 - \(MODULES-8148\) - Add SLES 15 support [\#191](https://github.com/puppetlabs/puppetlabs-reboot/pull/191) ([eimlav](https://github.com/eimlav))
 
 ### Fixed
@@ -107,6 +125,11 @@ All notable changes to this project will be documented in this file. The format 
 - Add additional guards for nix process detach [\#210](https://github.com/puppetlabs/puppetlabs-reboot/pull/210) ([reidmv](https://github.com/reidmv))
 - \[MODULES-8718\] Check for root or sudo in the reboot task nix.sh script [\#203](https://github.com/puppetlabs/puppetlabs-reboot/pull/203) ([thilinapiy](https://github.com/thilinapiy))
 - \(MODULES-8717\) Fix dependency issue on boltspec [\#202](https://github.com/puppetlabs/puppetlabs-reboot/pull/202) ([HelenCampbell](https://github.com/HelenCampbell))
+
+### UNCATEGORIZED PRS; LABEL THEM ON GITHUB
+
+- Fix plan return value [\#209](https://github.com/puppetlabs/puppetlabs-reboot/pull/209) ([reidmv](https://github.com/reidmv))
+- MODULES-8726: Ensure sbin is in the path [\#205](https://github.com/puppetlabs/puppetlabs-reboot/pull/205) ([xalimar](https://github.com/xalimar))
 
 # Changelog
 All notable changes to this project will be documented in this file.
