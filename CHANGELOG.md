@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org).
 
+## [v4.3.0](https://github.com/puppetlabs/puppetlabs-reboot/tree/v4.3.0) (2022-10-03)
+
+[Full Changelog](https://github.com/puppetlabs/puppetlabs-reboot/compare/v4.2.0...v4.3.0)
+
+### Added
+
+- pdksync - \(GH-cat-11\) Certify Support for Ubuntu 22.04 [\#329](https://github.com/puppetlabs/puppetlabs-reboot/pull/329) ([david22swan](https://github.com/david22swan))
+
+### Fixed
+
+- \(MAINT\) Dropped support for Windows\(7,8, 2008 Server & 2008 R2 Server\) and AIX \(5.3, 6.1\) [\#330](https://github.com/puppetlabs/puppetlabs-reboot/pull/330) ([jordanbreen28](https://github.com/jordanbreen28))
+
 ## [v4.2.0](https://github.com/puppetlabs/puppetlabs-reboot/tree/v4.2.0) (2022-06-06)
 
 [Full Changelog](https://github.com/puppetlabs/puppetlabs-reboot/compare/v4.1.0...v4.2.0)
