@@ -10,7 +10,7 @@ require 'puppet-strings/tasks' if Bundler.rubygems.find_name('puppet-strings').a
 
 def changelog_user
   return unless Rake.application.top_level_tasks.include? "changelog"
-  returnVal = "puppetlabs" || JSON.load(File.read('metadata.json'))['author']
+  returnVal = nil || JSON.load(File.read('metadata.json'))['author']
   raise "unable to find the changelog_user in .sync.yml, or the author in metadata.json" if returnVal.nil?
   puts "GitHubChangelogGenerator user:#{returnVal}"
   returnVal
@@ -49,7 +49,6 @@ if Bundler.rubygems.find_name('github_changelog_generator').any?
     raise "Set CHANGELOG_GITHUB_TOKEN environment variable eg 'export CHANGELOG_GITHUB_TOKEN=valid_token_here'" if Rake.application.top_level_tasks.include? "changelog" and ENV['CHANGELOG_GITHUB_TOKEN'].nil?
     config.user = "#{changelog_user}"
     config.project = "#{changelog_project}"
-    config.since_tag = "2.1.2"
     config.future_release = "#{changelog_future_release}"
     config.exclude_labels = ['maintenance']
     config.header = "# Change log\n\nAll notable changes to this project will be documented in this file. The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org)."
@@ -85,13 +84,6 @@ Gemfile:
         version: '~> 1.15'
         condition: "Gem::Version.new(RUBY_VERSION.dup) >= Gem::Version.new('2.3.0')"
 EOM
-  end
-end
-
-if Rake::Task.task_defined?('spec_prep')
-  Rake::Task.tasks.each do |task|
-    next unless task.name.start_with? 'litmus:acceptance'
-    task.enhance([Rake::Task['spec_prep']])
   end
 end
 
