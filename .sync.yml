@@ -15,6 +15,7 @@ Gemfile:
   optional:
     ":development":
       - gem: github_changelog_generator
+      version: '= 1.15.2'
 Rakefile:
   changelog_user: puppetlabs
   changelog_since_tag: 2.1.2
