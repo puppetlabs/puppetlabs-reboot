@@ -10,7 +10,7 @@ describe 'reboot task' do
   it 'reports the last boot time' do
     result = run_bolt_task('reboot::last_boot_time')
     expect(bolt_result_as_hash(result)['_output']).not_to be_empty
-    expect(result.stderr).to be(nil)
+    expect(result.stderr).to be_nil
     expect(result.exit_code).to be(0)
   end
 

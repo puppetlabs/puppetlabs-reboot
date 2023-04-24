@@ -7,8 +7,8 @@ require 'puppet/provider/reboot/windows'
 describe Puppet::Type.type(:reboot).provider(:windows) do
   let(:resource) { Puppet::Type.type(:reboot).new(provider: :windows, name: 'windows_reboot') }
   let(:provider) { resource.provider }
-  let(:native_path)     { "#{ENV['SYSTEMROOT']}\\sysnative\\shutdown.exe" }
-  let(:redirected_path) { "#{ENV['SYSTEMROOT']}\\system32\\shutdown.exe" }
+  let(:native_path)     { "#{ENV.fetch('SYSTEMROOT', nil)}\\sysnative\\shutdown.exe" }
+  let(:redirected_path) { "#{ENV.fetch('SYSTEMROOT', nil)}\\system32\\shutdown.exe" }
   let(:shutdown_not_found_error) { 'The shutdown.exe command was not found. On Windows 2003 x64 hotfix 942589 must be installed to access the 64-bit version of shutdown.exe from 32-bit version of ruby.exe.' } # rubocop:disable Layout/LineLength
 
   before :each do

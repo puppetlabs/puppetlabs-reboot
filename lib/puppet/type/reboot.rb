@@ -104,18 +104,14 @@ Puppet::Type.newtype(:reboot) do
     ]
 
     validate do |values|
-      if values == []
-        raise ArgumentError, _('There must be at least one element in the list')
-      end
+      raise ArgumentError, _('There must be at least one element in the list') if values == []
 
       values = [values] unless values.is_a?(Array)
 
       values.each do |value|
         value = value.to_sym if value.is_a?(String)
 
-        unless possible_values.include?(value)
-          raise ArgumentError, _("value must be one of %{possible_values.join(', ')}") % { possible_values: 'translateable' }
-        end
+        raise ArgumentError, _("value must be one of %{possible_values.join(', ')}") % { possible_values: 'translateable' } unless possible_values.include?(value)
       end
     end
 
@@ -136,18 +132,14 @@ Puppet::Type.newtype(:reboot) do
     ]
 
     validate do |values|
-      if values == []
-        raise ArgumentError, _('There must be at least one element in the list')
-      end
+      raise ArgumentError, _('There must be at least one element in the list') if values == []
 
       values = [values] unless values.is_a?(Array)
 
       values.each do |value|
         value = value.to_sym if value.is_a?(String)
 
-        unless possible_values.include?(value)
-          raise ArgumentError, _("value must be one of %{possible_values.join(', ')}") % { possible_values: 'translateable' }
-        end
+        raise ArgumentError, _("value must be one of %{possible_values.join(', ')}") % { possible_values: 'translateable' } unless possible_values.include?(value)
       end
     end
 
@@ -172,15 +164,11 @@ Puppet::Type.newtype(:reboot) do
     desc _('The message to log when the reboot is performed.')
 
     validate do |value|
-      if value.nil? || value == ''
-        raise ArgumentError, _('A non-empty message must be specified.')
-      end
+      raise ArgumentError, _('A non-empty message must be specified.') if value.nil? || value == ''
 
       # Maximum command line length in Windows is 8191 characters, so this is
       # an approximation based on the other parts of the shutdown command
-      if value.length > 8000
-        raise ArgumentError, _('The given message must not exceed 8000 characters.')
-      end
+      raise ArgumentError, _('The given message must not exceed 8000 characters.') if value.length > 8000
     end
 
     defaultto 'Puppet is rebooting the computer'
@@ -193,9 +181,7 @@ Puppet::Type.newtype(:reboot) do
       current run."
 
     validate do |value|
-      unless %r{^\d+$}.match?(value.to_s)
-        raise ArgumentError, _('The timeout must be an integer.')
-      end
+      raise ArgumentError, _('The timeout must be an integer.') unless %r{^\d+$}.match?(value.to_s)
     end
 
     defaultto 60

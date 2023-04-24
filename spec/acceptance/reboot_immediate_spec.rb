@@ -29,12 +29,12 @@ describe 'Reboot Immediately and Explicit Immediately' do
   it 'Reboot Immediately with Refresh' do
     result = apply_manifest(reboot_manifest, debug: true, catch_failures: true)
     expect(result.stdout).to match(skip_msg_pattern)
-    expect(reboot_issued_or_cancelled).to eq(true)
+    expect(reboot_issued_or_cancelled).to be(true)
   end
 
   it 'Reboot Immediately explicit with Refresh' do
     result = apply_manifest(reboot_immediate_manifest, debug: true, catch_failures: true)
     expect(result.stdout).to match(skip_msg_pattern)
-    expect(reboot_issued_or_cancelled).to eq(true)
+    expect(reboot_issued_or_cancelled).to be(true)
   end
 end
