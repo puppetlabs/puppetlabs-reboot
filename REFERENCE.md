@@ -47,15 +47,15 @@ Default value: `refreshed`
 
 The following parameters are available in the `reboot` type.
 
-* [`apply`](#apply)
-* [`message`](#message)
-* [`name`](#name)
-* [`onlyif`](#onlyif)
-* [`provider`](#provider)
-* [`timeout`](#timeout)
-* [`unless`](#unless)
+* [`apply`](#-reboot--apply)
+* [`message`](#-reboot--message)
+* [`name`](#-reboot--name)
+* [`onlyif`](#-reboot--onlyif)
+* [`provider`](#-reboot--provider)
+* [`timeout`](#-reboot--timeout)
+* [`unless`](#-reboot--unless)
 
-##### <a name="apply"></a>`apply`
+##### <a name="-reboot--apply"></a>`apply`
 
 Valid values: `immediately`, `finished`
 
@@ -67,27 +67,27 @@ run. The default is `immediately`.
 
 Default value: `immediately`
 
-##### <a name="message"></a>`message`
+##### <a name="-reboot--message"></a>`message`
 
 
 Default value: `Puppet is rebooting the computer`
 
-##### <a name="name"></a>`name`
+##### <a name="-reboot--name"></a>`name`
 
 namevar
 
 
-##### <a name="onlyif"></a>`onlyif`
+##### <a name="-reboot--onlyif"></a>`onlyif`
 
 For pending reboots, only reboot if the reboot is pending
 for one of the supplied reasons.
 
-##### <a name="provider"></a>`provider`
+##### <a name="-reboot--provider"></a>`provider`
 
 The specific backend to use for this `reboot` resource. You will seldom need to specify this --- Puppet will usually
 discover the appropriate provider for your platform.
 
-##### <a name="timeout"></a>`timeout`
+##### <a name="-reboot--timeout"></a>`timeout`
 
 The amount of time in seconds to wait between the time the reboot
 is requested and when the reboot is performed.  The default timeout
@@ -96,7 +96,7 @@ current run.
 
 Default value: `60`
 
-##### <a name="unless"></a>`unless`
+##### <a name="-reboot--unless"></a>`unless`
 
 For pending reboots, ignore the supplied reasons when checking pennding reboot
 
@@ -208,29 +208,29 @@ Reboots targets and waits for them to be available again.
 
 The following parameters are available in the `reboot` plan:
 
-* [`targets`](#targets)
-* [`message`](#message)
-* [`reboot_delay`](#reboot_delay)
-* [`disconnect_wait`](#disconnect_wait)
-* [`reconnect_timeout`](#reconnect_timeout)
-* [`retry_interval`](#retry_interval)
-* [`fail_plan_on_errors`](#fail_plan_on_errors)
+* [`targets`](#-reboot--targets)
+* [`message`](#-reboot--message)
+* [`reboot_delay`](#-reboot--reboot_delay)
+* [`disconnect_wait`](#-reboot--disconnect_wait)
+* [`reconnect_timeout`](#-reboot--reconnect_timeout)
+* [`retry_interval`](#-reboot--retry_interval)
+* [`fail_plan_on_errors`](#-reboot--fail_plan_on_errors)
 
-##### <a name="targets"></a>`targets`
+##### <a name="-reboot--targets"></a>`targets`
 
 Data type: `TargetSpec`
 
 Targets to reboot.
 
-##### <a name="message"></a>`message`
+##### <a name="-reboot--message"></a>`message`
 
 Data type: `Optional[String]`
 
 Message to log with the reboot (for platforms that support it).
 
-Default value: ``undef``
+Default value: `undef`
 
-##### <a name="reboot_delay"></a>`reboot_delay`
+##### <a name="-reboot--reboot_delay"></a>`reboot_delay`
 
 Data type: `Integer[1]`
 
@@ -238,7 +238,7 @@ How long (in seconds) to wait before rebooting. Defaults to 1.
 
 Default value: `1`
 
-##### <a name="disconnect_wait"></a>`disconnect_wait`
+##### <a name="-reboot--disconnect_wait"></a>`disconnect_wait`
 
 Data type: `Integer[0]`
 
@@ -246,7 +246,7 @@ How long (in seconds) to wait before checking whether the server has rebooted. D
 
 Default value: `10`
 
-##### <a name="reconnect_timeout"></a>`reconnect_timeout`
+##### <a name="-reboot--reconnect_timeout"></a>`reconnect_timeout`
 
 Data type: `Integer[0]`
 
@@ -254,7 +254,7 @@ How long (in seconds) to attempt to reconnect before giving up. Defaults to 180.
 
 Default value: `180`
 
-##### <a name="retry_interval"></a>`retry_interval`
+##### <a name="-reboot--retry_interval"></a>`retry_interval`
 
 Data type: `Integer[0]`
 
@@ -262,11 +262,11 @@ How long (in seconds) to wait between retries. Defaults to 1.
 
 Default value: `1`
 
-##### <a name="fail_plan_on_errors"></a>`fail_plan_on_errors`
+##### <a name="-reboot--fail_plan_on_errors"></a>`fail_plan_on_errors`
 
 Data type: `Boolean`
 
 Raise an error if any targets do not successfully reboot. Defaults to true.
 
-Default value: ``true``
+Default value: `true`
 
