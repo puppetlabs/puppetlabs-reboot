@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org).
 
+## [v5.0.0](https://github.com/puppetlabs/puppetlabs-reboot/tree/v5.0.0) (2023-04-24)
+
+[Full Changelog](https://github.com/puppetlabs/puppetlabs-reboot/compare/v4.3.1...v5.0.0)
+
+### Changed
+
+- \(CONT-795\) Puppet 8 support / Drop Puppet 6 [\#343](https://github.com/puppetlabs/puppetlabs-reboot/pull/343) ([LukasAud](https://github.com/LukasAud))
+
 ## [v4.3.1](https://github.com/puppetlabs/puppetlabs-reboot/tree/v4.3.1) (2023-04-24)
 
 [Full Changelog](https://github.com/puppetlabs/puppetlabs-reboot/compare/v4.3.0...v4.3.1)
@@ -67,6 +75,7 @@ All notable changes to this project will be documented in this file. The format 
 ### Fixed
 
 - Cleanup: Changed to ctrl::sleep\(\) and removed redundant reboot::sleep\(\) function [\#284](https://github.com/puppetlabs/puppetlabs-reboot/pull/284) ([fetzerms](https://github.com/fetzerms))
+- \(MODULES-10955\) More robust handling of reboot-task output [\#280](https://github.com/puppetlabs/puppetlabs-reboot/pull/280) ([fetzerms](https://github.com/fetzerms))
 
 ## [v4.0.0](https://github.com/puppetlabs/puppetlabs-reboot/tree/v4.0.0) (2021-02-27)
 
@@ -77,10 +86,6 @@ All notable changes to this project will be documented in this file. The format 
 - pdksync - \(MAINT\) Remove SLES 11 support [\#279](https://github.com/puppetlabs/puppetlabs-reboot/pull/279) ([sanfrancrisko](https://github.com/sanfrancrisko))
 - pdksync - \(MAINT\) Remove RHEL 5 family support [\#278](https://github.com/puppetlabs/puppetlabs-reboot/pull/278) ([sanfrancrisko](https://github.com/sanfrancrisko))
 - pdksync - Remove Puppet 5 from testing and bump minimal version to 6.0.0 [\#275](https://github.com/puppetlabs/puppetlabs-reboot/pull/275) ([carabasdaniel](https://github.com/carabasdaniel))
-
-### Fixed
-
-- \(MODULES-10955\) More robust handling of reboot-task output [\#280](https://github.com/puppetlabs/puppetlabs-reboot/pull/280) ([fetzerms](https://github.com/fetzerms))
 
 ## [v3.2.0](https://github.com/puppetlabs/puppetlabs-reboot/tree/v3.2.0) (2021-01-19)
 
@@ -115,6 +120,10 @@ All notable changes to this project will be documented in this file. The format 
 - Add `shutdown\_only` parameter to tasks [\#224](https://github.com/puppetlabs/puppetlabs-reboot/pull/224) ([MikaelSmith](https://github.com/MikaelSmith))
 - \(MODULES-8201\) Add pending reboot due to domain join for windows. [\#179](https://github.com/puppetlabs/puppetlabs-reboot/pull/179) ([razorbladex401](https://github.com/razorbladex401))
 
+### Fixed
+
+- Fix plan return value [\#209](https://github.com/puppetlabs/puppetlabs-reboot/pull/209) ([reidmv](https://github.com/reidmv))
+
 ## [v2.3.0](https://github.com/puppetlabs/puppetlabs-reboot/tree/v2.3.0) (2019-12-06)
 
 [Full Changelog](https://github.com/puppetlabs/puppetlabs-reboot/compare/2.2.0...v2.3.0)
@@ -144,7 +153,6 @@ All notable changes to this project will be documented in this file. The format 
 ### Fixed
 
 - Add additional guards for nix process detach [\#210](https://github.com/puppetlabs/puppetlabs-reboot/pull/210) ([reidmv](https://github.com/reidmv))
-- Fix plan return value [\#209](https://github.com/puppetlabs/puppetlabs-reboot/pull/209) ([reidmv](https://github.com/reidmv))
 - MODULES-8726: Ensure sbin is in the path [\#205](https://github.com/puppetlabs/puppetlabs-reboot/pull/205) ([xalimar](https://github.com/xalimar))
 - \[MODULES-8718\] Check for root or sudo in the reboot task nix.sh script [\#203](https://github.com/puppetlabs/puppetlabs-reboot/pull/203) ([thilinapiy](https://github.com/thilinapiy))
 - \(MODULES-8717\) Fix dependency issue on boltspec [\#202](https://github.com/puppetlabs/puppetlabs-reboot/pull/202) ([HelenCampbell](https://github.com/HelenCampbell))
