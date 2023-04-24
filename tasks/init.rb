@@ -64,10 +64,10 @@ class Reboot # rubocop:disable Style/ClassAndModuleChildren
     end
 
     def shutdown_executable_windows
-      if File.exist?("#{ENV['SYSTEMROOT']}\\sysnative\\shutdown.exe")
-        "#{ENV['SYSTEMROOT']}\\sysnative\\shutdown.exe"
-      elsif File.exist?("#{ENV['SYSTEMROOT']}\\system32\\shutdown.exe")
-        "#{ENV['SYSTEMROOT']}\\system32\\shutdown.exe"
+      if File.exist?("#{ENV.fetch('SYSTEMROOT', nil)}\\sysnative\\shutdown.exe")
+        "#{ENV.fetch('SYSTEMROOT', nil)}\\sysnative\\shutdown.exe"
+      elsif File.exist?("#{ENV.fetch('SYSTEMROOT', nil)}\\system32\\shutdown.exe")
+        "#{ENV.fetch('SYSTEMROOT', nil)}\\system32\\shutdown.exe"
       else
         'shutdown.exe'
       end
@@ -102,7 +102,7 @@ unless STDIN.tty?
 
     result = {
       'status' => 'queued',
-      'timeout' => reboot.timeout,
+      'timeout' => reboot.timeout
     }
   rescue JSON::ParserError
     result = {

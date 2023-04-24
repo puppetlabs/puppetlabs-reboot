@@ -22,9 +22,11 @@ def substitute_shutdown_on_path
   Helper.instance.run_shell('puppet resource package which ensure=latest')
   Helper.instance.run_shell('puppet resource package systemd-sysv ensure=latest') if os[:family] == 'debian' && os[:release].to_i == 9
   $shutdown_path = Helper.instance.run_shell('which shutdown').stdout.chomp
-  if Helper.instance.run_shell("test -f #{SHUTDOWN_TEMP_LOC}", expect_failures: true).exit_code == 0
-    return if Helper.instance.run_shell("sha1sum #{$shutdown_path} | cut -d ' ' -f 1").stdout.chomp == SHUTDOWN_SCRIPT_EXPECTED_SHA1
+  if Helper.instance.run_shell("test -f #{SHUTDOWN_TEMP_LOC}",
+                               expect_failures: true).exit_code == 0 && (Helper.instance.run_shell("sha1sum #{$shutdown_path} | cut -d ' ' -f 1").stdout.chomp == SHUTDOWN_SCRIPT_EXPECTED_SHA1)
+    return
   end
+
   Helper.instance.run_shell("mv #{$shutdown_path} #{SHUTDOWN_TEMP_LOC}")
   LINUX_SHUTDOWN_SCRIPT.each do |line|
     Helper.instance.run_shell("echo '#{line}' >> #{$shutdown_path}")
@@ -62,6 +64,7 @@ def reboot_issued_or_cancelled(expected_args = ['-r', '+1', 'Puppet', 'is', 'reb
     return [0, WINDOWS_SHUTDOWN_NOT_IN_PROGRESS].flatten.include? result.exit_code
   else
     raise 'No args to verify against' if expected_args.empty?
+
     result = run_shell("cat #{SHUTDOWN_LOG_LOCATION}")
     return result.stdout.chomp.split(' ') == expected_args if result.exit_code == 0
   end
@@ -71,5 +74,6 @@ end
 def bolt_result_as_hash(result)
   return {} unless result.result
   return result.result if result.result.is_a? Hash
+
   JSON.parse(result.result.gsub('=>', ':'))
 end

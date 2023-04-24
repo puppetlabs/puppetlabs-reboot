@@ -24,7 +24,7 @@ describe Puppet::Type.type(:reboot).provider(:posix) do
     end
 
     it 'does not reboot when setting the `when` property to refreshed' do
-      expect(provider).to receive(:reboot).never
+      expect(provider).not_to receive(:reboot)
 
       provider.when = :refreshed
     end
@@ -48,7 +48,7 @@ describe Puppet::Type.type(:reboot).provider(:posix) do
 
     it "doesn't stop the rest of the catalog transaction if apply is set to finished" do
       resource[:apply] = :finished
-      expect(Puppet::Application).to receive(:stop!).never
+      expect(Puppet::Application).not_to receive(:stop!)
       provider.reboot
     end
 
@@ -74,7 +74,7 @@ describe Puppet::Type.type(:reboot).provider(:posix) do
 
       it 'accepts timeouts that are not multiples of 60' do
         resource[:timeout] = 61
-        expect(Puppet).to receive(:warning).with(include('rounding')).never
+        expect(Puppet).not_to receive(:warning).with(include('rounding'))
         expect(provider).to receive(:async_shutdown).with(include("-g #{resource[:timeout].to_i}")).at_most(:once)
         provider.reboot
       end

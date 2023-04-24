@@ -24,7 +24,7 @@ describe 'Windows Provider - Pending Reboot', if: os[:family] == 'windows' do
       registry_key { 'HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\WindowsUpdate\\Auto Update\\RebootRequired':
         ensure => absent,
       }
-      MANIFEST
+    MANIFEST
     apply_manifest(undo_pending_reboot_manifest, catch_failures: true)
   end
 

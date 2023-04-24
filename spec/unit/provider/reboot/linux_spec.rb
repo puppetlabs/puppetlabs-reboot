@@ -14,10 +14,10 @@ describe Puppet::Type.type(:reboot).provider(:linux) do
   end
 
   it 'is a kind of Puppet::Type::Reboot::ProviderPosix' do
-    provider.must be_a_kind_of Puppet::Type::Reboot::ProviderPosix
+    provider.must be_a Puppet::Type::Reboot::ProviderPosix
   end
 
-  context '#initialize' do
+  describe '#initialize' do
     it 'issues a deprecation warning' do
       expect(Puppet).to receive(:deprecation_warning).with("The 'linux' reboot provider is deprecated and will be removed; use 'posix' instead.")
 
@@ -37,7 +37,7 @@ describe Puppet::Type.type(:reboot).provider(:linux) do
     end
 
     it 'does not reboot when setting the `when` property to refreshed' do
-      expect(provider).to receive(:reboot).never
+      expect(provider).not_to receive(:reboot)
 
       provider.when = :refreshed
     end
@@ -62,7 +62,7 @@ describe Puppet::Type.type(:reboot).provider(:linux) do
 
     it "doesn't stop the rest of the catalog transaction if apply is set to finished" do
       resource[:apply] = :finished
-      expect(Puppet::Application).to receive(:stop!).never
+      expect(Puppet::Application).not_to receive(:stop!)
       provider.reboot
     end
 

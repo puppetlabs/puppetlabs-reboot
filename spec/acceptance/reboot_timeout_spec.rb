@@ -18,7 +18,7 @@ describe 'Custom Timeout' do
   it 'Reboot Immediately with a Custom Timeout' do
     apply_manifest(reboot_manifest, debug: true) do |result|
       if os[:family] == 'windows'
-        expect(result.stdout).to match(%r{shutdown\.exe \/r \/t 120 \/d p:4:1})
+        expect(result.stdout).to match(%r{shutdown\.exe /r /t 120 /d p:4:1})
       else
         expect(result.stdout).to match(%r{shutdown -r \+2})
       end

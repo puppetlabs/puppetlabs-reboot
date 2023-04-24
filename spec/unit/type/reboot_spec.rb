@@ -27,7 +27,7 @@ describe Puppet::Type.type(:reboot) do
 
     it 'does not reboot if the `when` parameter is `pending`' do
       expect(resource.provider).to receive(:satisfies?).with([:manages_reboot_pending]).and_return(true)
-      expect(resource.provider).to receive(:reboot).never
+      expect(resource.provider).not_to receive(:reboot)
       resource[:when] = :pending
 
       resource.refresh
@@ -200,7 +200,7 @@ describe Puppet::Type.type(:reboot) do
 
       resource2[:apply] = :finished
       resource2[:when] = :refreshed
-      expect(resource2.provider).to receive(:reboot).never
+      expect(resource2.provider).not_to receive(:reboot)
       expect(Puppet).to receive(:debug).with(include('already scheduled')).at_most(:once)
       resource2.refresh
     end
