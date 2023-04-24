@@ -2,7 +2,7 @@
 
 require 'spec_helper'
 # require_relative '../../../tasks/init'
-require File.dirname(__FILE__) + '/../../../tasks/init.rb'
+require "#{File.dirname(__FILE__)}/../../../tasks/init.rb"
 
 describe Reboot::Task do # rubocop:disable RSpec/FilePath
   context 'on Windows' do

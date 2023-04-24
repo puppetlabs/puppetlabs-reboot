@@ -66,7 +66,7 @@ def reboot_issued_or_cancelled(expected_args = ['-r', '+1', 'Puppet', 'is', 'reb
     raise 'No args to verify against' if expected_args.empty?
 
     result = run_shell("cat #{SHUTDOWN_LOG_LOCATION}")
-    return result.stdout.chomp.split(' ') == expected_args if result.exit_code == 0
+    return result.stdout.chomp.split == expected_args if result.exit_code == 0
   end
   false
 end

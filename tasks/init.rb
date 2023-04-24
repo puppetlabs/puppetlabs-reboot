@@ -28,7 +28,7 @@ class Reboot # rubocop:disable Style/ClassAndModuleChildren
       else
         # Specify timeout in minutes, or now. Let the forked process sleep to handle seconds.
         timeout_min = @timeout / 60
-        timeout_min = (timeout_min > 0) ? "+#{timeout_min}" : 'now'
+        timeout_min = timeout_min.positive? ? "+#{timeout_min}" : 'now'
         timeout_sec = timeout % 60
         async_command(unix_shutdown_command(timeout: timeout_min, message: @message), timeout_sec)
       end
@@ -43,7 +43,7 @@ class Reboot # rubocop:disable Style/ClassAndModuleChildren
         # Puppet 7 monkey patches Ruby's Process Module
         # and Process.create will be available
         require 'puppet'
-        require 'win32/process' if Puppet::Util::Package.versioncmp(Puppet.version, '7.0.0') < 0
+        require 'win32/process' if Puppet::Util::Package.versioncmp(Puppet.version, '7.0.0').negative?
 
         Process.create(
           command_line: "cmd /c start #{cmd}",
@@ -95,9 +95,9 @@ class Reboot # rubocop:disable Style/ClassAndModuleChildren
 end
 
 # Actually run the reboot if we got piped input
-unless STDIN.tty?
+unless $stdin.tty?
   begin
-    reboot = Reboot::Task.new(JSON.parse(STDIN.read))
+    reboot = Reboot::Task.new(JSON.parse($stdin.read))
     reboot.execute!
 
     result = {
@@ -110,5 +110,5 @@ unless STDIN.tty?
       'message' => 'STDIN is not valid JSON'
     }
   end
-  JSON.dump(result, STDOUT)
+  JSON.dump(result, $stdout)
 end
