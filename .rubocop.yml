@@ -37,6 +37,8 @@ RSpec/HookArgument:
 RSpec/DescribeSymbol:
   Exclude:
   - spec/unit/facter/**/*.rb
+RSpec/MultipleExpectations:
+  Max: 3
 Style/BlockDelimiters:
   Description: Prefer braces for chaining. Mostly an aesthetical choice. Better to
     be consistent then.

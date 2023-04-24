@@ -95,10 +95,6 @@ RSpec/FilePath:
   Exclude:
     - 'spec/acceptance/reboot_message.spec.rb'
 
-# Offense count: 22
-RSpec/MultipleExpectations:
-  Max: 3
-
 # Offense count: 17
 # Configuration parameters: AllowSubject.
 RSpec/MultipleMemoizedHelpers:
@@ -124,8 +120,3 @@ RSpec/StubbedMock:
   Exclude:
     - 'spec/unit/task/init_spec.rb'
     - 'spec/unit/type/reboot_spec.rb'
-
-# Offense count: 1
-Style/MixinUsage:
-  Exclude:
-    - 'spec/spec_helper.rb'
