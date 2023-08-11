@@ -1,5 +1,4 @@
 # reboot
-[![Build Status](https://travis-ci.org/puppetlabs/puppetlabs-reboot.png?branch=main)](https://travis-ci.org/puppetlabs/puppetlabs-reboot)
 
 #### Table of Contents
 
