@@ -89,9 +89,14 @@ RSpec/ExpectInHook:
     - 'spec/unit/provider/reboot/posix_spec.rb'
 
 # Offense count: 1
+RSpec/SpecFilePathFormat:
+  Exclude:
+    - 'spec/unit/task/init_spec.rb'
+
+# Offense count: 1
 # Configuration parameters: Include, CustomTransform, IgnoreMethods, SpecSuffixOnly.
 # Include: **/*_spec*rb*, **/spec/**/*
-RSpec/FilePath:
+RSpec/SpecFilePathSuffix:
   Exclude:
     - 'spec/acceptance/reboot_message.spec.rb'
 

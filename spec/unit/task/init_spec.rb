@@ -4,7 +4,7 @@ require 'spec_helper'
 # require_relative '../../../tasks/init'
 require "#{File.dirname(__FILE__)}/../../../tasks/init.rb"
 
-describe Reboot::Task do # rubocop:disable RSpec/FilePath
+describe Reboot::Task do
   context 'on Windows' do
     before(:each) do
       allow(Facter).to receive(:value).with(:kernel).and_return('windows')
