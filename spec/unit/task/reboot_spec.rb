@@ -4,7 +4,7 @@ require 'spec_helper'
 # require_relative '../../../tasks/init'
 require "#{File.dirname(__FILE__)}/../../../tasks/init.rb"
 
-describe Reboot::Task do
+describe Task::Reboot do
   context 'on Windows' do
     before(:each) do
       allow(Facter).to receive(:value).with(:kernel).and_return('windows')

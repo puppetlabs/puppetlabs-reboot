@@ -51,7 +51,7 @@ RSpec/ContextWording:
     - 'spec/unit/provider/reboot/linux_spec.rb'
     - 'spec/unit/provider/reboot/posix_spec.rb'
     - 'spec/unit/provider/reboot/windows_spec.rb'
-    - 'spec/unit/task/init_spec.rb'
+    - 'spec/unit/task/reboot_spec.rb'
     - 'spec/unit/type/reboot_spec.rb'
 
 # Offense count: 13
@@ -65,7 +65,7 @@ RSpec/DescribeClass:
     - '**/spec/views/**/*'
     - 'spec/acceptance/reboot_finished_spec.rb'
     - 'spec/acceptance/reboot_immediate_spec.rb'
-    - 'spec/acceptance/reboot_message.spec.rb'
+    - 'spec/acceptance/reboot_with_custom_message_spec.rb'
     - 'spec/acceptance/reboot_no_refresh_spec.rb'
     - 'spec/acceptance/reboot_pending_spec.rb'
     - 'spec/acceptance/reboot_resume_spec.rb'
@@ -91,14 +91,14 @@ RSpec/ExpectInHook:
 # Offense count: 1
 RSpec/SpecFilePathFormat:
   Exclude:
-    - 'spec/unit/task/init_spec.rb'
+    - 'spec/unit/task/reboot_spec.rb'
 
 # Offense count: 1
 # Configuration parameters: Include, CustomTransform, IgnoreMethods, SpecSuffixOnly.
 # Include: **/*_spec*rb*, **/spec/**/*
 RSpec/SpecFilePathSuffix:
   Exclude:
-    - 'spec/acceptance/reboot_message.spec.rb'
+    - 'spec/acceptance/reboot_with_custom_message_spec.rb'
 
 # Offense count: 17
 # Configuration parameters: AllowSubject.
@@ -123,5 +123,5 @@ RSpec/NoExpectationExample:
 # Offense count: 21
 RSpec/StubbedMock:
   Exclude:
-    - 'spec/unit/task/init_spec.rb'
+    - 'spec/unit/task/reboot_spec.rb'
     - 'spec/unit/type/reboot_spec.rb'
