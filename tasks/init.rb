@@ -4,9 +4,9 @@
 require 'facter'
 require 'json'
 
-class Reboot # rubocop:disable Style/ClassAndModuleChildren
+module Task # rubocop:disable Style/ClassAndModuleChildren
   # Class for rebooting the system. This doesn't need to be a class but it allows for automated testing
-  class Task
+  class Reboot
     attr_accessor :timeout
 
     def initialize(opts = {})
@@ -97,7 +97,7 @@ end
 # Actually run the reboot if we got piped input
 unless $stdin.tty?
   begin
-    reboot = Reboot::Task.new(JSON.parse($stdin.read))
+    reboot = Task::Reboot.new(JSON.parse($stdin.read))
     reboot.execute!
 
     result = {
