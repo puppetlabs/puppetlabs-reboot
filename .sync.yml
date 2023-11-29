@@ -2,6 +2,7 @@
 ".gitlab-ci.yml":
   delete: true
 ".rubocop.yml":
+  include_todos: true
   profiles:
     strict:
       configs:
