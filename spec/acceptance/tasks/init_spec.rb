@@ -4,8 +4,10 @@ require 'spec_helper_acceptance'
 
 describe 'reboot task' do
   let(:tm) { 60 }
-  let(:bolt_default_reboot_args) { ['-r', '+1', "''", '</dev/null', '>/dev/null', '2>&1', '&'] }
-  let(:bolt_reboot_args_with_msg) { ['-r', '+1', 'Bolt\\', 'is\\', 'rebooting\\', 'the\\', 'computer', '</dev/null', '>/dev/null', '2>&1', '&'] }
+  let(:bolt_default_reboot_args) { [['-r', '+1'], ['-r', '+1', "''", '</dev/null', '>/dev/null', '2>&1', '&']] }
+  let(:bolt_reboot_args_with_msg) do
+    [['-r', '+1', 'Bolt', 'is', 'rebooting', 'the', 'computer'], ['-r', '+1', 'Bolt\\', 'is\\', 'rebooting\\', 'the\\', 'computer', '</dev/null', '>/dev/null', '2>&1', '&']]
+  end
 
   it 'reports the last boot time' do
     result = run_bolt_task('reboot::last_boot_time')

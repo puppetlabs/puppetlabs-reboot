@@ -64,8 +64,12 @@ def reboot_issued_or_cancelled(expected_args = ['-r', '+1', 'Puppet', 'is', 'reb
     return [0, WINDOWS_SHUTDOWN_NOT_IN_PROGRESS].flatten.include? result.exit_code
   else
     raise 'No args to verify against' if expected_args.empty?
-
     result = run_shell("cat #{SHUTDOWN_LOG_LOCATION}")
+
+    if expected_args.map(&:class).include?(Array) && result.exit_code == 0
+      return expected_args.include?(result.stdout.chomp.split)
+    end
+
     return result.stdout.chomp.split == expected_args if result.exit_code == 0
   end
   false
