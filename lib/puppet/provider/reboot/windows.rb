@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 Puppet::Type.type(:reboot).provide :windows do
-  confine operatingsystem: :windows
-  defaultfor operatingsystem: :windows
+  confine 'os.name': :windows
+  defaultfor 'os.name': :windows
 
   has_features :manages_reboot_pending
   attr_accessor :reboot_required
