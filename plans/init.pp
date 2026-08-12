@@ -84,9 +84,9 @@ plan reboot (
 
       # Build and return the memo for this iteration
       ({
-          'pending'   => $failed_targets,
-          'ok'        => $memo['ok'] + $ok_targets,
-          'timed_out' => $timed_out,
+        'pending'   => $failed_targets,
+        'ok'        => $memo['ok'] + $ok_targets,
+        'timed_out' => $timed_out,
       })
     }
   }
@@ -98,13 +98,13 @@ plan reboot (
 
   $error_set = $wait_results['pending'].map |$target| {
     Result.new($target, {
-        _output => 'failed to reboot',
-        _error  => $err,
+      _output => 'failed to reboot',
+      _error  => $err,
     })
   }
   $ok_set = $wait_results['ok'].map |$target| {
     Result.new($target, {
-        _output => 'rebooted',
+      _output => 'rebooted',
     })
   }
 
