@@ -5,6 +5,22 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org).
 
+## [v6.0.0](https://github.com/puppetlabs/puppetlabs-reboot/tree/v6.0.0) - 2026-08-26
+
+[Full Changelog](https://github.com/puppetlabs/puppetlabs-reboot/compare/v5.1.0...v6.0.0)
+
+### Changed
+
+- (CAT-2388) Puppetcore update and Remove Puppet 7 support [#378](https://github.com/puppetlabs/puppetlabs-reboot/pull/378) ([LukasAud](https://github.com/LukasAud))
+
+### Added
+
+- (MODULES-11707) Add Puppet 9 support [#381](https://github.com/puppetlabs/puppetlabs-reboot/pull/381) ([skyamgarp](https://github.com/skyamgarp))
+
+### Other
+
+- (CAT-7110) Add CentOS 9 support [#373](https://github.com/puppetlabs/puppetlabs-reboot/pull/373) ([shubhamshinde360](https://github.com/shubhamshinde360))
+
 ## [v5.1.0](https://github.com/puppetlabs/puppetlabs-reboot/tree/v5.1.0) - 2025-01-27
 
 [Full Changelog](https://github.com/puppetlabs/puppetlabs-reboot/compare/v5.0.0...v5.1.0)
@@ -133,7 +149,6 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 
 ### Added
 
-- Add `shutdown_only` parameter to tasks [#224](https://github.com/puppetlabs/puppetlabs-reboot/pull/224) ([MikaelSmith](https://github.com/MikaelSmith))
 - (MODULES-8201) Add pending reboot due to domain join for windows. [#179](https://github.com/puppetlabs/puppetlabs-reboot/pull/179) ([razorbladex401](https://github.com/razorbladex401))
 
 ## [v2.3.0](https://github.com/puppetlabs/puppetlabs-reboot/tree/v2.3.0) - 2019-12-06
@@ -248,7 +263,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 - (MODULES-4328) Implement reboot reason for windows [#136](https://github.com/puppetlabs/puppetlabs-reboot/pull/136) ([johnf](https://github.com/johnf))
 - Update README.md [#135](https://github.com/puppetlabs/puppetlabs-reboot/pull/135) ([tramaswami](https://github.com/tramaswami))
 - (MODULES-5187) mysnc puppet 5 and ruby 2.4 [#134](https://github.com/puppetlabs/puppetlabs-reboot/pull/134) ([eputnam](https://github.com/eputnam))
-- Fixed markdown in README.md [#133](https://github.com/puppetlabs/puppetlabs-reboot/pull/133) ([farshidlk](https://github.com/farshidlk))
+- Fixed markdown in README.md [#133](https://github.com/puppetlabs/puppetlabs-reboot/pull/133) ([bl0zr0](https://github.com/bl0zr0))
 - (MODULES-5144) Prep for puppet 5 [#132](https://github.com/puppetlabs/puppetlabs-reboot/pull/132) ([hunner](https://github.com/hunner))
 - (MODULES-4976) Remove rspec configuration for win32_console [#131](https://github.com/puppetlabs/puppetlabs-reboot/pull/131) ([glennsarti](https://github.com/glennsarti))
 - (MODULES-4836) Update puppet compatibility with 4.7 as lower bound [#130](https://github.com/puppetlabs/puppetlabs-reboot/pull/130) ([lbayerlein](https://github.com/lbayerlein))
