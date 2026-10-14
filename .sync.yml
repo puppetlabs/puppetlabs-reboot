@@ -35,6 +35,7 @@ spec/spec_helper.rb:
   unmanaged: false
 .github/workflows/nightly.yml:
   unmanaged: false
+  cron: '35 3 * * *'
 .github/workflows/release.yml:
   unmanaged: false
 .travis.yml:
