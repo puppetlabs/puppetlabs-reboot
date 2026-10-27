@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org).
 
+## [v6.1.0](https://github.com/puppetlabs/puppetlabs-reboot/tree/v6.1.0) - 2026-10-27
+
+[Full Changelog](https://github.com/puppetlabs/puppetlabs-reboot/compare/v6.0.0...v6.1.0)
+
+### Added
+
+- (MODULES-11888) Add Windows Server 2025 support [#380](https://github.com/puppetlabs/puppetlabs-reboot/pull/380) ([imaqsood](https://github.com/imaqsood))
+
 ## [v6.0.0](https://github.com/puppetlabs/puppetlabs-reboot/tree/v6.0.0) - 2026-08-26
 
 [Full Changelog](https://github.com/puppetlabs/puppetlabs-reboot/compare/v5.1.0...v6.0.0)
