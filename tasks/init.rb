@@ -102,12 +102,12 @@ unless $stdin.tty?
 
     result = {
       'status' => 'queued',
-      'timeout' => reboot.timeout
+      'timeout' => reboot.timeout,
     }
   rescue JSON::ParserError
     result = {
       'status' => 'failed',
-      'message' => 'STDIN is not valid JSON'
+      'message' => 'STDIN is not valid JSON',
     }
   end
   JSON.dump(result, $stdout)
