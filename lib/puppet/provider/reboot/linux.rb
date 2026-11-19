@@ -8,6 +8,6 @@ Puppet::Type.type(:reboot).provide :linux, parent: :posix do
 
   def initialize(resource = nil)
     Puppet.deprecation_warning _("The 'linux' reboot provider is deprecated and will be removed; use 'posix' instead.")
-    super(resource)
+    super
   end
 end

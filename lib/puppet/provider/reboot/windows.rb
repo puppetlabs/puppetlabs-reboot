@@ -99,7 +99,7 @@ Puppet::Type.type(:reboot).provide :windows do
     result = false
 
     reasons.each do |reason|
-      result ||= send("#{reason}?".to_sym)
+      result ||= send(:"#{reason}?")
     end
 
     result
